@@ -1,0 +1,7 @@
+config/config.php
+storage/private/*
+vendor/
+.idea/
+.vscode/
+*.log
+.DS_Store

@@ -1,0 +1,229 @@
+:root {
+    --navy: #182B3D;
+    --gold: #C49B3E;
+    --green: #376852;
+    --cream: #F7F3E8;
+    --grey: #5F6970;
+    --white: #ffffff;
+    --blue: #1F3C88;
+    --orange: #C77B30;
+    --purple: #5D4A82;
+    --text: #1f2937;
+    --border: rgba(24, 43, 61, 0.15);
+    --shadow: 0 12px 32px rgba(24, 43, 61, 0.08);
+}
+
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+}
+
+h1, h2, h3 {
+    font-family: Georgia, serif;
+    margin-top: 0;
+}
+
+.page-shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-mark {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--gold), #e6d29a);
+    color: var(--navy);
+    font-weight: 700;
+}
+
+.eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.brand-title {
+    margin: 0;
+    font-size: 1.7rem;
+}
+
+.topnav {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.topnav a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.content {
+    padding-top: 32px;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1.5fr 0.8fr;
+    gap: 24px;
+    align-items: center;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+}
+
+.kicker {
+    margin: 0 0 10px;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.hero h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 12px;
+}
+
+.lede {
+    font-size: 1.0625rem;
+    color: var(--grey);
+    max-width: 50ch;
+}
+
+.logo-box {
+    min-height: 180px;
+    border: 2px dashed var(--gold);
+    border-radius: 18px;
+    background: rgba(196, 155, 62, 0.12);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 20px;
+    color: var(--navy);
+    font-weight: 700;
+}
+
+.stats-panel,
+.info-card,
+.error-box {
+    background: rgba(255,255,255,0.8);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.stats-panel {
+    margin-top: 28px;
+    padding: 24px;
+}
+
+.section-header h3 {
+    margin-bottom: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 18px;
+}
+
+.stat-card .label {
+    display: block;
+    color: var(--grey);
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.stat-card strong {
+    font-size: 2rem;
+    color: var(--navy);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 28px;
+}
+
+.info-card {
+    padding: 24px;
+}
+
+.accent-blue { border-top: 6px solid var(--blue); }
+.accent-orange { border-top: 6px solid var(--orange); }
+.accent-purple { border-top: 6px solid var(--purple); }
+
+.error-box {
+    padding: 32px;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 12px 20px;
+    background: var(--navy);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+@media (max-width: 760px) {
+    .topbar,
+    .hero,
+    .stats-grid,
+    .info-grid {
+        grid-template-columns: 1fr;
+        display: block;
+    }
+
+    .topbar {
+        padding: 16px 18px;
+    }
+
+    .topnav {
+        margin-top: 14px;
+    }
+
+    .page-shell {
+        padding: 16px;
+    }
+}
