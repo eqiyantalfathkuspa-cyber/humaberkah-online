@@ -26,9 +26,12 @@ return [
         ],
     ],
     'security' => [
-        'session_lifetime_seconds' => 1800,
+        'session_lifetime_seconds' => 7200,
         'login_attempt_limit' => 5,
+        'ip_attempt_limit' => 30,
+        'lockout_window_seconds' => 15 * 60,
         'upload_max_size_bytes' => 5 * 1024 * 1024,
         'allowed_upload_types' => ['pdf', 'jpg', 'jpeg', 'png'],
     ],
+    'trusted_proxies' => [],
 ];

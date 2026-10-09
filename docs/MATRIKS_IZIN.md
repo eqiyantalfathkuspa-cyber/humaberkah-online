@@ -13,27 +13,35 @@
 | Rute / kemampuan | GUEST | SISWA | GURU | ADMIN |
 |---|---:|---:|---:|---:|
 | Halaman beranda publik | YA | YA | YA | YA |
-| Katalog layanan publik | YA | YA | YA | YA |
-| Detail layanan publik | YA | YA | YA | YA |
-| Form survei publik | YA | YA | YA | YA |
-| Kirim aspirasi / pengaduan | YA | YA | YA | YA |
+| GET /layanan | YA | YA | YA | YA |
+| GET /layanan/{kode} | YA | YA | YA | YA |
+| Login ke akun | YA | YA | YA | YA |
+| Logout | TIDAK | YA | YA | YA |
+| Portal pengguna | TIDAK | YA | YA | TIDAK |
+| Dashboard admin | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/pengguna | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/pengguna (buat pengguna) | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/pengguna/{id}/role | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/pengguna/{id}/nonaktif | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/pengguna/{id}/reset-sandi | TIDAK | TIDAK | TIDAK | YA |
+| Lihat audit admin | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/layanan | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/layanan/{kode}/ubah | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/layanan/{kode} | TIDAK | TIDAK | TIDAK | YA |
 | Lacak permohonan dengan token | YA | YA | YA | YA |
-| Login ke akun | TIDAK | YA | YA | YA |
-| Melihat status permohonan sendiri | TIDAK | YA | YA | YA |
-| Melihat riwayat permohonan orang lain | TIDAK | TIDAK | TIDAK | YA |
-| Mengajukan layanan FORMULIR | YA (jika layanan terbuka publik) | YA | YA | YA |
 | Mengakses halaman admin dashboard | TIDAK | TIDAK | TIDAK | YA |
 | Mengelola pengguna | TIDAK | TIDAK | TIDAK | YA |
-| Mengunggah bukti / eviden | TIDAK | TIDAK | TIDAK | YA |
-| Memverifikasi eviden | TIDAK | TIDAK | TIDAK | YA |
-| Melihat seluruh aplikasi sistem | TIDAK | TIDAK | TIDAK | YA |
-| Melihat seluruh pengaduan sistem | TIDAK | TIDAK | TIDAK | YA |
-| Melihat pengaduan milik sendiri | TIDAK | YA | YA | YA |
-| Mengedit pengaduan milik sendiri | TIDAK | YA (jika status mengizinkan) | YA (jika status mengizinkan) | YA |
-| Mengakses halaman BK / data sensitif siswa | TIDAK | TIDAK | TIDAK | YA (internal; tidak menyimpan data sensitif) |
-| Mengakses endpoint upload berbahaya / file rahasia | TIDAK | TIDAK | TIDAK | TIDAK |
-| Menambah / menghapus layanan acuan | TIDAK | TIDAK | TIDAK | YA |
 | Membaca audit log sistem | TIDAK | TIDAK | TIDAK | YA |
+
+Catatan implementasi Tahap 2A:
+- Role per rute diambil dari `app/Policies/Permissions.php` dan tidak ditulis ulang di `Router.php`.
+- `GET /logout` bukan rute legal; rute yang valid hanya `POST /logout`.
+- Seluruh POST pengelolaan pengguna wajib memakai token CSRF dan setiap tindakan dicatat di `audit_logs`.
+- POST perubahan standar layanan wajib memakai CSRF; semua ADMIN dapat mengubah mode dan standar layanan, dan perubahan mencatat nilai lama serta baru di `audit_logs`.
+- Katalog dan detail layanan publik dapat dilihat semua role, termasuk GUEST.
+- ADMIN tidak dapat menonaktifkan atau menurunkan role dirinya sendiri.
+- Login "Siswa / Guru" hanya mencari role SISWA atau GURU; login "Admin Pokja 6" hanya mencari role ADMIN. Pesan kegagalan tidak membedakan penyebab.
+- Pola parameter didukung Router, tetapi rute contoh yang bukan bagian aplikasi tidak didaftarkan.
 
 ## 3. Aturan khusus
 

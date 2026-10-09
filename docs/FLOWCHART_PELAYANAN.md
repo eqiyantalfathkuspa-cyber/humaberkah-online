@@ -38,13 +38,13 @@ Untuk setiap layanan, berlaku urutan tahap berikut:
 
 ## 3. Ringkasan per layanan
 
-| Kode | Nama layanan | Kategori | Mode usulan | Catatan |
+| Kode | Nama layanan | Kategori | Mode awal (final) | Catatan |
 |---|---|---|---|---|
 | TU-01 | Layanan Informasi Umum / Pengurusan Administrasi Umum | Tata Usaha | FORMULIR | pengajuan administrasi umum |
 | TU-02 | Layanan Pengelolaan Dokumen dan Data Administratif | Tata Usaha | FORMULIR | dokumen administratif |
-| KUR-01 | Layanan Informasi Kurikulum dan Pembelajaran | Kurikulum | TATAP_MUKA | informasi dan orientasi |
+| KUR-01 | Layanan Informasi Kurikulum dan Pembelajaran | Kurikulum | INFORMASI | informasi dan orientasi |
 | KUR-02 | Layanan Pengajuan / Penyesuaian Administrasi Kurikulum | Kurikulum | FORMULIR | pengajuan/penyesuaian |
-| KES-01 | Layanan Informasi BK / Konseling / Kesejahteraan Siswa | Kesiswaan | TATAP_MUKA | data sensitif tidak disimpan |
+| KES-01 | Layanan Informasi BK / Konseling / Kesejahteraan Siswa | Kesiswaan | INFORMASI | data sensitif tidak disimpan |
 | KES-02 | Layanan Pengajuan Kegiatan / Permohonan Siswa | Kesiswaan | FORMULIR | pengajuan layanan siswa |
 | KES-03 | Layanan Informasi PMBM / Pendaftaran / Layanan Informasi Siswa | Kesiswaan | INFORMASI | halaman informasi |
 | KES-04 | Layanan Pengelolaan Data Kesiswaan / Mutasi / Kebutuhan Khusus | Kesiswaan | FORMULIR | pengelolaan data administratif |
@@ -57,7 +57,8 @@ Untuk setiap layanan, berlaku urutan tahap berikut:
 - Prototipe tidak menyimpan isi konseling BK dan data pribadi siswa yang sensitif.
 - KES-01 dibatasi pada informasi dan penjadwalan sederhana, bukan konseling lengkap.
 - HUM-02 pada prinsipnya adalah modul pengaduan/aspirasi, bukan layanan umum penuh.
-- Mode dapat diubah setelah keputusan final oleh tim Pokja 6.
+- Mode awal final mengikuti keputusan Pokja 6: FORMULIR untuk TU-01, TU-02, KUR-02, KES-02, KES-04, SAR-01, dan HUM-01; INFORMASI untuk KUR-01, KES-01, dan KES-03; MODUL_PENGADUAN untuk HUM-02.
+- TATAP_MUKA tetap tersedia sebagai pilihan mode layanan, tetapi belum digunakan oleh layanan awal.
 - Label dan nama kategori harus selalu mengikuti dokumen ini dan tidak boleh diubah oleh agent.
 
 ## 5. Daftar 88 langkah layanan

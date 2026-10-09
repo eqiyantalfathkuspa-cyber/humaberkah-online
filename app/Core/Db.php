@@ -11,9 +11,27 @@ final class Db
 
     public static function pdo(string $database = 'default'): PDO
     {
-        $key = $database;
+        $activeKey = Config::activeDatabaseKey();
+        $requested = strtolower((string) $database);
+        $resolved = $requested === 'default' ? $activeKey : $requested;
+
+        if ($resolved === 'humamantap_test') {
+            $resolved = 'test';
+        }
+        if ($resolved === 'humamantap_dev' || $resolved === 'development') {
+            $resolved = 'default';
+        }
+
+        if ($activeKey === 'test' && $resolved !== 'test') {
+            throw new \RuntimeException('Test environment requires humamantap_test; received database key: ' . $database);
+        }
+        if ($activeKey !== 'test' && $resolved === 'test') {
+            throw new \RuntimeException('Development environment cannot use humamantap_test; received database key: ' . $database);
+        }
+
+        $key = $resolved;
         if (!isset(self::$pdoCache[$key])) {
-            $c = Config::database($database);
+            $c = Config::database($resolved);
             $dsn = 'mysql:host=' . $c['host'] . ';port=' . $c['port'] . ';dbname=' . $c['name'] . ';charset=' . ($c['charset'] ?? 'utf8mb4');
             self::$pdoCache[$key] = new PDO($dsn, $c['user'], $c['pass'], [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

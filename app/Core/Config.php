@@ -5,6 +5,18 @@ namespace App\Core;
 
 final class Config
 {
+    public static function activeDatabaseKey(): string
+    {
+        $env = strtolower((string) (getenv('APP_ENV') ?: ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? 'development')));
+        return $env === 'test' ? 'test' : 'default';
+    }
+
+    public static function activeDatabaseName(): string
+    {
+        $database = self::database(self::activeDatabaseKey());
+        return (string) ($database['name'] ?? self::activeDatabaseKey());
+    }
+
     public static function load(): array
     {
         static $config = null;
@@ -30,6 +42,20 @@ final class Config
     {
         $config = self::load();
         $databases = $config['databases'] ?? [];
-        return $databases[$name] ?? $databases['default'] ?? [];
+        $requested = strtolower((string)$name);
+
+        if ($requested === 'default') {
+            $requested = self::activeDatabaseKey();
+        }
+
+        if ($requested === 'humamantap_test') {
+            $requested = 'test';
+        }
+
+        if ($requested === 'humamantap_dev' || $requested === 'development') {
+            $requested = 'default';
+        }
+
+        return $databases[$requested] ?? $databases['default'] ?? [];
     }
 }

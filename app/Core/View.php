@@ -13,6 +13,7 @@ final class View
             throw new \RuntimeException('View not found: ' . $viewPath);
         }
 
+        $data['viewPath'] = $viewPath;
         extract($data, EXTR_SKIP);
         require $base . '/layouts/main.php';
     }

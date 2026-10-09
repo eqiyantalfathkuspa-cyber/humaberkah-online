@@ -1,8 +1,8 @@
-<section class="hero">
+﻿<section class="hero">
     <div class="hero-copy">
         <p class="kicker">HUMA LAYAN</p>
         <h2>Dari Huma Betang, Melayani dengan Amanah.</h2>
-        <p class="lede">Layanan publik MAN Kota Palangka Raya sebagai prototipe untuk uji coba tim Pokja 6.</p>
+        <p class="lede">Layanan publik MAN Kota Palangka Raya sebagai prototipe.</p>
     </div>
     <div class="logo-box" role="img" aria-label="Placeholder logo MAN Kota Palangka Raya">
         <span>DATA REQUIRED: logo resmi</span>
@@ -13,24 +13,7 @@
     <div class="section-header">
         <h3 id="statistik-heading">Statistik layanan</h3>
     </div>
-    <div class="stats-grid">
-        <article class="stat-card">
-            <span class="label">Permohonan</span>
-            <strong><?= angka_atau_kosong(null) ?></strong>
-        </article>
-        <article class="stat-card">
-            <span class="label">Pengaduan</span>
-            <strong><?= angka_atau_kosong(null) ?></strong>
-        </article>
-        <article class="stat-card">
-            <span class="label">Survey</span>
-            <strong><?= angka_atau_kosong(null) ?></strong>
-        </article>
-        <article class="stat-card">
-            <span class="label">Tuntas</span>
-            <strong><?= angka_atau_kosong(null) ?></strong>
-        </article>
-    </div>
+    <p>BELUM ADA DATA</p>
 </section>
 
 <section class="info-grid">

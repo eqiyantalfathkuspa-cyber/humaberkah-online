@@ -1,6 +1,10 @@
 <?php
 /** @var string $title */
 /** @var string $viewPath */
+$currentUser = App\Core\Auth::user();
+$currentRole = $currentUser['role_code'] ?? $currentUser['role'] ?? null;
+$canAccessAdmin = App\Policies\Permissions::can($currentRole, 'admin.dashboard');
+$canManageServices = App\Policies\Permissions::can($currentRole, 'admin.services.manage');
 ?>
 <!doctype html>
 <html lang="id">
@@ -24,6 +28,14 @@
                 <a href="/">Beranda</a>
                 <a href="/layanan">Layanan</a>
                 <a href="/laporan">Laporan</a>
+                <?php if ($canAccessAdmin): ?>
+                    <a href="/admin">Dashboard admin</a>
+                    <a href="/admin/pengguna">Pengguna</a>
+                    <a href="/admin/audit">Audit</a>
+                    <?php if ($canManageServices): ?>
+                        <a href="/admin/layanan">Kelola layanan</a>
+                    <?php endif; ?>
+                <?php endif; ?>
             </nav>
         </header>
 

@@ -1,0 +1,37 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Policies;
+
+final class Permissions
+{
+    public const MAP = [
+        'home.public' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'services.catalog' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'services.detail' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'login' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'logout' => ['SISWA', 'GURU', 'ADMIN'],
+        'portal.view' => ['SISWA', 'GURU'],
+        'admin.dashboard' => ['ADMIN'],
+        'admin.users.manage' => ['ADMIN'],
+        'admin.users.create' => ['ADMIN'],
+        'admin.users.role' => ['ADMIN'],
+        'admin.users.deactivate' => ['ADMIN'],
+        'admin.users.reset_password' => ['ADMIN'],
+        'admin.audit.view' => ['ADMIN'],
+        'admin.services.manage' => ['ADMIN'],
+        'admin.services.edit' => ['ADMIN'],
+        'admin.services.update' => ['ADMIN'],
+    ];
+
+    public static function can(?string $role, string $ability): bool
+    {
+        $normalizedRole = $role === null ? 'GUEST' : strtoupper((string) $role);
+        return in_array($normalizedRole, self::routeRoles($ability), true);
+    }
+
+    public static function routeRoles(string $ability): array
+    {
+        return self::MAP[$ability] ?? ['GUEST'];
+    }
+}
