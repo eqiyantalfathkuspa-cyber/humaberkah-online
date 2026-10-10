@@ -15,7 +15,6 @@
 - complaints
 - complaint_history
 - surveys
-- survey_answers
 - evidence_items
 - evidence_checkpoints
 - evidence_links
@@ -37,7 +36,8 @@
 - satu `applications` memiliki banyak `application_history`
 - satu `users` dapat mengirim banyak `complaints`
 - satu `complaints` memiliki banyak `complaint_history`
-- satu `surveys` memiliki banyak `survey_answers`
+- satu `applications` memiliki paling banyak satu `surveys` (UNIQUE `surveys.application_id`)
+- satu `services` memiliki banyak `surveys`
 - satu `services` memiliki banyak `evidence_links`
 - satu `evidence_checkpoints` memiliki banyak `evidence_links`
 - satu `applications` memiliki banyak `evaluations`
@@ -171,19 +171,19 @@ Relasi `application_documents.application_id` mereferensikan `applications.id` d
 
 ### surveys
 - `id`
+- `application_id` (unik, FK ke `applications.id`)
 - `service_id`
-- `title`
-- `status`
-- `opened_at`
-- `closed_at`
+- `speed_rating` (TINYINT UNSIGNED; validasi aplikasi 1–5)
+- `clarity_rating` (TINYINT UNSIGNED; validasi aplikasi 1–5)
+- `courtesy_rating` (TINYINT UNSIGNED; validasi aplikasi 1–5)
+- `suggestion` (opsional, maksimal 1.000 karakter)
+- `created_at`
+- Catatan: satu respon per pengajuan SELESAI; identitas pengisi tidak disimpan.
 
-### survey_answers
-- `id`
-- `survey_id`
-- `respondent_id` (nullable)
-- `response_token`
-- `answers_json`
-- `submitted_at`
+### survey_ip_quotas
+- `ip_hash` (SHA-256 alamat REMOTE_ADDR, primary key)
+- `window_started_at`
+- `submission_count` (kuota awal lima per IP per satu jam)
 
 ### evidence_items
 - `id`

@@ -37,10 +37,15 @@
 | GET /kahayan/diterima (flash satu kali) | YA | YA | YA | TIDAK |
 | GET /lacak-aduan | YA | YA | YA | YA |
 | POST /lacak-aduan (CSRF, cek kode aduan) | YA | YA | YA | YA |
+| GET /survei | YA | YA | YA | YA |
+| POST /survei (CSRF, kode lacak dalam POST) | YA | YA | YA | YA |
+| GET /survei/terima | YA | YA | YA | YA |
 | GET /admin/aduan | TIDAK | TIDAK | TIDAK | YA |
 | GET /admin/aduan/{id} | TIDAK | TIDAK | TIDAK | YA |
 | POST /admin/aduan/{id}/status | TIDAK | TIDAK | TIDAK | YA |
 | POST /admin/aduan/{id}/tanggapan | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/survei | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/survei/ekspor | TIDAK | TIDAK | TIDAK | YA |
 | GET /portal/aduan/{id} (tiket milik sendiri) | TIDAK | YA | YA | TIDAK |
 | GET /pengajuan/diterima | TIDAK | YA | YA | TIDAK |
 | GET /admin/pengajuan | TIDAK | TIDAK | TIDAK | YA |
@@ -68,6 +73,7 @@ Catatan implementasi Tahap 2A:
 - KAHAYAN AMANAH/HUM-02 menerima kiriman Guest, SISWA, dan GURU. Isi dan identitas hanya tampak pada rute ADMIN; cek kode melalui POST tidak memuat isi atau kontak.
 - Seluruh POST KAHAYAN memakai CSRF. Kuota awal kiriman adalah 5 per IP per jam; GET/POST lacak memakai kode yang tidak masuk URL dan respons privat memakai no-store/no-referrer.
 - Rute status admin mengikuti tabel perpindahan pada `ComplaintWorkflow` dan bagian Langkah 5 di `docs/DECISIONS.md`; riwayat bersifat append-only. Tanggapan publik maksimal 1.000 karakter.
+- Survei hanya menerima kode lacak melalui POST untuk pengajuan berstatus SELESAI; pengiriman satu kali, CSRF, honeypot, dan kuota IP wajib. Rekap dan ekspor hanya ADMIN; kode dan jawaban tidak dipaparkan ke publik.
 
 ## 3. Aturan khusus
 

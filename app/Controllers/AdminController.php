@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Auth;
+use App\Core\ApplicationWorkflow;
+use App\Core\ComplaintWorkflow;
 use App\Core\Db;
 use App\Core\ServiceCatalog;
 use App\Core\View;
@@ -16,7 +18,19 @@ final class AdminController
 
     public static function dashboard(): void
     {
-        View::render('pages/admin_dashboard', ['title' => 'Dashboard Admin']);
+        $applicationCounts = self::countsByStatus('applications', array_keys(ApplicationWorkflow::STATUS_LABELS));
+        $complaintCounts = self::countsByStatus('complaints', ComplaintWorkflow::STATUSES);
+        $surveyMetrics = Db::one(
+            'SELECT COUNT(*) AS respondent_count, AVG(speed_rating) AS speed_average, AVG(clarity_rating) AS clarity_average, AVG(courtesy_rating) AS courtesy_average FROM surveys'
+        ) ?? [];
+        View::render('pages/admin_dashboard', [
+            'title' => 'Dashboard Admin',
+            'applicationCounts' => $applicationCounts,
+            'applicationStatusLabels' => ApplicationWorkflow::STATUS_LABELS,
+            'complaintCounts' => $complaintCounts,
+            'complaintStatusLabels' => ComplaintWorkflow::STATUS_LABELS,
+            'surveyMetrics' => $surveyMetrics,
+        ]);
     }
 
     public static function users(): void
@@ -237,6 +251,25 @@ final class AdminController
             $message,
             $database
         );
+    }
+
+    /**
+     * @param array<int, string> $statuses
+     * @return array<string, int>
+     */
+    private static function countsByStatus(string $table, array $statuses): array
+    {
+        if (!in_array($table, ['applications', 'complaints'], true)) {
+            throw new \InvalidArgumentException('Tabel status dashboard tidak dikenal.');
+        }
+        $counts = array_fill_keys($statuses, 0);
+        foreach (Db::all('SELECT status, COUNT(*) AS row_count FROM ' . $table . ' GROUP BY status') as $row) {
+            $status = (string) $row['status'];
+            if (array_key_exists($status, $counts)) {
+                $counts[$status] = (int) $row['row_count'];
+            }
+        }
+        return $counts;
     }
 
     private static function renderUsers(string $message = '', bool $error = false, int $status = 200): void

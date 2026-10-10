@@ -9,6 +9,7 @@ use App\Controllers\ComplaintsController;
 use App\Controllers\AuthController;
 use App\Controllers\PortalController;
 use App\Controllers\ServiceController;
+use App\Controllers\SurveyController;
 use App\Policies\Permissions;
 
 final class Router
@@ -98,6 +99,22 @@ final class Router
                 '/lacak' => [
                     'handler' => [ApplicationController::class, 'trackingForm'],
                     'ability' => 'applications.track',
+                ],
+                '/survei' => [
+                    'handler' => [SurveyController::class, 'form'],
+                    'ability' => 'surveys.submit',
+                ],
+                '/survei/terima' => [
+                    'handler' => [SurveyController::class, 'thankYou'],
+                    'ability' => 'surveys.submit',
+                ],
+                '/admin/survei' => [
+                    'handler' => [SurveyController::class, 'adminIndex'],
+                    'ability' => 'admin.surveys.view',
+                ],
+                '/admin/survei/ekspor' => [
+                    'handler' => [SurveyController::class, 'export'],
+                    'ability' => 'admin.surveys.export',
                 ],
                 '/kahayan' => [
                     'handler' => [ComplaintsController::class, 'form'],
@@ -204,6 +221,11 @@ final class Router
                 '/lacak' => [
                     'handler' => [ApplicationController::class, 'track'],
                     'ability' => 'applications.track.lookup',
+                    'middleware' => ['csrf'],
+                ],
+                '/survei' => [
+                    'handler' => [SurveyController::class, 'submit'],
+                    'ability' => 'surveys.submit',
                     'middleware' => ['csrf'],
                 ],
                 '/kahayan' => [

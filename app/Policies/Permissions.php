@@ -16,6 +16,7 @@ final class Permissions
         'complaints.track' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'complaints.track.lookup' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'portal.complaints.view' => ['SISWA', 'GURU'],
+        'surveys.submit' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'login' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'logout' => ['SISWA', 'GURU', 'ADMIN'],
         'portal.view' => ['SISWA', 'GURU'],
@@ -37,6 +38,8 @@ final class Permissions
         'admin.complaints.detail' => ['ADMIN'],
         'admin.complaints.status' => ['ADMIN'],
         'admin.complaints.response' => ['ADMIN'],
+        'admin.surveys.view' => ['ADMIN'],
+        'admin.surveys.export' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool

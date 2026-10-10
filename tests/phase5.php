@@ -494,6 +494,8 @@ foreach (['Core', 'Controllers', 'Policies'] as $classDirectory) {
         $autoloadClasses[] = 'App\\' . $classDirectory . '\\' . basename($classFile, '.php');
     }
 }
+$autoloadClasses[] = 'App\\Controllers\\SurveyController';
+$autoloadClasses = array_values(array_unique($autoloadClasses));
 $autoloadProbe = '<?php require '
     . var_export(__DIR__ . '/../app/autoload.php', true)
     . '; $classes = ' . var_export($autoloadClasses, true)

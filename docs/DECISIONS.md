@@ -127,6 +127,17 @@
 - Isolasi tes: bootstrap memakai profil koneksi `test` yang harus menunjuk konfigurasi dasar `humamantap_test`, membuat database unik `humamantap_test_<nonce>` tanpa `DROP` saat inisialisasi, dan menandainya dengan token acak. Koneksi tes menolak target lain; proses cleanup hanya menghapus database yang dibuat oleh proses tersebut setelah memverifikasi token kepemilikan. Bila bukti kepemilikan hilang, database dibiarkan utuh.
 - Validasi: tes menjalankan request limiter dan migrator paralel melalui proses/koneksi terpisah serta fixture migrasi yang memaksa kegagalan SQL, crash proses, ketidakcocokan checksum, ledger lama, artefak orphan, ketidakcocokan signature kolom/index/FK/trigger/ledger. Hasil tes tidak membuktikan perilaku beban produksi atau seluruh kemungkinan crash/implicit commit.
 
+## 2026-10-11 (Langkah 6 – Survei kepuasan dan dashboard)
+
+- Survei hanya tersedia untuk pengajuan layanan berstatus SELESAI dan dibuka menggunakan kode lacak melalui POST; kode tidak menjadi bagian URL. Satu survei per pengajuan, dijaga UNIQUE pada `application_id`; kiriman kedua ditolak.
+- Nilai awal survei: penilaian 1–5 untuk KECEPATAN, KEJELASAN, dan KERAMAHAN; saran opsional maksimal 1.000 karakter. Tabel tidak menyimpan identitas pengisi. Pertanyaan final MENUNGGU POKJA 6.
+- Jawaban dan saran survei hanya dapat dilihat ADMIN melalui rekap dan ekspor; pengisi tidak memperoleh akses ke jawaban lain.
+- Dashboard admin menghitung angka dari basis data. Nilai 0 ditampilkan untuk hitungan baris nyata; rata-rata tanpa responden ditampilkan `BELUM ADA DATA`. Layanan dengan responden di bawah lima diberi label `DATA TERLALU SEDIKIT`.
+- Ekspor CSV hanya ADMIN. Awalan `=`, `+`, `-`, atau `@` di sel dilindungi dengan prefiks tanda kutip tunggal untuk mencegah formula CSV.
+- Kuota awal pengiriman survei: lima percobaan per IP per jam, memakai lock IP bersama dan hash IP; NAT sekolah dapat menyebabkan kuota berbagi.
+- MENUNGGU POKJA 6: pertanyaan final survei, skala final, apakah survei juga berlaku bagi layanan bermode INFORMASI, dan ambang minimum responden.
+- Status: nilai awal prototipe, tidak menyatakan kebijakan survei final.
+
 ## Catatan kepastian
 
 - PHP 8.3.33 dan MySQL 8.4.3 sesuai target.

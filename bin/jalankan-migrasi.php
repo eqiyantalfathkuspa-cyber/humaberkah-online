@@ -426,6 +426,113 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 ],
             ],
         ],
+        '009_surveys.sql' => [
+            'tables' => [
+                'surveys' => [
+                    'id', 'application_id', 'service_id', 'speed_rating', 'clarity_rating',
+                    'courtesy_rating', 'suggestion', 'created_at',
+                ],
+                'survey_ip_quotas' => ['ip_hash', 'window_started_at', 'submission_count'],
+            ],
+            'tableDefinitions' => [
+                'surveys' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+                'survey_ip_quotas' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+            ],
+            'columnDefinitions' => [
+                'surveys.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'surveys.application_id' => [
+                    'data_type' => 'bigint',
+                    'column_type' => 'bigint unsigned',
+                    'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'surveys.service_id' => [
+                    'data_type' => 'bigint',
+                    'column_type' => 'bigint unsigned',
+                    'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'surveys.speed_rating' => [
+                    'data_type' => 'tinyint',
+                    'column_type' => 'tinyint unsigned',
+                    'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'surveys.clarity_rating' => [
+                    'data_type' => 'tinyint',
+                    'column_type' => 'tinyint unsigned',
+                    'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'surveys.courtesy_rating' => [
+                    'data_type' => 'tinyint',
+                    'column_type' => 'tinyint unsigned',
+                    'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'surveys.suggestion' => [
+                    'data_type' => 'varchar',
+                    'character_maximum_length' => 1000,
+                    'is_nullable' => 'YES',
+                    'default_value' => null,
+                    'extra' => '',
+                    'character_set_name' => 'utf8mb4',
+                    'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'surveys.created_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => 'CURRENT_TIMESTAMP', 'extra' => 'DEFAULT_GENERATED',
+                ],
+                'survey_ip_quotas.ip_hash' => [
+                    'data_type' => 'char',
+                    'character_maximum_length' => 64,
+                    'is_nullable' => 'NO',
+                    'default_value' => null,
+                    'extra' => '',
+                    'character_set_name' => 'ascii',
+                    'collation_name' => 'ascii_bin',
+                ],
+                'survey_ip_quotas.window_started_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'survey_ip_quotas.submission_count' => [
+                    'data_type' => 'tinyint',
+                    'column_type' => 'tinyint unsigned',
+                    'is_nullable' => 'NO',
+                    'default_value' => '0', 'extra' => '',
+                ],
+            ],
+            'indexes' => [
+                'surveys.PRIMARY',
+                'surveys.uq_surveys_application',
+                'surveys.idx_surveys_service_created',
+                'survey_ip_quotas.PRIMARY',
+            ],
+            'indexDefinitions' => [
+                'surveys.PRIMARY' => ['columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null]],
+                'surveys.uq_surveys_application' => ['columns' => ['application_id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null]],
+                'surveys.idx_surveys_service_created' => ['columns' => ['service_id', 'created_at'], 'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null, null]],
+                'survey_ip_quotas.PRIMARY' => ['columns' => ['ip_hash'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null]],
+            ],
+            'foreignKeys' => [
+                'surveys.fk_surveys_application',
+                'surveys.fk_surveys_service',
+            ],
+            'foreignKeyDefinitions' => [
+                'surveys.fk_surveys_application' => [
+                    'column' => 'application_id', 'table' => 'applications', 'referenced_column' => 'id',
+                    'delete' => 'CASCADE', 'update' => 'CASCADE',
+                ],
+                'surveys.fk_surveys_service' => [
+                    'column' => 'service_id', 'table' => 'services', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+            ],
+        ],
     ];
     $specification = $specifications[$migrationName] ?? null;
     if ($specification === null) {
@@ -476,7 +583,7 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
         [$table, $column] = explode('.', $qualifiedColumn, 2);
         $expected++;
         $columnCheck = $pdo->prepare(
-            'SELECT DATA_TYPE, COLUMN_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, CHARACTER_SET_NAME, COLLATION_NAME FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?'
+            'SELECT DATA_TYPE, COLUMN_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT, EXTRA, CHARACTER_SET_NAME, COLLATION_NAME FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?'
         );
         $columnCheck->execute([$table, $column]);
         $actualDefinition = $columnCheck->fetch(PDO::FETCH_ASSOC);
@@ -487,6 +594,8 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 && (!isset($definition['character_maximum_length']) || (int) $actualDefinition['CHARACTER_MAXIMUM_LENGTH'] === $definition['character_maximum_length'])
                 && $actualDefinition['IS_NULLABLE'] === $definition['is_nullable']
                 && (!isset($definition['column_type']) || strtolower((string) $actualDefinition['COLUMN_TYPE']) === $definition['column_type'])
+                && (!array_key_exists('default_value', $definition) || $actualDefinition['COLUMN_DEFAULT'] === $definition['default_value'])
+                && (!isset($definition['extra']) || strtolower((string) $actualDefinition['EXTRA']) === strtolower($definition['extra']))
                 && (!isset($definition['character_set_name']) || strtolower((string) $actualDefinition['CHARACTER_SET_NAME']) === $definition['character_set_name'])
                 && (!isset($definition['collation_name']) || strtolower((string) $actualDefinition['COLLATION_NAME']) === $definition['collation_name'])
             ) {
@@ -533,7 +642,7 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
         [$table, $index] = explode('.', $qualifiedIndex, 2);
         $expected++;
         $indexCheck = $pdo->prepare(
-            'SELECT column_name AS COLUMN_NAME, non_unique AS NON_UNIQUE FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = ? AND index_name = ? ORDER BY seq_in_index'
+            'SELECT column_name AS COLUMN_NAME, non_unique AS NON_UNIQUE, index_type AS INDEX_TYPE, sub_part AS SUB_PART FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = ? AND index_name = ? ORDER BY seq_in_index'
         );
         $indexCheck->execute([$table, $index]);
         $actualRows = $indexCheck->fetchAll(PDO::FETCH_ASSOC);
@@ -541,7 +650,32 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
             $present++;
             $actualColumns = array_column($actualRows, 'COLUMN_NAME');
             $actualUnique = (int) $actualRows[0]['NON_UNIQUE'] === 0;
-            if ($actualColumns === $definition['columns'] && $actualUnique === $definition['unique']) {
+            $actualType = strtoupper((string) $actualRows[0]['INDEX_TYPE']);
+            $actualPrefixLengths = array_column($actualRows, 'SUB_PART');
+            if (
+                $actualColumns === $definition['columns']
+                && $actualUnique === $definition['unique']
+                && (!isset($definition['type']) || $actualType === $definition['type'])
+                && (!isset($definition['prefix_lengths']) || $actualPrefixLengths === $definition['prefix_lengths'])
+            ) {
+                $complete++;
+            }
+        }
+    }
+    foreach (($specification['tableDefinitions'] ?? []) as $table => $definition) {
+        $expected++;
+        $tableCheck = $pdo->prepare(
+            'SELECT t.engine AS ENGINE, t.table_collation AS TABLE_COLLATION, c.character_set_name AS CHARACTER_SET_NAME FROM information_schema.tables AS t LEFT JOIN information_schema.collations AS c ON c.collation_name = t.table_collation WHERE t.table_schema = DATABASE() AND t.table_name = ?'
+        );
+        $tableCheck->execute([$table]);
+        $actual = $tableCheck->fetch(PDO::FETCH_ASSOC);
+        if ($actual !== false) {
+            $present++;
+            if (
+                strcasecmp((string) $actual['ENGINE'], $definition['engine']) === 0
+                && strcasecmp((string) $actual['CHARACTER_SET_NAME'], $definition['character_set']) === 0
+                && strcasecmp((string) $actual['TABLE_COLLATION'], $definition['collation']) === 0
+            ) {
                 $complete++;
             }
         }

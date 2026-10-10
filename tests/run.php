@@ -190,6 +190,7 @@ check(
         '006_application_tracking_attempts.sql' => 1,
         '007_application_documents.sql' => 1,
         '008_complaints.sql' => 7,
+        '009_surveys.sql' => 2,
     ],
     json_encode($migrationStatementCounts)
 );
@@ -948,6 +949,7 @@ check('Akun terkunci setelah lima kegagalan', $lockedResult['ok'] === false && s
 require_once __DIR__ . '/../app/Core/ComplaintWorkflow.php';
 require __DIR__ . '/phase2b.php';
 require __DIR__ . '/phase5.php';
+require __DIR__ . '/phase6.php';
 
 print PHP_EOL . ($failed === 0 ? 'SEMUA TES LOLOS' : $failed . ' TES GAGAL') . PHP_EOL;
 ob_end_flush();

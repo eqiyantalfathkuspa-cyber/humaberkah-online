@@ -289,8 +289,14 @@ final class ApplicationController
 
     public static function adminIndex(): void
     {
+        $statusInput = $_GET['status'] ?? '';
+        $status = is_string($statusInput) ? strtoupper(trim($statusInput)) : '';
+        $filterStatus = isset(ApplicationWorkflow::STATUS_LABELS[$status]) ? $status : null;
         $applications = Db::all(
-            'SELECT a.id, a.tracking_code, a.status, a.created_at, s.code AS service_code, s.name AS service_name, u.full_name AS applicant_name FROM applications a INNER JOIN services s ON s.id = a.service_id INNER JOIN users u ON u.id = a.applicant_user_id ORDER BY a.created_at DESC, a.id DESC'
+            'SELECT a.id, a.tracking_code, a.status, a.created_at, s.code AS service_code, s.name AS service_name, u.full_name AS applicant_name FROM applications a INNER JOIN services s ON s.id = a.service_id INNER JOIN users u ON u.id = a.applicant_user_id'
+                . ($filterStatus === null ? '' : ' WHERE a.status = ?')
+                . ' ORDER BY a.created_at DESC, a.id DESC',
+            $filterStatus === null ? [] : [$filterStatus]
         );
         View::render('pages/admin_applications', [
             'title' => 'Antrean pengajuan',

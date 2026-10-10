@@ -33,6 +33,7 @@ $canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.compla
                     <a href="/kahayan">KAHAYAN AMANAH</a>
                 <?php endif; ?>
                 <a href="/lacak">Cek status pengajuan</a>
+                <a href="/survei">Survei kepuasan</a>
                 <a href="/lacak-aduan">Lacak aduan</a>
                 <a href="/laporan">Laporan</a>
                 <?php if ($canAccessAdmin): ?>
@@ -48,6 +49,7 @@ $canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.compla
                     <?php if ($canManageComplaints): ?>
                         <a href="/admin/aduan">Antrean KAHAYAN AMANAH</a>
                     <?php endif; ?>
+                    <a href="/admin/survei">Rekap survei</a>
                 <?php endif; ?>
             </nav>
         </header>
