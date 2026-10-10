@@ -44,8 +44,12 @@ $standardValue = static function (string $key) use ($standards): string {
     </section>
 
     <?php if (($service['mode'] ?? '') === 'FORMULIR'): ?>
-        <button type="button" class="btn primary" disabled aria-disabled="true">Ajukan</button>
-        <p class="lede">Pengajuan melalui website menyusul pada Langkah 4.</p>
+        <?php $currentRole = App\Core\Auth::user()['role_code'] ?? null; ?>
+        <?php if (App\Policies\Permissions::can($currentRole, 'applications.submit')): ?>
+            <p><a class="btn primary" href="/layanan/<?= e((string) ($service['code'] ?? '')) ?>/ajukan">Ajukan</a></p>
+        <?php elseif ($currentRole === null): ?>
+            <p class="lede">Login sebagai SISWA atau GURU untuk mengajukan layanan.</p>
+        <?php endif; ?>
     <?php elseif (($service['mode'] ?? '') === 'MODUL_PENGADUAN'): ?>
         <p class="notice">Layanan ini ditangani melalui modul pengaduan. Formulir belum tersedia.</p>
     <?php endif; ?>

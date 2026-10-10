@@ -28,7 +28,16 @@
 | GET /admin/layanan | TIDAK | TIDAK | TIDAK | YA |
 | GET /admin/layanan/{kode}/ubah | TIDAK | TIDAK | TIDAK | YA |
 | POST /admin/layanan/{kode} | TIDAK | TIDAK | TIDAK | YA |
-| Lacak permohonan dengan token | YA | YA | YA | YA |
+| GET /layanan/{kode}/ajukan | TIDAK | YA | YA | TIDAK |
+| POST /layanan/{kode}/ajukan | TIDAK | YA | YA | TIDAK |
+| GET /lacak | YA | YA | YA | YA |
+| POST /lacak (CSRF, `applications.track.lookup`) | YA | YA | YA | YA |
+| GET /pengajuan/diterima | TIDAK | YA | YA | TIDAK |
+| GET /admin/pengajuan | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/pengajuan/{id} | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/pengajuan/{id}/berkas/{docId} | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/pengajuan/{id}/status | TIDAK | TIDAK | TIDAK | YA |
+| Lacak permohonan dengan kode lewat form | YA | YA | YA | YA |
 | Mengakses halaman admin dashboard | TIDAK | TIDAK | TIDAK | YA |
 | Mengelola pengguna | TIDAK | TIDAK | TIDAK | YA |
 | Membaca audit log sistem | TIDAK | TIDAK | TIDAK | YA |
@@ -39,6 +48,10 @@ Catatan implementasi Tahap 2A:
 - Seluruh POST pengelolaan pengguna wajib memakai token CSRF dan setiap tindakan dicatat di `audit_logs`.
 - POST perubahan standar layanan wajib memakai CSRF; semua ADMIN dapat mengubah mode dan standar layanan, dan perubahan mencatat nilai lama serta baru di `audit_logs`.
 - Katalog dan detail layanan publik dapat dilihat semua role, termasuk GUEST.
+- Pembuatan pengajuan sementara dibatasi pada SISWA/GURU yang login; pilihan role ini MENUNGGU POKJA 6 karena dokumen sumber belum menetapkan role pengaju. Semua POST pengajuan dan perubahan status memakai CSRF.
+- Cek status memakai POST /lacak dengan CSRF; halaman formulir dan hasil tidak menyimpan cache dan melarang referrer. Hasil hanya menampilkan status serta tahap; antrean, detail, dan perubahan status hanya untuk ADMIN.
+- Pengajuan sukses memakai redirect ke halaman yang menampilkan kode lacak satu kali dari flash sesi; batas awal adalah 5 pengajuan per jam per akun (MENUNGGU POKJA 6).
+- Lampiran pengajuan hanya tersedia pada TU-01, TU-02, KUR-02, SAR-01, dan HUM-01; hanya ADMIN dapat mengunduhnya melalui GET /admin/pengajuan/{id}/berkas/{docId}. Halaman lacak dan portal tidak memaparkan lampiran atau nama berkas. KES-02 dan KES-04 menolak lampiran sampai keputusan tertulis Pokja 6.
 - ADMIN tidak dapat menonaktifkan atau menurunkan role dirinya sendiri.
 - Login "Siswa / Guru" hanya mencari role SISWA atau GURU; login "Admin Pokja 6" hanya mencari role ADMIN. Pesan kegagalan tidak membedakan penyebab.
 - Pola parameter didukung Router, tetapi rute contoh yang bukan bagian aplikasi tidak didaftarkan.

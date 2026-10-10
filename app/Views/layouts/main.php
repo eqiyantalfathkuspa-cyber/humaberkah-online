@@ -5,6 +5,7 @@ $currentUser = App\Core\Auth::user();
 $currentRole = $currentUser['role_code'] ?? $currentUser['role'] ?? null;
 $canAccessAdmin = App\Policies\Permissions::can($currentRole, 'admin.dashboard');
 $canManageServices = App\Policies\Permissions::can($currentRole, 'admin.services.manage');
+$canManageApplications = App\Policies\Permissions::can($currentRole, 'admin.applications.manage');
 ?>
 <!doctype html>
 <html lang="id">
@@ -27,6 +28,7 @@ $canManageServices = App\Policies\Permissions::can($currentRole, 'admin.services
             <nav class="topnav" aria-label="Navigasi utama">
                 <a href="/">Beranda</a>
                 <a href="/layanan">Layanan</a>
+                <a href="/lacak">Cek status pengajuan</a>
                 <a href="/laporan">Laporan</a>
                 <?php if ($canAccessAdmin): ?>
                     <a href="/admin">Dashboard admin</a>
@@ -34,6 +36,9 @@ $canManageServices = App\Policies\Permissions::can($currentRole, 'admin.services
                     <a href="/admin/audit">Audit</a>
                     <?php if ($canManageServices): ?>
                         <a href="/admin/layanan">Kelola layanan</a>
+                    <?php endif; ?>
+                    <?php if ($canManageApplications): ?>
+                        <a href="/admin/pengajuan">Antrean pengajuan</a>
                     <?php endif; ?>
                 <?php endif; ?>
             </nav>

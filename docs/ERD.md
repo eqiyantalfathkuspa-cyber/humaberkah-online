@@ -118,13 +118,14 @@
 ### application_documents
 - `id`
 - `application_id`
-- `document_type`
-- `original_name`
-- `stored_name`
-- `mime_type`
-- `size_bytes`
-- `uploaded_by`
+- `nama_asli` (nullable, dibersihkan)
+- `nama_acak` (nama penyimpanan acak di `storage/private/`)
+- `mime_terdeteksi` (`image/jpeg` atau `image/png`)
+- `ukuran` (byte)
+- `sha256` (hash isi berkas yang dihitung server)
 - `created_at`
+
+Relasi `application_documents.application_id` mereferensikan `applications.id` dengan penghapusan berantai. Batas aplikasi: maksimal 3 JPG/PNG, 5 MiB per berkas; PDF belum diterima.
 
 ### application_history
 - `id`
@@ -255,7 +256,7 @@
 ## 4. Keharusan relasi dan aturan validasi
 
 - `evidence_items.uploaded_by` dan `evidence_items.verified_by` wajib mereferensikan `users.id`.
-- `application_documents.uploaded_by` wajib mereferensikan `users.id` bila diunggah oleh akun yang terotentikasi.
+- `application_documents.application_id` wajib mereferensikan `applications.id`; identitas pengunggah tidak disimpan terpisah karena pemilik tercatat pada pengajuan.
 - `application_history` dan `complaint_history` harus bersifat append-only; trigger `BEFORE UPDATE` dan `BEFORE DELETE` menolak perubahan.
 - Setiap tabel riwayat minimal mencatat `from_status`, `to_status`, `changed_by`, `note`, `changed_at`.
 - `evidence_links` harus menjaga banyak ke banyak secara eksplisit: satu layanan bisa punya banyak checkpoint, dan satu checklist bisa terhubung ke banyak eviden.

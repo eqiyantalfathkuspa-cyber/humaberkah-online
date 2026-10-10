@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Core;
 
 use App\Controllers\AdminController;
+use App\Controllers\ApplicationController;
 use App\Controllers\AuthController;
 use App\Controllers\PortalController;
 use App\Controllers\ServiceController;
@@ -85,6 +86,18 @@ final class Router
                     'handler' => [ServiceController::class, 'detail'],
                     'ability' => 'services.detail',
                 ],
+                '/layanan/{code}/ajukan' => [
+                    'handler' => [ApplicationController::class, 'form'],
+                    'ability' => 'applications.submit',
+                ],
+                '/pengajuan/diterima' => [
+                    'handler' => [ApplicationController::class, 'submissionComplete'],
+                    'ability' => 'applications.submit',
+                ],
+                '/lacak' => [
+                    'handler' => [ApplicationController::class, 'trackingForm'],
+                    'ability' => 'applications.track',
+                ],
                 '/portal' => [
                     'handler' => [PortalController::class, 'index'],
                     'ability' => 'portal.view',
@@ -108,6 +121,18 @@ final class Router
                 '/admin/layanan/{code}/ubah' => [
                     'handler' => [AdminController::class, 'editService'],
                     'ability' => 'admin.services.edit',
+                ],
+                '/admin/pengajuan' => [
+                    'handler' => [ApplicationController::class, 'adminIndex'],
+                    'ability' => 'admin.applications.manage',
+                ],
+                '/admin/pengajuan/{id}' => [
+                    'handler' => [ApplicationController::class, 'adminDetail'],
+                    'ability' => 'admin.applications.detail',
+                ],
+                '/admin/pengajuan/{id}/berkas/{docId}' => [
+                    'handler' => [ApplicationController::class, 'downloadDocument'],
+                    'ability' => 'admin.applications.documents.download',
                 ],
             ],
             'POST' => [
@@ -146,6 +171,21 @@ final class Router
                     'ability' => 'admin.services.update',
                     'middleware' => ['csrf'],
                 ],
+                '/layanan/{code}/ajukan' => [
+                    'handler' => [ApplicationController::class, 'submit'],
+                    'ability' => 'applications.submit',
+                    'middleware' => ['csrf'],
+                ],
+                '/lacak' => [
+                    'handler' => [ApplicationController::class, 'track'],
+                    'ability' => 'applications.track.lookup',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/pengajuan/{id}/status' => [
+                    'handler' => [ApplicationController::class, 'updateStatus'],
+                    'ability' => 'admin.applications.status',
+                    'middleware' => ['csrf'],
+                ],
             ],
         ];
     }
@@ -156,12 +196,25 @@ final class Router
 
         if (!empty($route['middleware']) && in_array('csrf', $route['middleware'], true)) {
             if (!isset($_POST['_csrf']) || !hash_equals(Csrf::token(), (string) $_POST['_csrf'])) {
+                $handler = $route['handler'] ?? null;
+                if (
+                    $handler === [ApplicationController::class, 'submit']
+                    && ApplicationController::requestExceedsPostMaxSize()
+                ) {
+                    return self::authorizedRoute($route, $ability);
+                }
+
                 self::status(403);
                 View::render('pages/error', ['title' => '403', 'message' => 'Token CSRF tidak valid atau tidak ada.']);
                 return false;
             }
         }
 
+        return self::authorizedRoute($route, $ability);
+    }
+
+    private static function authorizedRoute(array $route, string $ability): bool
+    {
         $user = Auth::user();
         $allowedRoles = Permissions::routeRoles($ability);
 

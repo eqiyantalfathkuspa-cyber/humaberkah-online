@@ -56,6 +56,24 @@ final class Config
             $requested = 'default';
         }
 
-        return $databases[$requested] ?? $databases['default'] ?? [];
+        if ($requested === 'test') {
+            $database = $databases['test'] ?? null;
+            if (!is_array($database) || ($database['name'] ?? null) !== 'humamantap_test') {
+                throw new \RuntimeException('Konfigurasi tes harus memiliki profil humamantap_test khusus.');
+            }
+        } else {
+            $database = $databases[$requested] ?? $databases['default'] ?? [];
+        }
+        if ($requested === 'test' && self::activeDatabaseKey() === 'test') {
+            $fixtureName = getenv('HUMA_TEST_DATABASE_NAME');
+            if ($fixtureName !== false && $fixtureName !== '') {
+                if (!preg_match('/^humamantap_test_[a-f0-9]{24}$/', $fixtureName)) {
+                    throw new \RuntimeException('Nama basis data fixture tes tidak valid.');
+                }
+                $database['name'] = $fixtureName;
+            }
+        }
+
+        return $database;
     }
 }

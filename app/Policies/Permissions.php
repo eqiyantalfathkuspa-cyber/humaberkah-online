@@ -9,6 +9,9 @@ final class Permissions
         'home.public' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'services.catalog' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'services.detail' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'applications.submit' => ['SISWA', 'GURU'],
+        'applications.track' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'applications.track.lookup' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'login' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'logout' => ['SISWA', 'GURU', 'ADMIN'],
         'portal.view' => ['SISWA', 'GURU'],
@@ -22,6 +25,10 @@ final class Permissions
         'admin.services.manage' => ['ADMIN'],
         'admin.services.edit' => ['ADMIN'],
         'admin.services.update' => ['ADMIN'],
+        'admin.applications.manage' => ['ADMIN'],
+        'admin.applications.detail' => ['ADMIN'],
+        'admin.applications.status' => ['ADMIN'],
+        'admin.applications.documents.download' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool

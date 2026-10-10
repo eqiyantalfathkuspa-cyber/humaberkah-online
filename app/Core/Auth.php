@@ -302,6 +302,11 @@ final class Auth
     public static function audit(?int $actorId, string $actorRole, string $action, ?string $entityType = null, ?int $entityId = null, ?string $message = null, ?string $database = null): void
     {
         $database ??= self::databaseName();
+        if ($actorId !== null && Db::one('SELECT id FROM users WHERE id = ?', [$actorId], $database) === null) {
+            $message = trim(($message ?? '') . ' Aktor pengguna tidak ditemukan (id=' . $actorId . ').');
+            $actorId = null;
+        }
+
         Db::run(
             'INSERT INTO audit_logs (actor_id, actor_role, action, entity_type, entity_id, message) VALUES (?, ?, ?, ?, ?, ?)',
             [$actorId ?: null, $actorRole ?: 'GUEST', $action, $entityType, $entityId, $message],

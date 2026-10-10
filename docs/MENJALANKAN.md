@@ -50,5 +50,6 @@ php tests/run.php
 ## 6. Catatan
 
 - File `config/config.php` bersifat lokal dan tidak masuk Git.
+- Setelah mereset basis data kerja, hapus cookie localhost di browser agar sesi lama tidak dipakai kembali.
 - Prototipe tidak boleh menggunakan data nyata, identitas, atau dokumen sensitif.
 - Semua dashboard yang menampilkan angka harus berasal dari query basis data dan bila kosong, gunakan `BELUM ADA DATA`.
