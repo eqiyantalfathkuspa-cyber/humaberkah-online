@@ -45,6 +45,8 @@
 - satu `services` memiliki banyak `before_after`
 - semua perubahan dicatat di `audit_logs`
 - `id_counters` menyimpan nomor tiket dan token berikutnya
+- `complaints.user_id` mereferensikan `users.id` dengan `ON DELETE SET NULL`; `complaint_history.complaint_id` mereferensikan `complaints.id` dengan `ON DELETE CASCADE`, dan `changed_by` mereferensikan `users.id` dengan `ON DELETE SET NULL`.
+- Status HUM-02 dan perpindahan sahnya berada di `app/Core/ComplaintWorkflow.php`; keputusan yang sama dicatat di `docs/DECISIONS.md`.
 
 ## 3. Ringkasan tabel dan kolom kunci
 
@@ -139,24 +141,33 @@ Relasi `application_documents.application_id` mereferensikan `applications.id` d
 
 ### complaints
 - `id`
-- `complaint_no`
-- `reporter_id`
-- `reporter_name`
-- `subject`
-- `body`
-- `status`
+- `ticket_no` (unik; CMP-YYYY-NNNN dari `id_counters`)
+- `track_token` (unik, token acak)
+- `jenis` (PENGADUAN, ASPIRASI, SARAN, PERTANYAAN)
+- `isi` (wajib, maksimal 4.000 karakter)
+- `kontak` (opsional, maksimal 120 karakter)
+- `user_id` (nullable untuk Guest; identitas hanya terlihat ADMIN)
+- `status` (DITERIMA, DIKLASIFIKASI, DITINDAKLANJUTI, SELESAI, DITOLAK)
+- `response_note` (tanggapan publik ADMIN, opsional)
+- `reject_reason` (wajib saat DITOLAK)
 - `created_at`
-- `resolved_by`
+- `updated_at`
+- Catatan: isi dan identitas tidak dipaparkan pada pelacakan publik; tidak ada lampiran.
 
 ### complaint_history
 - `id`
 - `complaint_id`
-- `from_status`
-- `to_status`
+- `event_type` (STATUS atau TANGGAPAN)
+- `old_status`
+- `new_status`
 - `changed_by`
-- `note`
-- `changed_at`
+- `created_at`
 - Catatan: tabel append-only; update dan delete ditolak.
+
+### complaint_ip_quotas
+- `ip_hash` (SHA-256 alamat REMOTE_ADDR; primary key, bukan alamat IP mentah)
+- `window_started_at`
+- `submission_count` (kuota awal 5 kiriman per IP per satu jam)
 
 ### surveys
 - `id`
@@ -269,7 +280,7 @@ Relasi `application_documents.application_id` mereferensikan `applications.id` d
 - `services.status`: `DRAFT`, `PUBLISHED`, `ARCHIVED`
 - `applications.channel`: `WEBSITE`, `SOSIAL_MEDIA`, `LANGSUNG`
 - `applications.status`: `DIAJUKAN`, `DIVERIFIKASI`, `DIPROSES`, `SELESAI`, `DITOLAK`
-- `complaints.status`: `BARU`, `DIPROSES`, `SELESAI`, `DITOLAK`
+- `complaints.status`: `DITERIMA`, `DIKLASIFIKASI`, `DITINDAKLANJUTI`, `SELESAI`, `DITOLAK`
 - `surveys.status`: `DRAFT`, `PUBLISHED`, `CLOSED`
 - `evidence_items.verification_status`: `BELUM_DIVERIFIKASI`, `VALID`, `PERLU_PERBAIKAN`, `DITOLAK`
 - `login_attempts.result`: `SUCCESS`, `FAILED`, `LOCKED`

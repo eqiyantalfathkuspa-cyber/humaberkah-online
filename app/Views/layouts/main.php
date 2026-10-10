@@ -6,6 +6,7 @@ $currentRole = $currentUser['role_code'] ?? $currentUser['role'] ?? null;
 $canAccessAdmin = App\Policies\Permissions::can($currentRole, 'admin.dashboard');
 $canManageServices = App\Policies\Permissions::can($currentRole, 'admin.services.manage');
 $canManageApplications = App\Policies\Permissions::can($currentRole, 'admin.applications.manage');
+$canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.complaints.manage');
 ?>
 <!doctype html>
 <html lang="id">
@@ -28,7 +29,11 @@ $canManageApplications = App\Policies\Permissions::can($currentRole, 'admin.appl
             <nav class="topnav" aria-label="Navigasi utama">
                 <a href="/">Beranda</a>
                 <a href="/layanan">Layanan</a>
+                <?php if ($currentRole !== 'ADMIN'): ?>
+                    <a href="/kahayan">KAHAYAN AMANAH</a>
+                <?php endif; ?>
                 <a href="/lacak">Cek status pengajuan</a>
+                <a href="/lacak-aduan">Lacak aduan</a>
                 <a href="/laporan">Laporan</a>
                 <?php if ($canAccessAdmin): ?>
                     <a href="/admin">Dashboard admin</a>
@@ -39,6 +44,9 @@ $canManageApplications = App\Policies\Permissions::can($currentRole, 'admin.appl
                     <?php endif; ?>
                     <?php if ($canManageApplications): ?>
                         <a href="/admin/pengajuan">Antrean pengajuan</a>
+                    <?php endif; ?>
+                    <?php if ($canManageComplaints): ?>
+                        <a href="/admin/aduan">Antrean KAHAYAN AMANAH</a>
                     <?php endif; ?>
                 <?php endif; ?>
             </nav>

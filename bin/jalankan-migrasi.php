@@ -290,6 +290,142 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 ],
             ],
         ],
+        '008_complaints.sql' => [
+            'tables' => [
+                'complaints' => [
+                    'id', 'ticket_no', 'track_token', 'jenis', 'isi', 'kontak', 'user_id',
+                    'status', 'response_note', 'reject_reason', 'created_at', 'updated_at',
+                ],
+                'complaint_history' => [
+                    'id', 'complaint_id', 'event_type', 'old_status', 'new_status', 'changed_by', 'created_at',
+                ],
+                'complaint_ip_quotas' => ['ip_hash', 'window_started_at', 'submission_count'],
+            ],
+            'columnDefinitions' => [
+                'complaints.ticket_no' => [
+                    'data_type' => 'varchar',
+                    'character_maximum_length' => 32,
+                    'is_nullable' => 'NO',
+                    'character_set_name' => 'ascii',
+                    'collation_name' => 'ascii_bin',
+                ],
+                'complaints.track_token' => [
+                    'data_type' => 'char',
+                    'character_maximum_length' => 23,
+                    'is_nullable' => 'NO',
+                    'character_set_name' => 'ascii',
+                    'collation_name' => 'ascii_bin',
+                ],
+                'complaints.jenis' => [
+                    'data_type' => 'enum',
+                    'column_type' => "enum('pengaduan','aspirasi','saran','pertanyaan')",
+                    'is_nullable' => 'NO',
+                ],
+                'complaints.isi' => [
+                    'data_type' => 'varchar',
+                    'character_maximum_length' => 4000,
+                    'is_nullable' => 'NO',
+                ],
+                'complaints.kontak' => [
+                    'data_type' => 'varchar',
+                    'character_maximum_length' => 120,
+                    'is_nullable' => 'YES',
+                ],
+                'complaints.user_id' => [
+                    'data_type' => 'bigint',
+                    'column_type' => 'bigint unsigned',
+                    'is_nullable' => 'YES',
+                ],
+                'complaints.status' => [
+                    'data_type' => 'enum',
+                    'column_type' => "enum('diterima','diklasifikasi','ditindaklanjuti','selesai','ditolak')",
+                    'is_nullable' => 'NO',
+                ],
+                'complaints.response_note' => ['data_type' => 'text', 'is_nullable' => 'YES'],
+                'complaints.reject_reason' => [
+                    'data_type' => 'varchar',
+                    'character_maximum_length' => 4000,
+                    'is_nullable' => 'YES',
+                ],
+                'complaint_history.event_type' => [
+                    'data_type' => 'enum',
+                    'column_type' => "enum('status','tanggapan')",
+                    'is_nullable' => 'NO',
+                ],
+                'complaint_history.complaint_id' => [
+                    'data_type' => 'bigint',
+                    'column_type' => 'bigint unsigned',
+                    'is_nullable' => 'NO',
+                ],
+                'complaint_history.changed_by' => [
+                    'data_type' => 'bigint',
+                    'column_type' => 'bigint unsigned',
+                    'is_nullable' => 'YES',
+                ],
+                'complaint_ip_quotas.ip_hash' => [
+                    'data_type' => 'char',
+                    'character_maximum_length' => 64,
+                    'is_nullable' => 'NO',
+                    'character_set_name' => 'ascii',
+                    'collation_name' => 'ascii_bin',
+                ],
+                'complaint_ip_quotas.submission_count' => [
+                    'data_type' => 'tinyint',
+                    'column_type' => 'tinyint unsigned',
+                    'is_nullable' => 'NO',
+                ],
+            ],
+            'indexes' => [
+                'complaints.PRIMARY',
+                'complaints.uq_complaints_ticket_no',
+                'complaints.uq_complaints_track_token',
+                'complaints.idx_complaints_status_type_created',
+                'complaints.idx_complaints_user_created',
+                'complaint_history.PRIMARY',
+                'complaint_history.idx_complaint_history_complaint',
+                'complaint_ip_quotas.PRIMARY',
+            ],
+            'indexDefinitions' => [
+                'complaints.PRIMARY' => ['columns' => ['id'], 'unique' => true],
+                'complaints.uq_complaints_ticket_no' => ['columns' => ['ticket_no'], 'unique' => true],
+                'complaints.uq_complaints_track_token' => ['columns' => ['track_token'], 'unique' => true],
+                'complaints.idx_complaints_status_type_created' => ['columns' => ['status', 'jenis', 'created_at'], 'unique' => false],
+                'complaints.idx_complaints_user_created' => ['columns' => ['user_id', 'created_at'], 'unique' => false],
+                'complaint_history.PRIMARY' => ['columns' => ['id'], 'unique' => true],
+                'complaint_history.idx_complaint_history_complaint' => ['columns' => ['complaint_id', 'id'], 'unique' => false],
+                'complaint_ip_quotas.PRIMARY' => ['columns' => ['ip_hash'], 'unique' => true],
+            ],
+            'foreignKeys' => [
+                'complaints.fk_complaints_user',
+                'complaint_history.fk_complaint_history_complaint',
+                'complaint_history.fk_complaint_history_user',
+            ],
+            'foreignKeyDefinitions' => [
+                'complaints.fk_complaints_user' => [
+                    'column' => 'user_id', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'SET NULL', 'update' => 'CASCADE',
+                ],
+                'complaint_history.fk_complaint_history_complaint' => [
+                    'column' => 'complaint_id', 'table' => 'complaints', 'referenced_column' => 'id',
+                    'delete' => 'CASCADE', 'update' => 'CASCADE',
+                ],
+                'complaint_history.fk_complaint_history_user' => [
+                    'column' => 'changed_by', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'SET NULL', 'update' => 'CASCADE',
+                ],
+            ],
+            'triggers' => ['trg_complaint_history_no_update', 'trg_complaint_history_no_delete'],
+            'triggerDefinitions' => [
+                'trg_complaint_history_no_update' => [
+                    'table' => 'complaint_history', 'event' => 'UPDATE',
+                    'statement' => "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'complaint_history append-only'",
+                ],
+                'trg_complaint_history_no_delete' => [
+                    'table' => 'complaint_history', 'event' => 'DELETE',
+                    'statement' => "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'complaint_history append-only'",
+                ],
+            ],
+        ],
     ];
     $specification = $specifications[$migrationName] ?? null;
     if ($specification === null) {

@@ -12,6 +12,10 @@ final class Permissions
         'applications.submit' => ['SISWA', 'GURU'],
         'applications.track' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'applications.track.lookup' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'complaints.submit' => ['GUEST', 'SISWA', 'GURU'],
+        'complaints.track' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'complaints.track.lookup' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
+        'portal.complaints.view' => ['SISWA', 'GURU'],
         'login' => ['GUEST', 'SISWA', 'GURU', 'ADMIN'],
         'logout' => ['SISWA', 'GURU', 'ADMIN'],
         'portal.view' => ['SISWA', 'GURU'],
@@ -29,6 +33,10 @@ final class Permissions
         'admin.applications.detail' => ['ADMIN'],
         'admin.applications.status' => ['ADMIN'],
         'admin.applications.documents.download' => ['ADMIN'],
+        'admin.complaints.manage' => ['ADMIN'],
+        'admin.complaints.detail' => ['ADMIN'],
+        'admin.complaints.status' => ['ADMIN'],
+        'admin.complaints.response' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool

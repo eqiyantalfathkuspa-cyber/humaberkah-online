@@ -5,6 +5,7 @@ namespace App\Core;
 
 use App\Controllers\AdminController;
 use App\Controllers\ApplicationController;
+use App\Controllers\ComplaintsController;
 use App\Controllers\AuthController;
 use App\Controllers\PortalController;
 use App\Controllers\ServiceController;
@@ -98,9 +99,33 @@ final class Router
                     'handler' => [ApplicationController::class, 'trackingForm'],
                     'ability' => 'applications.track',
                 ],
+                '/kahayan' => [
+                    'handler' => [ComplaintsController::class, 'form'],
+                    'ability' => 'complaints.submit',
+                ],
+                '/kahayan/diterima' => [
+                    'handler' => [ComplaintsController::class, 'submitted'],
+                    'ability' => 'complaints.submit',
+                ],
+                '/lacak-aduan' => [
+                    'handler' => [ComplaintsController::class, 'trackingForm'],
+                    'ability' => 'complaints.track',
+                ],
+                '/admin/aduan' => [
+                    'handler' => [ComplaintsController::class, 'adminIndex'],
+                    'ability' => 'admin.complaints.manage',
+                ],
+                '/admin/aduan/{id}' => [
+                    'handler' => [ComplaintsController::class, 'adminDetail'],
+                    'ability' => 'admin.complaints.detail',
+                ],
                 '/portal' => [
                     'handler' => [PortalController::class, 'index'],
                     'ability' => 'portal.view',
+                ],
+                '/portal/aduan/{id}' => [
+                    'handler' => [ComplaintsController::class, 'portalDetail'],
+                    'ability' => 'portal.complaints.view',
                 ],
                 '/admin' => [
                     'handler' => [AdminController::class, 'dashboard'],
@@ -181,6 +206,26 @@ final class Router
                     'ability' => 'applications.track.lookup',
                     'middleware' => ['csrf'],
                 ],
+                '/kahayan' => [
+                    'handler' => [ComplaintsController::class, 'submit'],
+                    'ability' => 'complaints.submit',
+                    'middleware' => ['csrf'],
+                ],
+                '/lacak-aduan' => [
+                    'handler' => [ComplaintsController::class, 'track'],
+                    'ability' => 'complaints.track.lookup',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/aduan/{id}/status' => [
+                    'handler' => [ComplaintsController::class, 'updateStatus'],
+                    'ability' => 'admin.complaints.status',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/aduan/{id}/tanggapan' => [
+                    'handler' => [ComplaintsController::class, 'updateResponse'],
+                    'ability' => 'admin.complaints.response',
+                    'middleware' => ['csrf'],
+                ],
                 '/admin/pengajuan/{id}/status' => [
                     'handler' => [ApplicationController::class, 'updateStatus'],
                     'ability' => 'admin.applications.status',
@@ -193,10 +238,19 @@ final class Router
     private static function applyRouteChecks(array $route, array $params): bool
     {
         $ability = (string) ($route['ability'] ?? 'home.public');
+        $handler = $route['handler'] ?? null;
+        if (
+            $handler === [\App\Controllers\ComplaintsController::class, 'trackingForm']
+            || $handler === [\App\Controllers\ComplaintsController::class, 'track']
+        ) {
+            if (!headers_sent()) {
+                header('Cache-Control: no-store');
+                header('Referrer-Policy: no-referrer');
+            }
+        }
 
         if (!empty($route['middleware']) && in_array('csrf', $route['middleware'], true)) {
             if (!isset($_POST['_csrf']) || !hash_equals(Csrf::token(), (string) $_POST['_csrf'])) {
-                $handler = $route['handler'] ?? null;
                 if (
                     $handler === [ApplicationController::class, 'submit']
                     && ApplicationController::requestExceedsPostMaxSize()

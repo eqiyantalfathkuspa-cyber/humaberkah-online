@@ -51,7 +51,8 @@ $standardValue = static function (string $key) use ($standards): string {
             <p class="lede">Login sebagai SISWA atau GURU untuk mengajukan layanan.</p>
         <?php endif; ?>
     <?php elseif (($service['mode'] ?? '') === 'MODUL_PENGADUAN'): ?>
-        <p class="notice">Layanan ini ditangani melalui modul pengaduan. Formulir belum tersedia.</p>
+        <p class="notice">Layanan ini ditangani melalui modul pengaduan.</p>
+        <p><a class="btn primary" href="/kahayan">Kirim aspirasi atau pengaduan</a></p>
     <?php endif; ?>
     <p><a href="/layanan">Kembali ke katalog layanan</a></p>
 </section>

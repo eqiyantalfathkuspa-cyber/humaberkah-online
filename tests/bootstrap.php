@@ -17,7 +17,7 @@ require __DIR__ . '/../app/Core/View.php';
 require __DIR__ . '/../app/Core/Router.php';
 require __DIR__ . '/../app/Policies/Permissions.php';
 require __DIR__ . '/../app/Core/IdGen.php';
-require __DIR__ . '/../app/Core/Auth.php';
+require __DIR__ . '/../app/autoload.php';
 
 use App\Core\Config;
 use App\Core\Db;

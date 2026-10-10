@@ -100,6 +100,17 @@
 - Keputusan pengajuan 4a tidak berubah: pengajuan hanya untuk SISWA dan GURU yang sudah login.
 - Status: diterapkan untuk prototipe; klasifikasi layanan KES-02/KES-04 dan penerimaan lampiran tetap MENUNGGU POKJA 6.
 
+## 2026-10-11 (Langkah 5 – KAHAYAN AMANAH / HUM-02)
+
+- Keputusan nilai awal: pelapor dapat Guest, SISWA, atau GURU; identitas dan kontak tidak wajib. Kontak dibatasi 120 karakter. Sistem tidak meminta NISN, NIP, atau dokumen.
+- Jenis masukan dibatasi pada PENGADUAN, ASPIRASI, SARAN, dan PERTANYAAN. Isi wajib dan maksimal 4.000 karakter. Lampiran tidak diterima pada langkah ini.
+- Status awal DITERIMA; perpindahan yang sah: DITERIMA → DIKLASIFIKASI atau DITOLAK; DIKLASIFIKASI → DITINDAKLANJUTI atau DITOLAK; DITINDAKLANJUTI → SELESAI. SELESAI dan DITOLAK terminal. Penolakan wajib memiliki alasan.
+- Isi serta identitas pelapor hanya terlihat oleh ADMIN. Pelapor melacak dengan kode melalui POST; halaman publik hanya menampilkan kode tiket, status, tahap, dan tanggapan publik yang ditulis ADMIN, bukan isi pengaduan.
+- Kuota awal adalah lima pengiriman per IP per satu jam. Alamat IP hanya disimpan sebagai SHA-256 untuk mengelola kuota. Risiko NAT sekolah: pengguna berbagi IP dan kuota; satu pengguna dapat menghabiskan jatah bersama.
+- Pesan anonim tidak diteruskan kepada pihak lain dan sistem tidak mengirim notifikasi email.
+- MENUNGGU POKJA 6: kebijakan identitas pelapor, SLA tindak lanjut, kategori pengaduan, serta unit/pihak yang menindaklanjuti.
+- Status: nilai awal teknis prototipe; bukan kebijakan operasional final dan tidak menyatakan terpenuhinya layanan nyata.
+
 ## Audit atomisitas limiter dan pemulihan migrasi
 
 - Keputusan implementasi limiter: kegagalan cek status tetap dihitung per alamat IP dengan jendela dan ambang konfigurasi yang sudah berlaku; pencatatan diserialisasi menggunakan MySQL `GET_LOCK` per database dan IP, lalu menghitung, menyisipkan kegagalan/kunci, dan commit dalam satu urutan kritis. Tabel percobaan menggunakan InnoDB. Nilai ambang dan durasi tidak berubah.

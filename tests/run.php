@@ -189,6 +189,7 @@ check(
         '005_applications.sql' => 6,
         '006_application_tracking_attempts.sql' => 1,
         '007_application_documents.sql' => 1,
+        '008_complaints.sql' => 7,
     ],
     json_encode($migrationStatementCounts)
 );
@@ -944,7 +945,9 @@ $lockedResult = Auth::processLogin($lockoutUser, 'Password1234', 'ADMIN');
 $lockoutBuffer = ob_get_clean();
 check('Akun terkunci setelah lima kegagalan', $lockedResult['ok'] === false && str_contains($lockedResult['message'], 'terkunci'), $lockoutBuffer . PHP_EOL . $lockedResult['message']);
 
+require_once __DIR__ . '/../app/Core/ComplaintWorkflow.php';
 require __DIR__ . '/phase2b.php';
+require __DIR__ . '/phase5.php';
 
 print PHP_EOL . ($failed === 0 ? 'SEMUA TES LOLOS' : $failed . ' TES GAGAL') . PHP_EOL;
 ob_end_flush();

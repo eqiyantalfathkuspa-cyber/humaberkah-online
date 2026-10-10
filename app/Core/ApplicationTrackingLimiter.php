@@ -31,15 +31,8 @@ final class ApplicationTrackingLimiter
         }
 
         $database ??= Auth::databaseName();
-        $pdo = Db::pdo($database);
-        $lockName = 'huma-track:' . substr(hash('sha256', $database . "\0" . $ipAddress), 0, 32);
-        $lock = $pdo->prepare('SELECT GET_LOCK(?, 10)');
-        $lock->execute([$lockName]);
-        if ((int) $lock->fetchColumn() !== 1) {
-            throw new RuntimeException('Tidak dapat memperoleh lock pencatatan cek status.');
-        }
-
-        try {
+        return self::withIpLock($ipAddress, $database, static function () use ($ipAddress, $database): bool {
+            $pdo = Db::pdo($database);
             $pdo->beginTransaction();
             try {
                 if (self::isLockedOut($ipAddress, $database)) {
@@ -75,11 +68,31 @@ final class ApplicationTrackingLimiter
                 }
                 throw $exception;
             }
+        });
+    }
+
+    public static function withIpLock(string $ipAddress, string $database, callable $operation): mixed
+    {
+        $ipAddress = trim($ipAddress);
+        if ($ipAddress === '') {
+            throw new RuntimeException('Alamat IP tidak tersedia untuk serialisasi.');
+        }
+
+        $pdo = Db::pdo($database);
+        $lockName = 'huma-track:' . substr(hash('sha256', $database . "\0" . $ipAddress), 0, 32);
+        $lock = $pdo->prepare('SELECT GET_LOCK(?, 10)');
+        $lock->execute([$lockName]);
+        if ((int) $lock->fetchColumn() !== 1) {
+            throw new RuntimeException('Tidak dapat memperoleh lock pencatatan berbasis IP.');
+        }
+
+        try {
+            return $operation();
         } finally {
             $release = $pdo->prepare('SELECT RELEASE_LOCK(?)');
             $release->execute([$lockName]);
             if ((int) $release->fetchColumn() !== 1) {
-                throw new RuntimeException('Tidak dapat melepas lock pencatatan cek status.');
+                throw new RuntimeException('Tidak dapat melepas lock pencatatan berbasis IP.');
             }
         }
     }
