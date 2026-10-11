@@ -16,10 +16,10 @@ final class RtlController
 
     public static function index(): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.rtl.view')) {
             return;
         }
-        self::setPrivateHeaders();
 
         $evaluations = self::evaluations();
         $rawStatus = $_GET['status'] ?? '';
@@ -59,11 +59,11 @@ final class RtlController
 
     public static function create(): void
     {
+        self::setPrivateHeaders();
         $actor = self::adminUser('admin.rtl.create');
         if ($actor === null) {
             return;
         }
-        self::setPrivateHeaders();
 
         $values = [
             'evaluation_id' => self::postString('evaluation_id'),
@@ -137,10 +137,10 @@ final class RtlController
 
     public static function detail(array $params = []): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.rtl.view')) {
             return;
         }
-        self::setPrivateHeaders();
         $id = self::positiveInteger((string) ($params['id'] ?? ''));
         $rtl = $id === null ? null : self::findRtl($id);
         if ($rtl === null) {
@@ -164,11 +164,11 @@ final class RtlController
 
     public static function updateStatus(array $params = []): void
     {
+        self::setPrivateHeaders();
         $actor = self::adminUser('admin.rtl.update_status');
         if ($actor === null) {
             return;
         }
-        self::setPrivateHeaders();
 
         $id = self::positiveInteger((string) ($params['id'] ?? ''));
         if ($id === null) {
@@ -277,6 +277,7 @@ final class RtlController
 
     private static function renderIndexError(string $error, int $status, array $values): void
     {
+        self::setPrivateHeaders();
         http_response_code($status);
         $evaluations = self::evaluations();
         View::render('pages/admin_rtl', [
@@ -296,6 +297,7 @@ final class RtlController
 
     private static function renderStatusError(int $id, string $error, int $status): void
     {
+        self::setPrivateHeaders();
         http_response_code($status);
         $rtl = self::findRtl($id);
         if ($rtl === null) {
@@ -318,6 +320,7 @@ final class RtlController
 
     private static function statusNotFound(): void
     {
+        self::setPrivateHeaders();
         http_response_code(404);
         View::render('pages/error', ['title' => '404', 'message' => 'RTL tidak ditemukan.']);
     }
@@ -389,8 +392,17 @@ final class RtlController
 
     private static function positiveInteger(string $value): ?int
     {
-        $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        return $id === false ? null : $id;
+        if (preg_match('/^[1-9][0-9]*$/D', $value) !== 1) {
+            return null;
+        }
+        $maximum = (string) PHP_INT_MAX;
+        if (
+            strlen($value) > strlen($maximum)
+            || (strlen($value) === strlen($maximum) && strcmp($value, $maximum) > 0)
+        ) {
+            return null;
+        }
+        return (int) $value;
     }
 
     private static function containsEvaluation(array $evaluations, int $evaluationId): bool

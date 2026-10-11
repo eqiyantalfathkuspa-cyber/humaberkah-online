@@ -17,10 +17,10 @@ final class EvidenceController
 
     public static function index(): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.evidence.view')) {
             return;
         }
-        self::setPrivateHeaders();
 
         $services = Db::all('SELECT id, code, name FROM services ORDER BY code');
         $checkpoints = Db::all('SELECT id, code, name FROM evidence_checkpoints ORDER BY code');
@@ -77,6 +77,7 @@ final class EvidenceController
 
     public static function upload(): void
     {
+        self::setPrivateHeaders();
         $actor = self::adminUser('admin.evidence.upload');
         if ($actor === null) {
             return;
@@ -169,10 +170,10 @@ final class EvidenceController
 
     public static function detail(array $params = []): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.evidence.view')) {
             return;
         }
-        self::setPrivateHeaders();
         $id = self::parameterId($params, 'id');
         $item = $id === null ? null : self::findEvidence($id);
         if ($item === null) {
@@ -189,6 +190,7 @@ final class EvidenceController
 
     public static function download(array $params = []): void
     {
+        self::setPrivateHeaders();
         $actor = self::adminUser('admin.evidence.download');
         if ($actor === null) {
             return;
@@ -250,6 +252,7 @@ final class EvidenceController
 
     public static function verify(array $params = []): void
     {
+        self::setPrivateHeaders();
         $actor = self::adminUser('admin.evidence.verify');
         if ($actor === null) {
             return;
@@ -483,6 +486,7 @@ final class EvidenceController
 
     private static function renderUploadError(string $message, int $status): void
     {
+        self::setPrivateHeaders();
         http_response_code($status);
         $services = Db::all('SELECT id, code, name FROM services ORDER BY code');
         $checkpoints = Db::all('SELECT id, code, name FROM evidence_checkpoints ORDER BY code');
@@ -514,19 +518,34 @@ final class EvidenceController
     private static function queryId(string $key): ?int
     {
         $value = self::queryString($key);
-        return $value === '' ? null : (preg_match('/^[1-9][0-9]*$/D', $value) === 1 ? (int) $value : 0);
+        return $value === '' ? null : (self::positiveInteger($value) ?? 0);
     }
 
     private static function postId(string $key): ?int
     {
         $value = $_POST[$key] ?? null;
-        return is_string($value) && preg_match('/^[1-9][0-9]*$/D', $value) === 1 ? (int) $value : null;
+        return is_string($value) ? self::positiveInteger($value) : null;
     }
 
     private static function parameterId(array $params, string $key): ?int
     {
         $value = $params[$key] ?? '';
-        return is_string($value) && preg_match('/^[1-9][0-9]*$/D', $value) === 1 ? (int) $value : null;
+        return is_string($value) ? self::positiveInteger($value) : null;
+    }
+
+    private static function positiveInteger(string $value): ?int
+    {
+        if (preg_match('/^[1-9][0-9]*$/D', $value) !== 1) {
+            return null;
+        }
+        $maximum = (string) PHP_INT_MAX;
+        if (
+            strlen($value) > strlen($maximum)
+            || (strlen($value) === strlen($maximum) && strcmp($value, $maximum) > 0)
+        ) {
+            return null;
+        }
+        return (int) $value;
     }
 
     private static function postString(string $key): string

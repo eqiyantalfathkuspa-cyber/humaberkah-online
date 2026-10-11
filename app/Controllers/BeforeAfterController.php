@@ -14,10 +14,10 @@ final class BeforeAfterController
 {
     public static function index(): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.impact.view')) {
             return;
         }
-        self::setPrivateHeaders();
 
         $services = Db::all('SELECT id, code, name FROM services ORDER BY code');
         $rtls = self::completedRtls();
@@ -64,11 +64,11 @@ final class BeforeAfterController
 
     public static function create(): void
     {
+        self::setPrivateHeaders();
         $actor = self::adminUser('admin.impact.create');
         if ($actor === null) {
             return;
         }
-        self::setPrivateHeaders();
 
         $values = [
             'service_id' => self::postString('service_id'),
@@ -185,10 +185,10 @@ final class BeforeAfterController
 
     public static function detail(array $params = []): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.impact.view')) {
             return;
         }
-        self::setPrivateHeaders();
         $id = self::positiveInteger((string) ($params['id'] ?? ''));
         $record = $id === null ? null : self::findRecord($id);
         if ($record === null) {
@@ -240,6 +240,7 @@ final class BeforeAfterController
 
     private static function renderIndexError(string $error, int $status, array $values): void
     {
+        self::setPrivateHeaders();
         http_response_code($status);
         $services = Db::all('SELECT id, code, name FROM services ORDER BY code');
         View::render('pages/admin_before_after', [
@@ -346,8 +347,17 @@ final class BeforeAfterController
 
     private static function positiveInteger(string $value): ?int
     {
-        $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        return $id === false ? null : $id;
+        if (preg_match('/^[1-9][0-9]*$/D', $value) !== 1) {
+            return null;
+        }
+        $maximum = (string) PHP_INT_MAX;
+        if (
+            strlen($value) > strlen($maximum)
+            || (strlen($value) === strlen($maximum) && strcmp($value, $maximum) > 0)
+        ) {
+            return null;
+        }
+        return (int) $value;
     }
 
     private static function authorized(string $ability): bool

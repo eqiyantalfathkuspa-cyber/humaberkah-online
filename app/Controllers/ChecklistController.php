@@ -12,6 +12,7 @@ final class ChecklistController
 {
     public static function index(): void
     {
+        self::setPrivateHeaders();
         $user = Auth::user();
         $role = (string) ($user['role_code'] ?? $user['role'] ?? 'GUEST');
         if (!Permissions::can($role, 'admin.checklist.view')) {
@@ -27,12 +28,17 @@ final class ChecklistController
             return;
         }
 
-        if (!headers_sent()) {
-            header('Cache-Control: no-store');
-        }
         View::render('pages/admin_checklist', [
             'title' => 'Checklist Eviden',
             ...ChecklistService::matrix(),
         ]);
+    }
+
+    private static function setPrivateHeaders(): void
+    {
+        if (!headers_sent()) {
+            header('Cache-Control: no-store');
+            header('Referrer-Policy: no-referrer');
+        }
     }
 }

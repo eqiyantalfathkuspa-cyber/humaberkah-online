@@ -961,6 +961,7 @@ require __DIR__ . '/phase7b.php';
 require __DIR__ . '/phase8b.php';
 require __DIR__ . '/phase8c.php';
 require __DIR__ . '/phase8d.php';
+require __DIR__ . '/phase-post-audit.php';
 
 print PHP_EOL . ($failed === 0 ? 'SEMUA TES LOLOS' : $failed . ' TES GAGAL') . PHP_EOL;
 ob_end_flush();

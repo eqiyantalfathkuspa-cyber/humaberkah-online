@@ -204,3 +204,11 @@
 - Halaman menyatakan catatan deskriptif internal prototipe, bukan bukti sebab-akibat, bukan bukti dampak terukur, dan bukan klaim kepatuhan PMPZI/LKE.
 - Definisi dan kriteria before/after serta isi halaman blueprint 10, 14, 15, dan 16 belum diverifikasi; MENUNGGU KONFIRMASI POKJA 6.
 - Status: disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.
+
+## Keterbatasan implementasi yang diketahui (Langkah 7B–8D)
+
+- Berkas eviden dapat menjadi orphan bila proses mati setelah pemindahan berkas ke storage dan sebelum transaksi database commit. Prosedur rekonsiliasi berkas orphan menunggu Pokja 6.
+- Penanda “dikoreksi oleh” memakai `GROUP_CONCAT`, yang dibatasi oleh `group_concat_max_len` MySQL (nilai bawaan 1024 byte). Daftar koreksi dapat terpotong bila satu catatan dikoreksi sangat banyak kali.
+- Append-only pada tabel catatan MADANI (`madani_evaluations`, `madani_rtl`, `madani_rtl_status_log`, dan `madani_before_after`) ditegakkan pada lapisan aplikasi dan melalui ketiadaan rute edit/hapus, bukan oleh database. Untuk deployment, gunakan akun database aplikasi khusus dengan hak minimum serta tanpa `DELETE`/`UPDATE` pada tabel-tabel catatan tersebut.
+- Batas PHP `upload_max_filesize`, `post_max_size`, dan `max_file_uploads` pada PHP-FPM/web server harus diperiksa terpisah dari nilai PHP CLI.
+- Zona waktu PHP server memengaruhi validasi tanggal masa depan pada catatan before/after.

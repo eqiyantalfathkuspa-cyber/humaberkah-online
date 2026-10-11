@@ -14,10 +14,10 @@ final class EvaluationController
 {
     public static function index(): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.evaluations.view')) {
             return;
         }
-        self::setPrivateHeaders();
 
         $services = Db::all('SELECT id, code, name FROM services ORDER BY code');
         $serviceId = self::queryId('service_id');
@@ -42,11 +42,11 @@ final class EvaluationController
 
     public static function create(): void
     {
+        self::setPrivateHeaders();
         $actor = self::adminUser('admin.evaluations.create');
         if ($actor === null) {
             return;
         }
-        self::setPrivateHeaders();
 
         $values = [
             'service_id' => self::postString('service_id'),
@@ -140,10 +140,10 @@ final class EvaluationController
 
     public static function detail(array $params = []): void
     {
+        self::setPrivateHeaders();
         if (!self::authorized('admin.evaluations.view')) {
             return;
         }
-        self::setPrivateHeaders();
         $id = self::positiveInteger((string) ($params['id'] ?? ''));
         $evaluation = $id === null ? null : Db::one(
             'SELECT e.id, e.service_id, e.period_start, e.period_end, e.summary, e.findings, e.conclusion, e.corrects_evaluation_id, e.created_by, e.created_at, s.code AS service_code, s.name AS service_name, author.full_name AS author_name, (SELECT GROUP_CONCAT(correction.id ORDER BY correction.id SEPARATOR \',\') FROM madani_evaluations AS correction WHERE correction.corrects_evaluation_id = e.id) AS corrected_by_ids FROM madani_evaluations AS e INNER JOIN services AS s ON s.id = e.service_id INNER JOIN users AS author ON author.id = e.created_by WHERE e.id = ?',
@@ -203,6 +203,7 @@ final class EvaluationController
 
     private static function renderIndexError(string $error, int $status, array $values): void
     {
+        self::setPrivateHeaders();
         http_response_code($status);
         $services = Db::all('SELECT id, code, name FROM services ORDER BY code');
         View::render('pages/admin_evaluations', [
@@ -230,7 +231,14 @@ final class EvaluationController
 
     private static function queryId(string $key): ?int
     {
-        return self::positiveInteger(is_string($_GET[$key] ?? null) ? $_GET[$key] : '');
+        if (!array_key_exists($key, $_GET)) {
+            return null;
+        }
+        if (!is_string($_GET[$key])) {
+            return 0;
+        }
+        $value = trim($_GET[$key]);
+        return $value === '' ? null : (self::positiveInteger($value) ?? 0);
     }
 
     private static function postString(string $key, bool $trim = true): string
@@ -244,8 +252,17 @@ final class EvaluationController
 
     private static function positiveInteger(string $value): ?int
     {
-        $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        return $id === false ? null : $id;
+        if (preg_match('/^[1-9][0-9]*$/D', $value) !== 1) {
+            return null;
+        }
+        $maximum = (string) PHP_INT_MAX;
+        if (
+            strlen($value) > strlen($maximum)
+            || (strlen($value) === strlen($maximum) && strcmp($value, $maximum) > 0)
+        ) {
+            return null;
+        }
+        return (int) $value;
     }
 
     private static function containsService(array $services, int $serviceId): bool
