@@ -6,6 +6,7 @@ namespace App\Core;
 use App\Controllers\AdminController;
 use App\Controllers\ApplicationController;
 use App\Controllers\ComplaintsController;
+use App\Controllers\EvidenceController;
 use App\Controllers\AuthController;
 use App\Controllers\PortalController;
 use App\Controllers\ServiceController;
@@ -115,6 +116,18 @@ final class Router
                 '/admin/survei/ekspor' => [
                     'handler' => [SurveyController::class, 'export'],
                     'ability' => 'admin.surveys.export',
+                ],
+                '/admin/eviden' => [
+                    'handler' => [EvidenceController::class, 'index'],
+                    'ability' => 'admin.evidence.view',
+                ],
+                '/admin/eviden/{id}/berkas' => [
+                    'handler' => [EvidenceController::class, 'download'],
+                    'ability' => 'admin.evidence.download',
+                ],
+                '/admin/eviden/{id}' => [
+                    'handler' => [EvidenceController::class, 'detail'],
+                    'ability' => 'admin.evidence.view',
                 ],
                 '/kahayan' => [
                     'handler' => [ComplaintsController::class, 'form'],
@@ -251,6 +264,16 @@ final class Router
                 '/admin/pengajuan/{id}/status' => [
                     'handler' => [ApplicationController::class, 'updateStatus'],
                     'ability' => 'admin.applications.status',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/eviden' => [
+                    'handler' => [EvidenceController::class, 'upload'],
+                    'ability' => 'admin.evidence.upload',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/eviden/{id}/verifikasi' => [
+                    'handler' => [EvidenceController::class, 'verify'],
+                    'ability' => 'admin.evidence.verify',
                     'middleware' => ['csrf'],
                 ],
             ],

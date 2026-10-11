@@ -40,6 +40,10 @@ final class Permissions
         'admin.complaints.response' => ['ADMIN'],
         'admin.surveys.view' => ['ADMIN'],
         'admin.surveys.export' => ['ADMIN'],
+        'admin.evidence.view' => ['ADMIN'],
+        'admin.evidence.upload' => ['ADMIN'],
+        'admin.evidence.download' => ['ADMIN'],
+        'admin.evidence.verify' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool

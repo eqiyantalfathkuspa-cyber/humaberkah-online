@@ -7,3 +7,6 @@ vendor/
 .DS_Store
 
 config/config.php
+
+*.sql
+!database/migrations/*.sql

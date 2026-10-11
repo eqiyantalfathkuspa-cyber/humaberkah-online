@@ -50,6 +50,7 @@ $canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.compla
                         <a href="/admin/aduan">Antrean KAHAYAN AMANAH</a>
                     <?php endif; ?>
                     <a href="/admin/survei">Rekap survei</a>
+                    <a href="/admin/eviden">Eviden</a>
                 <?php endif; ?>
             </nav>
         </header>

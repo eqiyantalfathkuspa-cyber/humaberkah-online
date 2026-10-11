@@ -628,6 +628,132 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 ],
             ],
         ],
+        '011_evidence_foundation.sql' => [
+            'tables' => [
+                'evidence_checkpoints' => ['id', 'code', 'name'],
+                'evidence_items' => [
+                    'id', 'service_id', 'checkpoint_id', 'status', 'stored_name',
+                    'original_name', 'mime', 'size_bytes', 'sha256', 'uploaded_by',
+                    'verified_by', 'verified_at', 'review_reason', 'created_at',
+                ],
+            ],
+            'tableDefinitions' => [
+                'evidence_checkpoints' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+                'evidence_items' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+            ],
+            'columnDefinitions' => [
+                'evidence_checkpoints.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'evidence_checkpoints.code' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 16, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'ascii', 'collation_name' => 'ascii_bin',
+                ],
+                'evidence_checkpoints.name' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 160, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'evidence_items.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'evidence_items.service_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'evidence_items.checkpoint_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'evidence_items.status' => [
+                    'data_type' => 'enum', 'column_type' => "enum('diunggah','terverifikasi','perlu_perbaikan')",
+                    'is_nullable' => 'NO', 'default_value' => 'DIUNGGAH', 'extra' => '',
+                    'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'evidence_items.stored_name' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 68, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'ascii', 'collation_name' => 'ascii_bin',
+                ],
+                'evidence_items.original_name' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 255, 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'evidence_items.mime' => [
+                    'data_type' => 'enum', 'column_type' => "enum('image/jpeg','image/png')", 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'evidence_items.size_bytes' => [
+                    'data_type' => 'int', 'column_type' => 'int unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'evidence_items.sha256' => [
+                    'data_type' => 'char', 'character_maximum_length' => 64, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'ascii', 'collation_name' => 'ascii_bin',
+                ],
+                'evidence_items.uploaded_by' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'evidence_items.verified_by' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'evidence_items.verified_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'evidence_items.review_reason' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 500, 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'evidence_items.created_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => 'CURRENT_TIMESTAMP', 'extra' => 'DEFAULT_GENERATED',
+                ],
+            ],
+            'indexes' => [
+                'evidence_checkpoints.PRIMARY',
+                'evidence_checkpoints.uq_evidence_checkpoints_code',
+                'evidence_items.PRIMARY',
+                'evidence_items.uq_evidence_items_stored_name',
+                'evidence_items.idx_evidence_items_service_checkpoint_status',
+            ],
+            'indexDefinitions' => [
+                'evidence_checkpoints.PRIMARY' => ['columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null]],
+                'evidence_checkpoints.uq_evidence_checkpoints_code' => ['columns' => ['code'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null]],
+                'evidence_items.PRIMARY' => ['columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null]],
+                'evidence_items.uq_evidence_items_stored_name' => ['columns' => ['stored_name'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null]],
+                'evidence_items.idx_evidence_items_service_checkpoint_status' => [
+                    'columns' => ['service_id', 'checkpoint_id', 'status', 'created_at'],
+                    'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null, null, null, null],
+                ],
+            ],
+            'foreignKeys' => [
+                'evidence_items.fk_evidence_items_service',
+                'evidence_items.fk_evidence_items_checkpoint',
+                'evidence_items.fk_evidence_items_uploaded_by',
+                'evidence_items.fk_evidence_items_verified_by',
+            ],
+            'foreignKeyDefinitions' => [
+                'evidence_items.fk_evidence_items_service' => [
+                    'column' => 'service_id', 'table' => 'services', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'evidence_items.fk_evidence_items_checkpoint' => [
+                    'column' => 'checkpoint_id', 'table' => 'evidence_checkpoints', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'evidence_items.fk_evidence_items_uploaded_by' => [
+                    'column' => 'uploaded_by', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'evidence_items.fk_evidence_items_verified_by' => [
+                    'column' => 'verified_by', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+            ],
+        ],
     ];
     $specification = $specifications[$migrationName] ?? null;
     if ($specification === null) {

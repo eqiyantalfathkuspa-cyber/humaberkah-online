@@ -40,8 +40,10 @@
 - satu `services` memiliki banyak `surveys`
 - satu `services` bermode INFORMASI memiliki banyak `information_surveys`
 - satu `services` memiliki banyak bucket `information_survey_ip_quotas`, masing-masing dibedakan oleh hash IP
-- satu `services` memiliki banyak `evidence_links`
-- satu `evidence_checkpoints` memiliki banyak `evidence_links`
+- satu `services` memiliki banyak `evidence_items`
+- satu `evidence_checkpoints` memiliki banyak `evidence_items`
+- satu `users` dapat mengunggah banyak `evidence_items` melalui `uploaded_by`
+- satu `users` dapat memutuskan banyak `evidence_items` melalui `verified_by`
 - satu `applications` memiliki banyak `evaluations`
 - satu `complaints` memiliki banyak `follow_up_actions`
 - satu `services` memiliki banyak `before_after`
@@ -202,23 +204,10 @@ Relasi `application_documents.application_id` mereferensikan `applications.id` d
 - `submission_count` (maksimal tiga kiriman per IP per layanan per satu jam sebagai nilai awal)
 
 ### evidence_items
-- `id`
-- `service_id`
-- `title`
-- `file_name`
-- `storage_path`
-- `uploaded_by`
-- `verified_by`
-- `verification_status`
-- `created_at`
-- `verified_at`
+- Definisi konseptual sebelumnya telah digantikan oleh struktur aktual pada bagian `evidence_items (migrasi 011)` di bawah.
 
 ### evidence_checkpoints
-- `id`
-- `code`
-- `label`
-- `description`
-- `sort_order`
+- Definisi konseptual sebelumnya telah digantikan oleh struktur aktual pada bagian `evidence_checkpoints (migrasi 011)` di bawah.
 
 - 9 titik pembuktian yang harus tersedia secara konseptual:
   1. EV-01: Identitas layanan
@@ -238,6 +227,28 @@ Relasi `application_documents.application_id` mereferensikan `applications.id` d
 - `evidence_id`
 - `created_at`
 - Catatan: relasi many-to-many antara layanan dan checkpoint, lalu ke eviden.
+
+**Catatan implementasi Langkah 7B:** tabel `evidence_links` di atas masih model konseptual dan belum dibuat. Migrasi 011 mengikat setiap `evidence_items` langsung ke tepat satu `service_id` dan satu `checkpoint_id`; pasangan tersebut dapat memiliki banyak eviden. Tidak ada tabel checklist/sel pada 7B.
+
+### evidence_checkpoints (migrasi 011)
+- `id` (`BIGINT UNSIGNED`, PK)
+- `code` (`EV-01` sampai `EV-09`, unik)
+- `name`
+
+Seed label: EV-01 Identitas layanan; EV-02 Dokumen persyaratan; EV-03 Proses verifikasi awal; EV-04 Pelaksanaan SOP; EV-05 Hasil layanan; EV-06 Umpan balik pelanggan; EV-07 Evaluasi internal; EV-08 RTL / tindak lanjut; EV-09 Dampak layanan. Kriteria bukti per checkpoint belum ditetapkan dan MENUNGGU POKJA 6.
+
+### evidence_items (migrasi 011)
+- `id` (`BIGINT UNSIGNED`, PK)
+- `service_id` → `services.id` (`ON DELETE RESTRICT`)
+- `checkpoint_id` → `evidence_checkpoints.id` (`ON DELETE RESTRICT`)
+- `status`: `DIUNGGAH`, `TERVERIFIKASI`, `PERLU_PERBAIKAN`
+- `stored_name` (nama simpan acak unik), `original_name` (nama tersanitasi nullable)
+- `mime` (`image/jpeg` atau `image/png`), `size_bytes`, `sha256`
+- `uploaded_by` → `users.id` (`ON DELETE RESTRICT`)
+- `verified_by` → `users.id` (nullable, `ON DELETE RESTRICT`)
+- `verified_at`, `review_reason`, `created_at`
+
+Satu eviden adalah satu berkas dan satu pasangan layanan-checkpoint; maksimal tiga berkas JPG/PNG per unggahan, masing-masing maksimal 5 MiB, disimpan semua-atau-tidak-sama-sekali. Hanya status `DIUNGGAH` yang dapat diputuskan dan keputusan final; perbaikan menggunakan unggahan baru tanpa versioning. Alasan `PERLU_PERBAIKAN` wajib, maksimal 500 karakter UTF-8 valid. Pengunggah boleh memverifikasi sendiri; daftar/detail memberi penanda tersebut. Hanya ADMIN dapat mengakses, mengelola, dan mengunduh. Audit hanya menyimpan aktor, aksi, ID eviden, layanan, checkpoint, status, MIME, ukuran, dan SHA-256; tidak menyimpan isi, nama asli, atau alasan.
 
 ### evaluations
 - `id`
@@ -286,7 +297,7 @@ Relasi `application_documents.application_id` mereferensikan `applications.id` d
 - `application_documents.application_id` wajib mereferensikan `applications.id`; identitas pengunggah tidak disimpan terpisah karena pemilik tercatat pada pengajuan.
 - `application_history` dan `complaint_history` harus bersifat append-only; trigger `BEFORE UPDATE` dan `BEFORE DELETE` menolak perubahan.
 - Setiap tabel riwayat minimal mencatat `from_status`, `to_status`, `changed_by`, `note`, `changed_at`.
-- `evidence_links` harus menjaga banyak ke banyak secara eksplisit: satu layanan bisa punya banyak checkpoint, dan satu checklist bisa terhubung ke banyak eviden.
+- Pada migrasi 011, relasi layanan-checkpoint-eviden langsung dinyatakan oleh FK `evidence_items.service_id` dan `evidence_items.checkpoint_id`; `evidence_links` belum diimplementasikan.
 
 ## 5. ENUM lengkap (konsep awal)
 

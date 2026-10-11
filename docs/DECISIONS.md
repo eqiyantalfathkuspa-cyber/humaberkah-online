@@ -153,3 +153,13 @@
 - Tabel `surveys` tidak diubah agar signature migrasi 009 tetap berlaku. Respons survei INFORMASI disimpan terpisah di `information_surveys`.
 - Kuota awal survei INFORMASI adalah maksimal tiga kiriman per IP per layanan per jam. Hanya hash alamat IP disimpan; kuota ini terpisah dari kuota survei berkode. Risiko NAT sekolah: beberapa pengguna pada IP yang sama berbagi kuota untuk layanan yang sama.
 - Status: keputusan teknis sementara prototipe, MENUNGGU KONFIRMASI POKJA 6.
+
+## 2026-10-11 (Langkah 7B – Eviden)
+
+- Keputusan sementara disetujui oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6: 99 sel checklist pada tahap 7C direncanakan sebagai 11 layanan katalog × 9 checkpoint EV-01 sampai EV-09; semua checkpoint berlaku untuk semua layanan. Label diambil persis dari `docs/ERD.md`. Kriteria bukti per checkpoint belum ditetapkan dan tidak boleh dikarang.
+- Satu eviden adalah satu berkas yang terikat pada satu pasangan layanan-checkpoint; satu pasangan dapat memiliki banyak eviden. Satu unggahan menerima maksimal tiga berkas dan menyimpan seluruh berkas dalam satu transaksi (semua berhasil atau tidak ada).
+- Status eviden adalah `DIUNGGAH`, `TERVERIFIKASI`, atau `PERLU_PERBAIKAN`. Hanya status `DIUNGGAH` dapat diputuskan. Keputusan final; tindak lanjut dilakukan dengan mengunggah eviden baru tanpa versioning. `PERLU_PERBAIKAN` wajib beralasan maksimal 500 karakter UTF-8 valid.
+- Hanya ADMIN dapat mengakses fungsi eviden. Pengunggah boleh memverifikasi evidennya sendiri. `uploaded_by` dan `verified_by` selalu direkam; antarmuka memberi penanda “diverifikasi oleh pengunggah yang sama” bila ID keduanya sama.
+- Berkas sementara dibatasi pada JPG/PNG, maksimal 5 MiB per berkas dan tiga berkas per unggahan. PDF dan format lain ditolak; kebijakan format dapat ditinjau terpisah oleh Pokja 6.
+- Pengujian hanya memakai data dan berkas fiktif. Retensi, pemulihan berkas orphan, dan kriteria bukti per checkpoint MENUNGGU POKJA 6. Tidak ada klaim kepatuhan PMPZI/LKE.
+- Audit hanya mencatat metadata: aktor, aksi, ID eviden, layanan, checkpoint, status, MIME, ukuran, dan SHA-256. Isi berkas, nama asli, serta alasan perbaikan tidak dicatat dalam audit.
