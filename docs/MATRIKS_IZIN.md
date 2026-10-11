@@ -52,6 +52,9 @@
 | GET /admin/eviden/{id}/berkas (`admin.evidence.download`) | TIDAK | TIDAK | TIDAK | YA |
 | POST /admin/eviden/{id}/verifikasi (`admin.evidence.verify`, CSRF) | TIDAK | TIDAK | TIDAK | YA |
 | GET /admin/checklist-99 (`admin.checklist.view`) | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/evaluasi (`admin.evaluations.view`) | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/evaluasi (`admin.evaluations.create`, CSRF) | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/evaluasi/{id} (`admin.evaluations.view`) | TIDAK | TIDAK | TIDAK | YA |
 | GET /portal/aduan/{id} (tiket milik sendiri) | TIDAK | YA | YA | TIDAK |
 | GET /pengajuan/diterima | TIDAK | YA | YA | TIDAK |
 | GET /admin/pengajuan | TIDAK | TIDAK | TIDAK | YA |
@@ -83,6 +86,7 @@ Catatan implementasi Tahap 2A:
 - Rute eviden memakai kemampuan `admin.evidence.view`, `admin.evidence.upload`, `admin.evidence.download`, dan `admin.evidence.verify`; keempatnya hanya untuk ADMIN. POST unggah dan verifikasi wajib CSRF. Izin diperiksa di server lewat `Permissions.php`.
 - Satu eviden adalah satu berkas untuk satu layanan dan satu checkpoint. Status hanya dapat diputuskan dari `DIUNGGAH`, keputusan final, dan perbaikan dilakukan dengan unggahan baru. Pengunggah dapat memverifikasi sendiri; tampilan menandainya secara eksplisit. Detail dan unduhan hanya tersedia bagi ADMIN.
 - GET `/admin/checklist-99` memakai kemampuan `admin.checklist.view` (ADMIN). Checklist membentuk pasangan layanan-checkpoint dari data aktual, menghitung status dari `evidence_items`, dan tidak menyimpan baris sel atau menyediakan rute POST.
+- Catatan evaluasi per layanan-periode memakai `admin.evaluations.view` untuk GET daftar/detail dan `admin.evaluations.create` untuk POST (ADMIN saja, CSRF). Data append-only; koreksi dibuat sebagai catatan baru yang merujuk evaluasi sebelumnya pada layanan yang sama. Tidak ada rute edit/hapus, skor, atau persentase.
 
 ## 3. Aturan khusus
 

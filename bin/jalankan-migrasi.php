@@ -754,6 +754,96 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 ],
             ],
         ],
+        '012_madani_evaluations.sql' => [
+            'tables' => [
+                'madani_evaluations' => [
+                    'id', 'service_id', 'period_start', 'period_end', 'summary',
+                    'findings', 'conclusion', 'corrects_evaluation_id', 'created_by', 'created_at',
+                ],
+            ],
+            'tableDefinitions' => [
+                'madani_evaluations' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+            ],
+            'columnDefinitions' => [
+                'madani_evaluations.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'madani_evaluations.service_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_evaluations.period_start' => [
+                    'data_type' => 'date', 'column_type' => 'date', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_evaluations.period_end' => [
+                    'data_type' => 'date', 'column_type' => 'date', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_evaluations.summary' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 2000, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_evaluations.findings' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 2000, 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_evaluations.conclusion' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 1000, 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_evaluations.corrects_evaluation_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_evaluations.created_by' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_evaluations.created_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => 'CURRENT_TIMESTAMP', 'extra' => 'DEFAULT_GENERATED',
+                ],
+            ],
+            'indexes' => [
+                'madani_evaluations.PRIMARY',
+                'madani_evaluations.idx_madani_evaluations_service_period',
+                'madani_evaluations.idx_madani_evaluations_corrects',
+            ],
+            'indexDefinitions' => [
+                'madani_evaluations.PRIMARY' => [
+                    'columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'madani_evaluations.idx_madani_evaluations_service_period' => [
+                    'columns' => ['service_id', 'period_start', 'period_end'],
+                    'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null, null, null],
+                ],
+                'madani_evaluations.idx_madani_evaluations_corrects' => [
+                    'columns' => ['corrects_evaluation_id'],
+                    'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+            ],
+            'foreignKeys' => [
+                'madani_evaluations.fk_madani_evaluations_service',
+                'madani_evaluations.fk_madani_evaluations_corrects',
+                'madani_evaluations.fk_madani_evaluations_created_by',
+            ],
+            'foreignKeyDefinitions' => [
+                'madani_evaluations.fk_madani_evaluations_service' => [
+                    'column' => 'service_id', 'table' => 'services', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_evaluations.fk_madani_evaluations_corrects' => [
+                    'column' => 'corrects_evaluation_id', 'table' => 'madani_evaluations', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_evaluations.fk_madani_evaluations_created_by' => [
+                    'column' => 'created_by', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+            ],
+        ],
     ];
     $specification = $specifications[$migrationName] ?? null;
     if ($specification === null) {

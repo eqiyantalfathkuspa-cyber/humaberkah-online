@@ -8,6 +8,7 @@ use App\Controllers\ApplicationController;
 use App\Controllers\ComplaintsController;
 use App\Controllers\ChecklistController;
 use App\Controllers\EvidenceController;
+use App\Controllers\EvaluationController;
 use App\Controllers\AuthController;
 use App\Controllers\PortalController;
 use App\Controllers\ServiceController;
@@ -125,6 +126,14 @@ final class Router
                 '/admin/checklist-99' => [
                     'handler' => [ChecklistController::class, 'index'],
                     'ability' => 'admin.checklist.view',
+                ],
+                '/admin/evaluasi' => [
+                    'handler' => [EvaluationController::class, 'index'],
+                    'ability' => 'admin.evaluations.view',
+                ],
+                '/admin/evaluasi/{id}' => [
+                    'handler' => [EvaluationController::class, 'detail'],
+                    'ability' => 'admin.evaluations.view',
                 ],
                 '/admin/eviden/{id}/berkas' => [
                     'handler' => [EvidenceController::class, 'download'],
@@ -279,6 +288,11 @@ final class Router
                 '/admin/eviden/{id}/verifikasi' => [
                     'handler' => [EvidenceController::class, 'verify'],
                     'ability' => 'admin.evidence.verify',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/evaluasi' => [
+                    'handler' => [EvaluationController::class, 'create'],
+                    'ability' => 'admin.evaluations.create',
                     'middleware' => ['csrf'],
                 ],
             ],

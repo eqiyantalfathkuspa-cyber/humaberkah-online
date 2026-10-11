@@ -18,7 +18,7 @@
 - evidence_items
 - evidence_checkpoints
 - evidence_links
-- evaluations
+- madani_evaluations
 - follow_up_actions
 - before_after
 - audit_logs
@@ -44,7 +44,9 @@
 - satu `evidence_checkpoints` memiliki banyak `evidence_items`
 - satu `users` dapat mengunggah banyak `evidence_items` melalui `uploaded_by`
 - satu `users` dapat memutuskan banyak `evidence_items` melalui `verified_by`
-- satu `applications` memiliki banyak `evaluations`
+- satu `services` memiliki banyak `madani_evaluations`
+- satu `users` mencatat banyak `madani_evaluations` melalui `created_by`
+- satu `madani_evaluations` dapat dikoreksi oleh banyak catatan baru melalui `corrects_evaluation_id`; referensi koreksi wajib pada layanan yang sama
 - satu `complaints` memiliki banyak `follow_up_actions`
 - satu `services` memiliki banyak `before_after`
 - semua perubahan dicatat di `audit_logs`
@@ -254,13 +256,19 @@ Satu eviden adalah satu berkas dan satu pasangan layanan-checkpoint; maksimal ti
 
 Checklist membentuk seluruh pasangan `services` × `evidence_checkpoints` dengan CROSS JOIN. Tidak ada tabel sel atau status checklist tersimpan. Status dihitung dari jumlah `evidence_items` dengan prioritas `VALID` (ada `TERVERIFIKASI`), lalu `ADA_BELUM_VERIFIKASI` (ada `DIUNGGAH`), lalu `PERLU_PERBAIKAN` (hanya ada status itu), dan `KOSONG` bila tidak ada eviden. Layanan nonaktif tetap termasuk.
 
-### evaluations
+### madani_evaluations
 - `id`
-- `application_id`
-- `evaluator_id`
-- `score`
-- `notes`
+- `service_id`
+- `period_start`
+- `period_end`
+- `summary`
+- `findings` (nullable)
+- `conclusion` (nullable)
+- `corrects_evaluation_id` (nullable self-reference)
+- `created_by`
 - `created_at`
+
+Skema implementasi migrasi 012 menggantikan entitas `evaluations` konseptual di blueprint/ERD. Evaluasi adalah catatan teks per layanan per periode, tanpa skor, angka penilaian, atau persentase. Tidak ada UNIQUE untuk layanan-periode sehingga catatan dengan periode sama diperbolehkan. Catatan append-only; koreksi dibuat sebagai baris baru yang merujuk catatan lama pada layanan yang sama. Audit hanya berisi metadata dan tidak menyalin ringkasan, temuan, atau kesimpulan. Kriteria evaluasi/indikator tetap menunggu konfirmasi Pokja 6.
 
 ### follow_up_actions
 - `id`

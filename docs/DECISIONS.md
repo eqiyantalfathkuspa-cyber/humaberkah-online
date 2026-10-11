@@ -171,3 +171,13 @@
 - Checklist adalah instrumen kendali internal prototipe, bukan indikator resmi LKE/PMPZI. Tidak menampilkan persentase atau skor.
 - Layanan nonaktif tetap disertakan dalam matriks dan diberi label nonaktif. Jumlah layanan dan sel aktual harus dilaporkan dari fixture/data yang diperiksa; rencana 11 layanan × 9 checkpoint menghasilkan 99 hanya bila data aktual cocok.
 - Status keputusan: sementara disetujui oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.
+
+## 2026-10-11 (Langkah 8B – Evaluasi catatan terstruktur)
+
+- Pemetaan penamaan disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6: blueprint menyebut MADANI sebagai Tahap 7 dan pengerasan sebagai Tahap 8; proyek ini menamai pekerjaan MADANI Langkah 8 (8B evaluasi, 8C RTL, 8D before/after). Langkah 8F dibatalkan; audit dan sinkronisasi dokumen menjadi bagian akhir tiap langkah. Laporan/ekspor/dashboard MADANI (8E) ditunda sampai 8B–8D selesai dan diputuskan perlu.
+- Evaluasi sementara disetujui sebagai catatan teks per layanan per periode (tanggal mulai dan akhir), dengan ringkasan wajib, temuan opsional, dan kesimpulan opsional. Tidak ada skor, angka penilaian, atau persentase dan tidak ada tumpang tindih makna dengan survei kepuasan.
+- Hanya ADMIN dapat mencatat dan melihat evaluasi. Satu layanan boleh memiliki beberapa catatan pada periode yang sama; tidak ada pencegahan duplikat berdasarkan periode.
+- Catatan bersifat append-only: tidak ada edit atau hapus. Koreksi dilakukan dengan catatan baru yang merujuk catatan lama melalui `corrects_evaluation_id`; layanan wajib sama, catatan lama tetap dan menampilkan penanda koreksi.
+- Hanya data fiktif yang boleh digunakan. Dilarang memasukkan data pribadi, identitas siswa, atau informasi BK. Audit hanya berisi aktor, aksi, ID evaluasi, layanan, periode, dan ID catatan yang dikoreksi; audit tidak memuat ringkasan, temuan, atau kesimpulan.
+- Halaman menyatakan catatan internal prototipe dan tidak mengklaim kepatuhan PMPZI/LKE. Definisi evaluasi, kriteria, dan indikator menunggu Pokja 6; isi halaman blueprint 10, 14, 15, dan 16 belum diverifikasi.
+- Status: disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.

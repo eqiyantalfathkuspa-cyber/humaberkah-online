@@ -193,6 +193,7 @@ check(
         '009_surveys.sql' => 2,
         '010_information_surveys.sql' => 2,
         '011_evidence_foundation.sql' => 3,
+        '012_madani_evaluations.sql' => 1,
     ],
     json_encode($migrationStatementCounts)
 );
@@ -955,6 +956,7 @@ require __DIR__ . '/phase6.php';
 require __DIR__ . '/phase6b.php';
 require __DIR__ . '/phase7c.php';
 require __DIR__ . '/phase7b.php';
+require __DIR__ . '/phase8b.php';
 
 print PHP_EOL . ($failed === 0 ? 'SEMUA TES LOLOS' : $failed . ' TES GAGAL') . PHP_EOL;
 ob_end_flush();

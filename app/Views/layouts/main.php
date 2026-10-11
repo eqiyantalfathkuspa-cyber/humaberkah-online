@@ -8,6 +8,7 @@ $canManageServices = App\Policies\Permissions::can($currentRole, 'admin.services
 $canManageApplications = App\Policies\Permissions::can($currentRole, 'admin.applications.manage');
 $canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.complaints.manage');
 $canViewChecklist = App\Policies\Permissions::can($currentRole, 'admin.checklist.view');
+$canViewEvaluations = App\Policies\Permissions::can($currentRole, 'admin.evaluations.view');
 ?>
 <!doctype html>
 <html lang="id">
@@ -54,6 +55,9 @@ $canViewChecklist = App\Policies\Permissions::can($currentRole, 'admin.checklist
                     <a href="/admin/eviden">Eviden</a>
                     <?php if ($canViewChecklist): ?>
                         <a href="/admin/checklist-99">Checklist eviden</a>
+                    <?php endif; ?>
+                    <?php if ($canViewEvaluations): ?>
+                        <a href="/admin/evaluasi">Evaluasi layanan</a>
                     <?php endif; ?>
                 <?php endif; ?>
             </nav>
