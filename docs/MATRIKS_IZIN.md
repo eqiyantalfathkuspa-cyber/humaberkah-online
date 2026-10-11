@@ -59,6 +59,9 @@
 | POST /admin/rtl (`admin.rtl.create`, CSRF) | TIDAK | TIDAK | TIDAK | YA |
 | GET /admin/rtl/{id} (`admin.rtl.view`) | TIDAK | TIDAK | TIDAK | YA |
 | POST /admin/rtl/{id}/status (`admin.rtl.update_status`, CSRF) | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/dampak (`admin.impact.view`) | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/dampak/{id} (`admin.impact.view`) | TIDAK | TIDAK | TIDAK | YA |
+| POST /admin/dampak (`admin.impact.create`, CSRF) | TIDAK | TIDAK | TIDAK | YA |
 | GET /portal/aduan/{id} (tiket milik sendiri) | TIDAK | YA | YA | TIDAK |
 | GET /pengajuan/diterima | TIDAK | YA | YA | TIDAK |
 | GET /admin/pengajuan | TIDAK | TIDAK | TIDAK | YA |
@@ -92,6 +95,7 @@ Catatan implementasi Tahap 2A:
 - GET `/admin/checklist-99` memakai kemampuan `admin.checklist.view` (ADMIN). Checklist membentuk pasangan layanan-checkpoint dari data aktual, menghitung status dari `evidence_items`, dan tidak menyimpan baris sel atau menyediakan rute POST.
 - Catatan evaluasi per layanan-periode memakai `admin.evaluations.view` untuk GET daftar/detail dan `admin.evaluations.create` untuk POST (ADMIN saja, CSRF). Data append-only; koreksi dibuat sebagai catatan baru yang merujuk evaluasi sebelumnya pada layanan yang sama. Tidak ada rute edit/hapus, skor, atau persentase.
 - RTL MADANI merujuk tepat satu evaluasi 8B. Kemampuan `admin.rtl.view` melindungi kedua GET, `admin.rtl.create` melindungi POST pencatatan, dan `admin.rtl.update_status` melindungi POST perubahan status; semua hanya ADMIN dan kedua POST memakai CSRF. Perubahan status append-only pada riwayat; tidak ada rute edit/hapus RTL atau notifikasi.
+- Catatan before/after deskriptif memakai `admin.impact.view` untuk kedua GET dan `admin.impact.create` untuk POST; semua hanya ADMIN dan POST memakai CSRF. Catatan append-only, tanpa rute edit/hapus, metrik, atau klaim dampak terukur.
 
 ## 3. Aturan khusus
 

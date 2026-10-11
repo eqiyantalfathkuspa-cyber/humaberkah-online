@@ -20,7 +20,7 @@
 - evidence_links
 - madani_evaluations
 - follow_up_actions
-- before_after
+- `before_after` (entitas konseptual; digantikan oleh `madani_before_after` pada migrasi 014)
 - audit_logs
 - id_counters
 
@@ -50,7 +50,7 @@
 - satu `madani_evaluations` memiliki banyak `madani_rtl`
 - satu `madani_rtl` memiliki banyak baris riwayat pada `madani_rtl_status_log`; satu `users` mencatat banyak RTL dan perubahan status
 - satu `complaints` memiliki banyak `follow_up_actions`
-- satu `services` memiliki banyak `before_after`
+- satu `services` memiliki banyak `madani_before_after`; satu catatan dapat merujuk RTL selesai secara opsional dan dapat dikoreksi oleh catatan baru pada layanan yang sama
 - semua perubahan dicatat di `audit_logs`
 - `id_counters` menyimpan nomor tiket dan token berikutnya
 - `complaints.user_id` mereferensikan `users.id` dengan `ON DELETE SET NULL`; `complaint_history.complaint_id` mereferensikan `complaints.id` dengan `ON DELETE CASCADE`, dan `changed_by` mereferensikan `users.id` dengan `ON DELETE SET NULL`.
@@ -285,14 +285,20 @@ Skema implementasi migrasi 012 menggantikan entitas `evaluations` konseptual di 
 - `created_at`
 - Catatan implementasi: `follow_up_actions` konseptual di atas tetap berorientasi pada `complaints`; untuk RTL MADANI, skema implementasi migrasi 013 adalah `madani_rtl` dan `madani_rtl_status_log`, bukan tabel konseptual tersebut.
 
-### before_after
+### madani_before_after (migrasi 014)
 - `id`
 - `service_id`
+- `rtl_id` (nullable; bila diisi, layanan RTL harus sama dan status saat ini `SELESAI`)
 - `title`
 - `before_text`
+- `before_observed_on`
 - `after_text`
+- `after_observed_on`
+- `source_note`
+- `corrects_before_after_id` (nullable self-reference; layanan harus sama)
 - `created_by`
 - `created_at`
+- Catatan: menggantikan entitas konseptual `before_after`; append-only, tanpa edit/hapus dan tanpa angka terukur, skor, persentase, atau selisih. Audit metadata tidak menyalin teks.
 
 ### audit_logs
 - `id`

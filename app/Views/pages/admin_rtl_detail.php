@@ -61,5 +61,6 @@ $statusLabels = [
             </tbody>
         </table>
     </div>
+    <p><a class="btn" href="/admin/dampak?rtl_id=<?= e((string) $rtl['id']) ?>">Lihat catatan Before/After untuk RTL ini</a></p>
     <p><a class="btn" href="/admin/rtl">Kembali ke RTL</a></p>
 </section>

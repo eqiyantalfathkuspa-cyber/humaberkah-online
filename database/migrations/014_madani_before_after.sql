@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS madani_before_after (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  service_id BIGINT UNSIGNED NOT NULL,
+  rtl_id BIGINT UNSIGNED NULL,
+  title VARCHAR(200) NOT NULL,
+  before_text VARCHAR(2000) NOT NULL,
+  before_observed_on DATE NOT NULL,
+  after_text VARCHAR(2000) NOT NULL,
+  after_observed_on DATE NOT NULL,
+  source_note VARCHAR(500) NOT NULL,
+  corrects_before_after_id BIGINT UNSIGNED NULL,
+  created_by BIGINT UNSIGNED NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_madani_before_after_service_after (service_id, after_observed_on),
+  KEY idx_madani_before_after_rtl (rtl_id),
+  KEY idx_madani_before_after_corrects (corrects_before_after_id),
+  CONSTRAINT fk_madani_before_after_service FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_madani_before_after_rtl FOREIGN KEY (rtl_id) REFERENCES madani_rtl(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_madani_before_after_corrects FOREIGN KEY (corrects_before_after_id) REFERENCES madani_before_after(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_madani_before_after_created_by FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

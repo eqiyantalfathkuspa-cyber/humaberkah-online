@@ -10,6 +10,7 @@ $canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.compla
 $canViewChecklist = App\Policies\Permissions::can($currentRole, 'admin.checklist.view');
 $canViewEvaluations = App\Policies\Permissions::can($currentRole, 'admin.evaluations.view');
 $canViewRtl = App\Policies\Permissions::can($currentRole, 'admin.rtl.view');
+$canViewImpact = App\Policies\Permissions::can($currentRole, 'admin.impact.view');
 ?>
 <!doctype html>
 <html lang="id">
@@ -62,6 +63,9 @@ $canViewRtl = App\Policies\Permissions::can($currentRole, 'admin.rtl.view');
                     <?php endif; ?>
                     <?php if ($canViewRtl): ?>
                         <a href="/admin/rtl">Rencana Tindak Lanjut</a>
+                    <?php endif; ?>
+                    <?php if ($canViewImpact): ?>
+                        <a href="/admin/dampak">Catatan Before/After</a>
                     <?php endif; ?>
                 <?php endif; ?>
             </nav>

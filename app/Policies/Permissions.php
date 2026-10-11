@@ -50,6 +50,8 @@ final class Permissions
         'admin.rtl.view' => ['ADMIN'],
         'admin.rtl.create' => ['ADMIN'],
         'admin.rtl.update_status' => ['ADMIN'],
+        'admin.impact.view' => ['ADMIN'],
+        'admin.impact.create' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool

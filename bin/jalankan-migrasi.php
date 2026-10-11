@@ -960,6 +960,113 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 ],
             ],
         ],
+        '014_madani_before_after.sql' => [
+            'tables' => [
+                'madani_before_after' => [
+                    'id', 'service_id', 'rtl_id', 'title', 'before_text', 'before_observed_on',
+                    'after_text', 'after_observed_on', 'source_note', 'corrects_before_after_id',
+                    'created_by', 'created_at',
+                ],
+            ],
+            'tableDefinitions' => [
+                'madani_before_after' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+            ],
+            'columnDefinitions' => [
+                'madani_before_after.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'madani_before_after.service_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_before_after.rtl_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_before_after.title' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 200, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_before_after.before_text' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 2000, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_before_after.before_observed_on' => [
+                    'data_type' => 'date', 'column_type' => 'date', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_before_after.after_text' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 2000, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_before_after.after_observed_on' => [
+                    'data_type' => 'date', 'column_type' => 'date', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_before_after.source_note' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 500, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_before_after.corrects_before_after_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_before_after.created_by' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_before_after.created_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => 'CURRENT_TIMESTAMP', 'extra' => 'DEFAULT_GENERATED',
+                ],
+            ],
+            'indexes' => [
+                'madani_before_after.PRIMARY',
+                'madani_before_after.idx_madani_before_after_service_after',
+                'madani_before_after.idx_madani_before_after_rtl',
+                'madani_before_after.idx_madani_before_after_corrects',
+            ],
+            'indexDefinitions' => [
+                'madani_before_after.PRIMARY' => [
+                    'columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'madani_before_after.idx_madani_before_after_service_after' => [
+                    'columns' => ['service_id', 'after_observed_on'],
+                    'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null, null],
+                ],
+                'madani_before_after.idx_madani_before_after_rtl' => [
+                    'columns' => ['rtl_id'], 'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'madani_before_after.idx_madani_before_after_corrects' => [
+                    'columns' => ['corrects_before_after_id'], 'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+            ],
+            'foreignKeys' => [
+                'madani_before_after.fk_madani_before_after_service',
+                'madani_before_after.fk_madani_before_after_rtl',
+                'madani_before_after.fk_madani_before_after_corrects',
+                'madani_before_after.fk_madani_before_after_created_by',
+            ],
+            'foreignKeyDefinitions' => [
+                'madani_before_after.fk_madani_before_after_service' => [
+                    'column' => 'service_id', 'table' => 'services', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_before_after.fk_madani_before_after_rtl' => [
+                    'column' => 'rtl_id', 'table' => 'madani_rtl', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_before_after.fk_madani_before_after_corrects' => [
+                    'column' => 'corrects_before_after_id', 'table' => 'madani_before_after', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_before_after.fk_madani_before_after_created_by' => [
+                    'column' => 'created_by', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+            ],
+        ],
     ];
     $specification = $specifications[$migrationName] ?? null;
     if ($specification === null) {

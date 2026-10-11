@@ -193,3 +193,14 @@
 - Halaman menyatakan “internal prototipe, bukan klaim kepatuhan PMPZI/LKE”. Tidak ada notifikasi, skor, atau persentase.
 - Definisi RTL, PIC, dan alur status serta isi halaman blueprint 10, 14, 15, dan 16 MENUNGGU KONFIRMASI POKJA 6.
 - Status: disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.
+
+## 2026-10-11 (Langkah 8D – Before/After deskriptif append-only)
+
+- Before/after adalah catatan naratif deskriptif per layanan: judul, kondisi sebelum beserta tanggal pengamatan, kondisi sesudah beserta tanggal pengamatan, dan sumber pengamatan wajib. Tidak ada angka terukur, skor, persentase, atau selisih hitungan.
+- Keterkaitan RTL bersifat opsional. Jika dicatat, RTL harus ada, layanannya harus sama dengan layanan catatan, dan status terbaru RTL harus `SELESAI` pada saat pencatatan.
+- Tanggal kondisi sebelum harus lebih awal atau sama dengan tanggal sesudah; tanggal sesudah tidak boleh melewati tanggal server.
+- Catatan append-only: tidak dapat diedit atau dihapus. Koreksi dibuat sebagai catatan baru yang merujuk catatan lama pada layanan yang sama; catatan lama tetap tampil dengan penanda “dikoreksi oleh #id”.
+- Hanya ADMIN dapat mencatat atau melihat. Gunakan data fiktif; jangan memasukkan data pribadi, identitas siswa, atau informasi BK. Audit hanya metadata aktor, aksi, ID catatan, ID layanan, ID RTL bila ada, dan ID yang dikoreksi bila ada; audit tidak menyimpan judul, narasi, atau sumber.
+- Halaman menyatakan catatan deskriptif internal prototipe, bukan bukti sebab-akibat, bukan bukti dampak terukur, dan bukan klaim kepatuhan PMPZI/LKE.
+- Definisi dan kriteria before/after serta isi halaman blueprint 10, 14, 15, dan 16 belum diverifikasi; MENUNGGU KONFIRMASI POKJA 6.
+- Status: disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.

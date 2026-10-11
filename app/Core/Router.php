@@ -7,6 +7,7 @@ use App\Controllers\AdminController;
 use App\Controllers\ApplicationController;
 use App\Controllers\ComplaintsController;
 use App\Controllers\ChecklistController;
+use App\Controllers\BeforeAfterController;
 use App\Controllers\EvidenceController;
 use App\Controllers\EvaluationController;
 use App\Controllers\RtlController;
@@ -143,6 +144,14 @@ final class Router
                 '/admin/rtl/{id}' => [
                     'handler' => [RtlController::class, 'detail'],
                     'ability' => 'admin.rtl.view',
+                ],
+                '/admin/dampak' => [
+                    'handler' => [BeforeAfterController::class, 'index'],
+                    'ability' => 'admin.impact.view',
+                ],
+                '/admin/dampak/{id}' => [
+                    'handler' => [BeforeAfterController::class, 'detail'],
+                    'ability' => 'admin.impact.view',
                 ],
                 '/admin/eviden/{id}/berkas' => [
                     'handler' => [EvidenceController::class, 'download'],
@@ -312,6 +321,11 @@ final class Router
                 '/admin/rtl/{id}/status' => [
                     'handler' => [RtlController::class, 'updateStatus'],
                     'ability' => 'admin.rtl.update_status',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/dampak' => [
+                    'handler' => [BeforeAfterController::class, 'create'],
+                    'ability' => 'admin.impact.create',
                     'middleware' => ['csrf'],
                 ],
             ],
