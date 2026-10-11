@@ -23,6 +23,9 @@ final class AdminController
         $surveyMetrics = Db::one(
             'SELECT COUNT(*) AS respondent_count, AVG(speed_rating) AS speed_average, AVG(clarity_rating) AS clarity_average, AVG(courtesy_rating) AS courtesy_average FROM surveys'
         ) ?? [];
+        $informationSurveyCount = (int) (Db::one(
+            'SELECT COUNT(*) AS respondent_count FROM information_surveys'
+        )['respondent_count'] ?? 0);
         View::render('pages/admin_dashboard', [
             'title' => 'Dashboard Admin',
             'applicationCounts' => $applicationCounts,
@@ -30,6 +33,7 @@ final class AdminController
             'complaintCounts' => $complaintCounts,
             'complaintStatusLabels' => ComplaintWorkflow::STATUS_LABELS,
             'surveyMetrics' => $surveyMetrics,
+            'informationSurveyCount' => $informationSurveyCount,
         ]);
     }
 

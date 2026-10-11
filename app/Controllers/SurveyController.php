@@ -30,12 +30,25 @@ final class SurveyController
             'trackingCode' => '',
             'ratings' => [],
             'suggestion' => '',
+            'surveyType' => 'tracked',
+            'informationServices' => self::informationServices(),
+            'serviceId' => '',
         ]);
     }
 
     public static function submit(): void
     {
         self::setPrivateHeaders();
+        $surveyType = self::postString('survey_type');
+        if ($surveyType === 'information') {
+            self::submitInformationSurvey();
+            return;
+        }
+        if ($surveyType !== '' && $surveyType !== 'tracked') {
+            self::renderInformationFailure();
+            return;
+        }
+
         $trackingCode = strtoupper(self::postString('tracking_code'));
         $suggestion = self::postString('suggestion');
         $honeypot = self::postString('website');
@@ -173,6 +186,135 @@ final class SurveyController
         http_response_code(303);
     }
 
+    private static function submitInformationSurvey(): void
+    {
+        $suggestion = self::postString('suggestion');
+        $honeypot = self::postString('website');
+        $serviceIdInput = $_POST['service_id'] ?? null;
+        $serviceId = is_string($serviceIdInput) && preg_match('/^[1-9][0-9]*$/D', $serviceIdInput) === 1
+            ? filter_var($serviceIdInput, FILTER_VALIDATE_INT)
+            : false;
+        $ratings = [];
+        foreach (self::ASPECTS as $field) {
+            $ratings[$field] = self::rating($_POST[$field] ?? null);
+        }
+
+        if (
+            $honeypot !== ''
+            || $serviceId === false
+            || in_array(null, $ratings, true)
+            || !mb_check_encoding($suggestion, 'UTF-8')
+            || mb_strlen($suggestion, 'UTF-8') > 1000
+        ) {
+            self::renderInformationFailure();
+            return;
+        }
+
+        $database = Auth::databaseName();
+        $ipAddress = Auth::clientIp();
+        if ($ipAddress === '') {
+            self::renderInformationFailure(503);
+            return;
+        }
+        $ipHash = hash('sha256', $ipAddress);
+        $pdo = Db::pdo($database);
+
+        $result = ApplicationTrackingLimiter::withIpLock(
+            $ipAddress,
+            $database,
+            static function () use ($pdo, $database, $ipHash, $serviceId, $ratings, $suggestion): string {
+                $pdo->beginTransaction();
+                try {
+                    $service = Db::one(
+                        'SELECT id FROM services WHERE id = ? AND mode = ? AND is_active = 1 FOR UPDATE',
+                        [$serviceId, 'INFORMASI'],
+                        $database
+                    );
+                    if ($service === null) {
+                        $pdo->rollBack();
+                        return 'invalid';
+                    }
+
+                    Db::run(
+                        'INSERT IGNORE INTO information_survey_ip_quotas (service_id, ip_hash, window_started_at, submission_count) VALUES (?, ?, NOW(), 0)',
+                        [$serviceId, $ipHash],
+                        $database
+                    );
+                    $quota = Db::one(
+                        'SELECT submission_count, window_started_at <= DATE_SUB(NOW(), INTERVAL 1 HOUR) AS expired FROM information_survey_ip_quotas WHERE service_id = ? AND ip_hash = ? FOR UPDATE',
+                        [$serviceId, $ipHash],
+                        $database
+                    );
+                    if ($quota === null) {
+                        throw new \RuntimeException('Catatan kuota survei informasi tidak dapat dibaca.');
+                    }
+
+                    $count = (int) $quota['submission_count'];
+                    if ((int) $quota['expired'] === 1) {
+                        $count = 0;
+                        Db::run(
+                            'UPDATE information_survey_ip_quotas SET window_started_at = NOW(), submission_count = 0 WHERE service_id = ? AND ip_hash = ?',
+                            [$serviceId, $ipHash],
+                            $database
+                        );
+                    }
+                    if ($count >= 3) {
+                        $pdo->rollBack();
+                        return 'limited';
+                    }
+
+                    Db::run(
+                        'UPDATE information_survey_ip_quotas SET submission_count = submission_count + 1 WHERE service_id = ? AND ip_hash = ?',
+                        [$serviceId, $ipHash],
+                        $database
+                    );
+                    Db::run(
+                        'INSERT INTO information_surveys (service_id, speed_rating, clarity_rating, courtesy_rating, suggestion) VALUES (?, ?, ?, ?, ?)',
+                        [
+                            $serviceId,
+                            $ratings['speed_rating'],
+                            $ratings['clarity_rating'],
+                            $ratings['courtesy_rating'],
+                            $suggestion !== '' ? $suggestion : null,
+                        ],
+                        $database
+                    );
+                    Auth::audit(
+                        null,
+                        'GUEST',
+                        'information_survey_submitted',
+                        'information_surveys',
+                        $serviceId,
+                        'Survei layanan informasi tersimpan.',
+                        $database
+                    );
+                    $pdo->commit();
+                    return 'saved';
+                } catch (Throwable $exception) {
+                    if ($pdo->inTransaction()) {
+                        $pdo->rollBack();
+                    }
+                    throw $exception;
+                }
+            }
+        );
+
+        if ($result === 'limited') {
+            self::renderInformationFailure(429);
+            return;
+        }
+        if ($result !== 'saved') {
+            self::renderInformationFailure();
+            return;
+        }
+
+        $_SESSION['survey_submitted'] = true;
+        if (!headers_sent()) {
+            header('Location: /survei/terima', true, 303);
+        }
+        http_response_code(303);
+    }
+
     public static function thankYou(): void
     {
         self::setPrivateHeaders();
@@ -189,32 +331,40 @@ final class SurveyController
         $summaries = Db::all(
             'SELECT s.id AS service_id, s.code AS service_code, s.name AS service_name, COUNT(v.id) AS respondent_count, AVG(v.speed_rating) AS speed_average, AVG(v.clarity_rating) AS clarity_average, AVG(v.courtesy_rating) AS courtesy_average FROM services s LEFT JOIN surveys v ON v.service_id = s.id GROUP BY s.id, s.code, s.name ORDER BY s.code'
         );
+        $informationSummaries = Db::all(
+            'SELECT s.id AS service_id, s.code AS service_code, s.name AS service_name, COUNT(v.id) AS respondent_count, AVG(v.speed_rating) AS speed_average, AVG(v.clarity_rating) AS clarity_average, AVG(v.courtesy_rating) AS courtesy_average FROM services s LEFT JOIN information_surveys v ON v.service_id = s.id WHERE s.mode = ? OR v.id IS NOT NULL GROUP BY s.id, s.code, s.name ORDER BY s.code',
+            ['INFORMASI']
+        );
         $suggestions = Db::all(
             'SELECT s.code AS service_code, s.name AS service_name, v.suggestion, v.created_at FROM surveys v INNER JOIN services s ON s.id = v.service_id WHERE v.suggestion IS NOT NULL AND v.suggestion <> ? ORDER BY v.created_at DESC, v.id DESC LIMIT 50',
             ['']
         );
-        foreach ($summaries as &$summary) {
-            $summary['respondent_count'] = (int) $summary['respondent_count'];
-            foreach (['speed_average', 'clarity_average', 'courtesy_average'] as $column) {
-                $summary[$column] = $summary[$column] === null
-                    ? 'BELUM ADA DATA'
-                    : number_format((float) $summary[$column], 2, ',', '.');
-            }
-            $summary['small_sample'] = $summary['respondent_count'] < 5;
-        }
-        unset($summary);
+        $informationSuggestions = Db::all(
+            'SELECT s.code AS service_code, s.name AS service_name, v.suggestion, v.created_at FROM information_surveys v INNER JOIN services s ON s.id = v.service_id WHERE v.suggestion IS NOT NULL AND v.suggestion <> ? ORDER BY v.created_at DESC, v.id DESC LIMIT 50',
+            ['']
+        );
+        self::normalizeSummaries($summaries);
+        self::normalizeSummaries($informationSummaries);
         View::render('pages/admin_surveys', [
             'title' => 'Rekap survei kepuasan',
             'summaries' => $summaries,
             'suggestions' => $suggestions,
+            'informationSummaries' => $informationSummaries,
+            'informationSuggestions' => $informationSuggestions,
         ]);
     }
 
     public static function export(): void
     {
-        $rows = Db::all(
-            'SELECT s.code AS service_code, s.name AS service_name, v.speed_rating, v.clarity_rating, v.courtesy_rating, v.suggestion, v.created_at FROM surveys v INNER JOIN services s ON s.id = v.service_id ORDER BY v.created_at, v.id'
+        $codedRows = Db::all(
+            'SELECT ? AS source, s.code AS service_code, s.name AS service_name, v.speed_rating, v.clarity_rating, v.courtesy_rating, v.suggestion, v.created_at FROM surveys v INNER JOIN services s ON s.id = v.service_id ORDER BY v.created_at, v.id',
+            ['BERKODE']
         );
+        $informationRows = Db::all(
+            'SELECT ? AS source, s.code AS service_code, s.name AS service_name, v.speed_rating, v.clarity_rating, v.courtesy_rating, v.suggestion, v.created_at FROM information_surveys v INNER JOIN services s ON s.id = v.service_id ORDER BY v.created_at, v.id',
+            ['TANPA_VERIFIKASI']
+        );
+        $rows = array_merge($codedRows, $informationRows);
         Auth::audit(
             (int) (Auth::user()['id'] ?? 0),
             'ADMIN',
@@ -232,7 +382,7 @@ final class SurveyController
         if ($output === false) {
             throw new \RuntimeException('Tidak dapat membuka keluaran ekspor CSV.');
         }
-        fputcsv($output, ['Kode layanan', 'Nama layanan', 'Kecepatan', 'Kejelasan', 'Keramahan', 'Saran', 'Waktu'], ',', '"', '\\');
+        fputcsv($output, ['Sumber', 'Kode layanan', 'Nama layanan', 'Kecepatan', 'Kejelasan', 'Keramahan', 'Saran', 'Waktu'], ',', '"', '\\');
         foreach ($rows as $row) {
             fputcsv($output, array_map(self::csvCell(...), array_values($row)), ',', '"', '\\');
         }
@@ -270,7 +420,9 @@ final class SurveyController
         int $status,
         string $trackingCode,
         array $ratings,
-        string $suggestion
+        string $suggestion,
+        string $surveyType = 'tracked',
+        string $serviceId = ''
     ): void {
         http_response_code($status);
         View::render('pages/survey_form', [
@@ -279,7 +431,44 @@ final class SurveyController
             'trackingCode' => $trackingCode,
             'ratings' => $ratings,
             'suggestion' => $suggestion,
+            'surveyType' => $surveyType,
+            'informationServices' => self::informationServices(),
+            'serviceId' => $serviceId,
         ]);
+    }
+
+    private static function renderInformationFailure(int $status = 422): void
+    {
+        self::renderForm(
+            'Survei tidak dapat diproses. Periksa kembali data dan coba lagi.',
+            $status,
+            '',
+            [],
+            '',
+            'information'
+        );
+    }
+
+    private static function informationServices(): array
+    {
+        return Db::all(
+            'SELECT id, code, name FROM services WHERE mode = ? AND is_active = 1 ORDER BY code',
+            ['INFORMASI']
+        );
+    }
+
+    private static function normalizeSummaries(array &$summaries): void
+    {
+        foreach ($summaries as &$summary) {
+            $summary['respondent_count'] = (int) $summary['respondent_count'];
+            foreach (['speed_average', 'clarity_average', 'courtesy_average'] as $column) {
+                $summary[$column] = $summary[$column] === null
+                    ? 'BELUM ADA DATA'
+                    : number_format((float) $summary[$column], 2, ',', '.');
+            }
+            $summary['small_sample'] = $summary['respondent_count'] < 5;
+        }
+        unset($summary);
     }
 
     private static function setPrivateHeaders(): void

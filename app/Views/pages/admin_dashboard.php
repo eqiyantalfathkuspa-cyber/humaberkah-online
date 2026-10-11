@@ -32,6 +32,8 @@ $average = static fn (string $key): string => ($surveyMetrics[$key] ?? null) ===
         <li>Rata-rata kejelasan: <?= e($average('clarity_average')) ?></li>
         <li>Rata-rata keramahan: <?= e($average('courtesy_average')) ?></li>
     </ul>
+    <h3>Survei layanan informasi (tanpa verifikasi)</h3>
+    <p>Jumlah responden: <?= e((string) $informationSurveyCount) ?></p>
     <p><a class="btn primary" href="/admin/survei">Rekap survei</a></p>
     <form method="post" action="/logout">
         <?= App\Core\Csrf::field() ?>

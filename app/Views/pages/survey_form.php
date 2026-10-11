@@ -4,6 +4,9 @@ $error = $error ?? '';
 $trackingCode = $trackingCode ?? '';
 $ratings = $ratings ?? [];
 $suggestion = $suggestion ?? '';
+$informationServices = $informationServices ?? [];
+$serviceId = $serviceId ?? '';
+$surveyType = $surveyType ?? 'tracked';
 $aspects = [
     'speed_rating' => 'Kecepatan',
     'clarity_rating' => 'Kejelasan',
@@ -14,15 +17,33 @@ $aspects = [
     <div class="section-header">
         <h2>Survei kepuasan layanan</h2>
     </div>
-    <p>Survei hanya dapat diisi satu kali untuk pengajuan yang sudah selesai. Jawaban tidak mencatat identitas pengisi.</p>
+    <p>Survei berkode hanya dapat diisi satu kali untuk pengajuan yang sudah selesai. Survei layanan informasi tidak memerlukan kode lacak dan tidak memverifikasi pengisi; jawaban tidak mencatat identitas pengisi.</p>
     <?php if ($error !== ''): ?>
         <p class="auth-error"><?= e($error) ?></p>
     <?php endif; ?>
     <form method="post" action="/survei" class="auth-form">
         <?= App\Core\Csrf::field() ?>
         <label>
-            <span>Kode lacak pengajuan</span>
-            <input type="text" name="tracking_code" maxlength="23" value="<?= e($trackingCode) ?>" required>
+            <span>Pilih jalur survei</span>
+            <select name="survey_type" required>
+                <option value="tracked" <?= $surveyType === 'tracked' ? 'selected' : '' ?>>Punya kode lacak pengajuan</option>
+                <option value="information" <?= $surveyType === 'information' ? 'selected' : '' ?>>Layanan informasi (tanpa kode lacak)</option>
+            </select>
+        </label>
+        <label>
+            <span>Kode lacak pengajuan (untuk jalur berkode)</span>
+            <input type="text" name="tracking_code" maxlength="23" value="<?= e($trackingCode) ?>">
+        </label>
+        <label>
+            <span>Layanan informasi (untuk jalur tanpa kode lacak)</span>
+            <select name="service_id">
+                <option value="">Pilih layanan informasi</option>
+                <?php foreach ($informationServices as $service): ?>
+                    <option value="<?= e((string) $service['id']) ?>" <?= (string) $service['id'] === (string) $serviceId ? 'selected' : '' ?>>
+                        <?= e((string) $service['code']) ?> — <?= e((string) $service['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </label>
         <?php foreach ($aspects as $field => $label): ?>
             <label>

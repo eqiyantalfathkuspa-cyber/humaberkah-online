@@ -533,6 +533,101 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 ],
             ],
         ],
+        '010_information_surveys.sql' => [
+            'tables' => [
+                'information_surveys' => [
+                    'id', 'service_id', 'speed_rating', 'clarity_rating',
+                    'courtesy_rating', 'suggestion', 'created_at',
+                ],
+                'information_survey_ip_quotas' => [
+                    'service_id', 'ip_hash', 'window_started_at', 'submission_count',
+                ],
+            ],
+            'tableDefinitions' => [
+                'information_surveys' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+                'information_survey_ip_quotas' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+            ],
+            'columnDefinitions' => [
+                'information_surveys.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'information_surveys.service_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'information_surveys.speed_rating' => [
+                    'data_type' => 'tinyint', 'column_type' => 'tinyint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'information_surveys.clarity_rating' => [
+                    'data_type' => 'tinyint', 'column_type' => 'tinyint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'information_surveys.courtesy_rating' => [
+                    'data_type' => 'tinyint', 'column_type' => 'tinyint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'information_surveys.suggestion' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 1000, 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '',
+                    'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'information_surveys.created_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => 'CURRENT_TIMESTAMP', 'extra' => 'DEFAULT_GENERATED',
+                ],
+                'information_survey_ip_quotas.service_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'information_survey_ip_quotas.ip_hash' => [
+                    'data_type' => 'char', 'character_maximum_length' => 64, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                    'character_set_name' => 'ascii', 'collation_name' => 'ascii_bin',
+                ],
+                'information_survey_ip_quotas.window_started_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'information_survey_ip_quotas.submission_count' => [
+                    'data_type' => 'tinyint', 'column_type' => 'tinyint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => '0', 'extra' => '',
+                ],
+            ],
+            'indexes' => [
+                'information_surveys.PRIMARY',
+                'information_surveys.idx_information_surveys_service_created',
+                'information_survey_ip_quotas.PRIMARY',
+            ],
+            'indexDefinitions' => [
+                'information_surveys.PRIMARY' => [
+                    'columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'information_surveys.idx_information_surveys_service_created' => [
+                    'columns' => ['service_id', 'created_at'], 'unique' => false, 'type' => 'BTREE',
+                    'prefix_lengths' => [null, null],
+                ],
+                'information_survey_ip_quotas.PRIMARY' => [
+                    'columns' => ['service_id', 'ip_hash'], 'unique' => true, 'type' => 'BTREE',
+                    'prefix_lengths' => [null, null],
+                ],
+            ],
+            'foreignKeys' => [
+                'information_surveys.fk_information_surveys_service',
+                'information_survey_ip_quotas.fk_information_survey_ip_quotas_service',
+            ],
+            'foreignKeyDefinitions' => [
+                'information_surveys.fk_information_surveys_service' => [
+                    'column' => 'service_id', 'table' => 'services', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'information_survey_ip_quotas.fk_information_survey_ip_quotas_service' => [
+                    'column' => 'service_id', 'table' => 'services', 'referenced_column' => 'id',
+                    'delete' => 'CASCADE', 'update' => 'CASCADE',
+                ],
+            ],
+        ],
     ];
     $specification = $specifications[$migrationName] ?? null;
     if ($specification === null) {

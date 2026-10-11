@@ -73,7 +73,7 @@ Catatan implementasi Tahap 2A:
 - KAHAYAN AMANAH/HUM-02 menerima kiriman Guest, SISWA, dan GURU. Isi dan identitas hanya tampak pada rute ADMIN; cek kode melalui POST tidak memuat isi atau kontak.
 - Seluruh POST KAHAYAN memakai CSRF. Kuota awal kiriman adalah 5 per IP per jam; GET/POST lacak memakai kode yang tidak masuk URL dan respons privat memakai no-store/no-referrer.
 - Rute status admin mengikuti tabel perpindahan pada `ComplaintWorkflow` dan bagian Langkah 5 di `docs/DECISIONS.md`; riwayat bersifat append-only. Tanggapan publik maksimal 1.000 karakter.
-- Survei hanya menerima kode lacak melalui POST untuk pengajuan berstatus SELESAI; pengiriman satu kali, CSRF, honeypot, dan kuota IP wajib. Rekap dan ekspor hanya ADMIN; kode dan jawaban tidak dipaparkan ke publik.
+- Rute `/survei` yang sudah ada melayani dua jalur: survei berkode untuk pengajuan berstatus SELESAI (satu kali per pengajuan) dan survei INFORMASI tanpa kode lacak (tidak terverifikasi). Keduanya memakai CSRF, honeypot, dan kuota IP terpisah; jalur INFORMASI dibatasi tiga kiriman per IP per layanan per jam. Jalur INFORMASI hanya dipilih di menu `/survei`, tanpa tautan dari halaman layanan. Tidak ada kemampuan/rute baru; POST tetap memakai `surveys.submit` untuk GUEST, SISWA, GURU, dan ADMIN. Rekap dan ekspor gabungan hanya ADMIN; kedua sumber tetap dilabeli dan direkap terpisah.
 
 ## 3. Aturan khusus
 

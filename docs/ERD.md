@@ -38,6 +38,8 @@
 - satu `complaints` memiliki banyak `complaint_history`
 - satu `applications` memiliki paling banyak satu `surveys` (UNIQUE `surveys.application_id`)
 - satu `services` memiliki banyak `surveys`
+- satu `services` bermode INFORMASI memiliki banyak `information_surveys`
+- satu `services` memiliki banyak bucket `information_survey_ip_quotas`, masing-masing dibedakan oleh hash IP
 - satu `services` memiliki banyak `evidence_links`
 - satu `evidence_checkpoints` memiliki banyak `evidence_links`
 - satu `applications` memiliki banyak `evaluations`
@@ -184,6 +186,20 @@ Relasi `application_documents.application_id` mereferensikan `applications.id` d
 - `ip_hash` (SHA-256 alamat REMOTE_ADDR, primary key)
 - `window_started_at`
 - `submission_count` (kuota awal lima per IP per satu jam)
+
+### information_surveys
+- `id` (primary key)
+- `service_id` (FK ke `services.id`; aplikasi hanya menerima layanan aktif bermode INFORMASI)
+- `speed_rating`, `clarity_rating`, `courtesy_rating` (TINYINT UNSIGNED; validasi aplikasi 1–5)
+- `suggestion` (opsional, maksimal 1.000 karakter)
+- `created_at`
+- Catatan: survei tanpa kode lacak dan tanpa identitas pengisi; data berlabel “tanpa verifikasi” dan direkap terpisah dari `surveys`.
+
+### information_survey_ip_quotas
+- `service_id` (FK ke `services.id`)
+- `ip_hash` (SHA-256 alamat REMOTE_ADDR; pasangan `service_id`, `ip_hash` menjadi primary key)
+- `window_started_at`
+- `submission_count` (maksimal tiga kiriman per IP per layanan per satu jam sebagai nilai awal)
 
 ### evidence_items
 - `id`

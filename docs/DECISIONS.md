@@ -144,3 +144,12 @@
 - Ekstensi yang dibutuhkan tersedia: `pdo_mysql`, `mbstring`, `fileinfo`, `openssl`.
 - MySQL server lokal terdeteksi hidup dan dapat diping.
 - Semua keputusan yang bersifat operasional dan layanan tetap menunggu konfirmasi dari tim Pokja 6.
+
+## 2026-10-11 (Langkah 6B – Survei layanan informasi tanpa kode lacak)
+
+- Keputusan: sementara disetujui oleh pemilik proyek dan MENUNGGU KONFIRMASI POKJA 6. Survei memiliki tiga aspek KECEPATAN, KEJELASAN, dan KERAMAHAN, masing-masing berskala 1–5; saran opsional maksimal 1.000 karakter. Ambang responden lima tetap berlaku.
+- Survei layanan INFORMASI tersedia melalui menu `/survei`, tanpa tautan di halaman layanan atau halaman lain, dan tidak memakai kode lacak.
+- Karena identitas/kunci unik pengisi tidak tersedia, jawaban layanan INFORMASI tidak terverifikasi. Rata-rata dan saran tampil terpisah dari survei berkode dengan label “tanpa verifikasi”; keduanya tidak dicampur.
+- Tabel `surveys` tidak diubah agar signature migrasi 009 tetap berlaku. Respons survei INFORMASI disimpan terpisah di `information_surveys`.
+- Kuota awal survei INFORMASI adalah maksimal tiga kiriman per IP per layanan per jam. Hanya hash alamat IP disimpan; kuota ini terpisah dari kuota survei berkode. Risiko NAT sekolah: beberapa pengguna pada IP yang sama berbagi kuota untuk layanan yang sama.
+- Status: keputusan teknis sementara prototipe, MENUNGGU KONFIRMASI POKJA 6.
