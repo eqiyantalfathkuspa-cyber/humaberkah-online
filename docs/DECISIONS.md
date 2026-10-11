@@ -181,3 +181,15 @@
 - Hanya data fiktif yang boleh digunakan. Dilarang memasukkan data pribadi, identitas siswa, atau informasi BK. Audit hanya berisi aktor, aksi, ID evaluasi, layanan, periode, dan ID catatan yang dikoreksi; audit tidak memuat ringkasan, temuan, atau kesimpulan.
 - Halaman menyatakan catatan internal prototipe dan tidak mengklaim kepatuhan PMPZI/LKE. Definisi evaluasi, kriteria, dan indikator menunggu Pokja 6; isi halaman blueprint 10, 14, 15, dan 16 belum diverifikasi.
 - Status: disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.
+
+## 2026-10-11 (Langkah 8C – RTL append-only)
+
+- RTL adalah tindak lanjut atas satu evaluasi 8B; satu evaluasi dapat memiliki banyak RTL. Evaluasi yang sudah dikoreksi tetap dapat dirujuk dan harus diberi penanda koreksi pada tampilan.
+- Isi RTL adalah uraian tindakan wajib, penanggung jawab berupa nama/jabatan fiktif wajib, dan tenggat tanggal wajib.
+- Status yang disetujui sementara adalah `DIRENCANAKAN`, `BERJALAN`, dan `SELESAI`; status awal `DIRENCANAKAN`. Transisi hanya maju: `DIRENCANAKAN` ke `BERJALAN` atau `SELESAI`, serta `BERJALAN` ke `SELESAI`. `SELESAI` final; tidak ada mundur atau pembatalan.
+- Data RTL append-only: isi tidak dapat diedit atau dihapus. Perubahan status menjadi baris baru pada `madani_rtl_status_log`; status saat ini dihitung dari baris riwayat terbaru. Catatan status opsional maksimal 500 karakter. Kesalahan isi diperbaiki dengan RTL baru.
+- Label “Lewat tenggat” dihitung dari tenggat dan tanggal server hanya untuk RTL yang belum `SELESAI`; label tidak disimpan dan tidak mengubah status.
+- Hanya ADMIN yang dapat melihat atau mencatat RTL. Gunakan data fiktif saja; dilarang memasukkan data pribadi, identitas siswa, atau informasi BK. Audit hanya menyimpan aktor, aksi, ID RTL, ID evaluasi, dan status baru—tanpa uraian tindakan, penanggung jawab, atau catatan.
+- Halaman menyatakan “internal prototipe, bukan klaim kepatuhan PMPZI/LKE”. Tidak ada notifikasi, skor, atau persentase.
+- Definisi RTL, PIC, dan alur status serta isi halaman blueprint 10, 14, 15, dan 16 MENUNGGU KONFIRMASI POKJA 6.
+- Status: disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.

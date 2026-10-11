@@ -47,6 +47,9 @@ final class Permissions
         'admin.checklist.view' => ['ADMIN'],
         'admin.evaluations.view' => ['ADMIN'],
         'admin.evaluations.create' => ['ADMIN'],
+        'admin.rtl.view' => ['ADMIN'],
+        'admin.rtl.create' => ['ADMIN'],
+        'admin.rtl.update_status' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool

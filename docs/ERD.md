@@ -47,6 +47,8 @@
 - satu `services` memiliki banyak `madani_evaluations`
 - satu `users` mencatat banyak `madani_evaluations` melalui `created_by`
 - satu `madani_evaluations` dapat dikoreksi oleh banyak catatan baru melalui `corrects_evaluation_id`; referensi koreksi wajib pada layanan yang sama
+- satu `madani_evaluations` memiliki banyak `madani_rtl`
+- satu `madani_rtl` memiliki banyak baris riwayat pada `madani_rtl_status_log`; satu `users` mencatat banyak RTL dan perubahan status
 - satu `complaints` memiliki banyak `follow_up_actions`
 - satu `services` memiliki banyak `before_after`
 - semua perubahan dicatat di `audit_logs`
@@ -270,6 +272,10 @@ Checklist membentuk seluruh pasangan `services` × `evidence_checkpoints` dengan
 
 Skema implementasi migrasi 012 menggantikan entitas `evaluations` konseptual di blueprint/ERD. Evaluasi adalah catatan teks per layanan per periode, tanpa skor, angka penilaian, atau persentase. Tidak ada UNIQUE untuk layanan-periode sehingga catatan dengan periode sama diperbolehkan. Catatan append-only; koreksi dibuat sebagai baris baru yang merujuk catatan lama pada layanan yang sama. Audit hanya berisi metadata dan tidak menyalin ringkasan, temuan, atau kesimpulan. Kriteria evaluasi/indikator tetap menunggu konfirmasi Pokja 6.
 
+### madani_rtl dan madani_rtl_status_log (migrasi 013)
+
+`madani_rtl` menyimpan uraian tindakan, penanggung jawab fiktif, tenggat, dan referensi wajib ke satu `madani_evaluations`. `madani_rtl_status_log` menyimpan status dan catatan opsional sebagai riwayat append-only; status saat ini dihitung dari baris riwayat dengan ID terbaru, bukan disalin ke tabel RTL. Status awal `DIRENCANAKAN`; transisi hanya maju ke `BERJALAN` atau `SELESAI`, dan `SELESAI` final. Label lewat tenggat dihitung dan tidak disimpan. Audit hanya berisi metadata dan tidak menyalin uraian, penanggung jawab, atau catatan. Hanya ADMIN, data fiktif, tanpa notifikasi, skor, atau persentase. Keputusan sementara menunggu konfirmasi Pokja 6.
+
 ### follow_up_actions
 - `id`
 - `complaint_id`
@@ -277,6 +283,7 @@ Skema implementasi migrasi 012 menggantikan entitas `evaluations` konseptual di 
 - `action_note`
 - `actor_id`
 - `created_at`
+- Catatan implementasi: `follow_up_actions` konseptual di atas tetap berorientasi pada `complaints`; untuk RTL MADANI, skema implementasi migrasi 013 adalah `madani_rtl` dan `madani_rtl_status_log`, bukan tabel konseptual tersebut.
 
 ### before_after
 - `id`

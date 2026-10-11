@@ -9,6 +9,7 @@ use App\Controllers\ComplaintsController;
 use App\Controllers\ChecklistController;
 use App\Controllers\EvidenceController;
 use App\Controllers\EvaluationController;
+use App\Controllers\RtlController;
 use App\Controllers\AuthController;
 use App\Controllers\PortalController;
 use App\Controllers\ServiceController;
@@ -134,6 +135,14 @@ final class Router
                 '/admin/evaluasi/{id}' => [
                     'handler' => [EvaluationController::class, 'detail'],
                     'ability' => 'admin.evaluations.view',
+                ],
+                '/admin/rtl' => [
+                    'handler' => [RtlController::class, 'index'],
+                    'ability' => 'admin.rtl.view',
+                ],
+                '/admin/rtl/{id}' => [
+                    'handler' => [RtlController::class, 'detail'],
+                    'ability' => 'admin.rtl.view',
                 ],
                 '/admin/eviden/{id}/berkas' => [
                     'handler' => [EvidenceController::class, 'download'],
@@ -293,6 +302,16 @@ final class Router
                 '/admin/evaluasi' => [
                     'handler' => [EvaluationController::class, 'create'],
                     'ability' => 'admin.evaluations.create',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/rtl' => [
+                    'handler' => [RtlController::class, 'create'],
+                    'ability' => 'admin.rtl.create',
+                    'middleware' => ['csrf'],
+                ],
+                '/admin/rtl/{id}/status' => [
+                    'handler' => [RtlController::class, 'updateStatus'],
+                    'ability' => 'admin.rtl.update_status',
                     'middleware' => ['csrf'],
                 ],
             ],

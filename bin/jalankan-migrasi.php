@@ -844,6 +844,122 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 ],
             ],
         ],
+        '013_madani_rtl.sql' => [
+            'tables' => [
+                'madani_rtl' => [
+                    'id', 'evaluation_id', 'action_description', 'responsible_name', 'due_date', 'created_by', 'created_at',
+                ],
+                'madani_rtl_status_log' => [
+                    'id', 'rtl_id', 'status', 'note', 'changed_by', 'created_at',
+                ],
+            ],
+            'tableDefinitions' => [
+                'madani_rtl' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+                'madani_rtl_status_log' => ['engine' => 'InnoDB', 'character_set' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci'],
+            ],
+            'columnDefinitions' => [
+                'madani_rtl.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'madani_rtl.evaluation_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_rtl.action_description' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 2000, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_rtl.responsible_name' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 150, 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_rtl.due_date' => [
+                    'data_type' => 'date', 'column_type' => 'date', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_rtl.created_by' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_rtl.created_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => 'CURRENT_TIMESTAMP', 'extra' => 'DEFAULT_GENERATED',
+                ],
+                'madani_rtl_status_log.id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => 'auto_increment',
+                ],
+                'madani_rtl_status_log.rtl_id' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_rtl_status_log.status' => [
+                    'data_type' => 'enum', 'column_type' => "enum('direncanakan','berjalan','selesai')", 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_rtl_status_log.note' => [
+                    'data_type' => 'varchar', 'character_maximum_length' => 500, 'is_nullable' => 'YES',
+                    'default_value' => null, 'extra' => '', 'character_set_name' => 'utf8mb4', 'collation_name' => 'utf8mb4_unicode_ci',
+                ],
+                'madani_rtl_status_log.changed_by' => [
+                    'data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO',
+                    'default_value' => null, 'extra' => '',
+                ],
+                'madani_rtl_status_log.created_at' => [
+                    'data_type' => 'datetime', 'column_type' => 'datetime', 'is_nullable' => 'NO',
+                    'default_value' => 'CURRENT_TIMESTAMP', 'extra' => 'DEFAULT_GENERATED',
+                ],
+            ],
+            'indexes' => [
+                'madani_rtl.PRIMARY',
+                'madani_rtl.idx_madani_rtl_evaluation',
+                'madani_rtl.idx_madani_rtl_due_date',
+                'madani_rtl_status_log.PRIMARY',
+                'madani_rtl_status_log.idx_madani_rtl_status_log_rtl_id',
+            ],
+            'indexDefinitions' => [
+                'madani_rtl.PRIMARY' => [
+                    'columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'madani_rtl.idx_madani_rtl_evaluation' => [
+                    'columns' => ['evaluation_id'], 'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'madani_rtl.idx_madani_rtl_due_date' => [
+                    'columns' => ['due_date'], 'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'madani_rtl_status_log.PRIMARY' => [
+                    'columns' => ['id'], 'unique' => true, 'type' => 'BTREE', 'prefix_lengths' => [null],
+                ],
+                'madani_rtl_status_log.idx_madani_rtl_status_log_rtl_id' => [
+                    'columns' => ['rtl_id', 'id'], 'unique' => false, 'type' => 'BTREE', 'prefix_lengths' => [null, null],
+                ],
+            ],
+            'foreignKeys' => [
+                'madani_rtl.fk_madani_rtl_evaluation',
+                'madani_rtl.fk_madani_rtl_created_by',
+                'madani_rtl_status_log.fk_madani_rtl_status_log_rtl',
+                'madani_rtl_status_log.fk_madani_rtl_status_log_changed_by',
+            ],
+            'foreignKeyDefinitions' => [
+                'madani_rtl.fk_madani_rtl_evaluation' => [
+                    'column' => 'evaluation_id', 'table' => 'madani_evaluations', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_rtl.fk_madani_rtl_created_by' => [
+                    'column' => 'created_by', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_rtl_status_log.fk_madani_rtl_status_log_rtl' => [
+                    'column' => 'rtl_id', 'table' => 'madani_rtl', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+                'madani_rtl_status_log.fk_madani_rtl_status_log_changed_by' => [
+                    'column' => 'changed_by', 'table' => 'users', 'referenced_column' => 'id',
+                    'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                ],
+            ],
+        ],
     ];
     $specification = $specifications[$migrationName] ?? null;
     if ($specification === null) {

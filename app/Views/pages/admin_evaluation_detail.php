@@ -26,5 +26,6 @@ $correctedBy = trim((string) ($evaluation['corrected_by_ids'] ?? ''));
             </dd>
         <?php endif; ?>
     </dl>
+    <p><a class="btn" href="/admin/rtl?evaluation_id=<?= e((string) $evaluation['id']) ?>">Lihat RTL untuk evaluasi ini</a></p>
     <p><a class="btn" href="/admin/evaluasi">Kembali ke evaluasi</a></p>
 </section>
