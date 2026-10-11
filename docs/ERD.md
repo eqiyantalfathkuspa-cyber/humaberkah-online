@@ -250,6 +250,10 @@ Seed label: EV-01 Identitas layanan; EV-02 Dokumen persyaratan; EV-03 Proses ver
 
 Satu eviden adalah satu berkas dan satu pasangan layanan-checkpoint; maksimal tiga berkas JPG/PNG per unggahan, masing-masing maksimal 5 MiB, disimpan semua-atau-tidak-sama-sekali. Hanya status `DIUNGGAH` yang dapat diputuskan dan keputusan final; perbaikan menggunakan unggahan baru tanpa versioning. Alasan `PERLU_PERBAIKAN` wajib, maksimal 500 karakter UTF-8 valid. Pengunggah boleh memverifikasi sendiri; daftar/detail memberi penanda tersebut. Hanya ADMIN dapat mengakses, mengelola, dan mengunduh. Audit hanya menyimpan aktor, aksi, ID eviden, layanan, checkpoint, status, MIME, ukuran, dan SHA-256; tidak menyimpan isi, nama asli, atau alasan.
 
+### Sel checklist (dihitung, bukan disimpan)
+
+Checklist membentuk seluruh pasangan `services` × `evidence_checkpoints` dengan CROSS JOIN. Tidak ada tabel sel atau status checklist tersimpan. Status dihitung dari jumlah `evidence_items` dengan prioritas `VALID` (ada `TERVERIFIKASI`), lalu `ADA_BELUM_VERIFIKASI` (ada `DIUNGGAH`), lalu `PERLU_PERBAIKAN` (hanya ada status itu), dan `KOSONG` bila tidak ada eviden. Layanan nonaktif tetap termasuk.
+
 ### evaluations
 - `id`
 - `application_id`

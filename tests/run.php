@@ -953,6 +953,7 @@ require __DIR__ . '/phase2b.php';
 require __DIR__ . '/phase5.php';
 require __DIR__ . '/phase6.php';
 require __DIR__ . '/phase6b.php';
+require __DIR__ . '/phase7c.php';
 require __DIR__ . '/phase7b.php';
 
 print PHP_EOL . ($failed === 0 ? 'SEMUA TES LOLOS' : $failed . ' TES GAGAL') . PHP_EOL;

@@ -6,6 +6,7 @@ namespace App\Core;
 use App\Controllers\AdminController;
 use App\Controllers\ApplicationController;
 use App\Controllers\ComplaintsController;
+use App\Controllers\ChecklistController;
 use App\Controllers\EvidenceController;
 use App\Controllers\AuthController;
 use App\Controllers\PortalController;
@@ -120,6 +121,10 @@ final class Router
                 '/admin/eviden' => [
                     'handler' => [EvidenceController::class, 'index'],
                     'ability' => 'admin.evidence.view',
+                ],
+                '/admin/checklist-99' => [
+                    'handler' => [ChecklistController::class, 'index'],
+                    'ability' => 'admin.checklist.view',
                 ],
                 '/admin/eviden/{id}/berkas' => [
                     'handler' => [EvidenceController::class, 'download'],

@@ -163,3 +163,11 @@
 - Berkas sementara dibatasi pada JPG/PNG, maksimal 5 MiB per berkas dan tiga berkas per unggahan. PDF dan format lain ditolak; kebijakan format dapat ditinjau terpisah oleh Pokja 6.
 - Pengujian hanya memakai data dan berkas fiktif. Retensi, pemulihan berkas orphan, dan kriteria bukti per checkpoint MENUNGGU POKJA 6. Tidak ada klaim kepatuhan PMPZI/LKE.
 - Audit hanya mencatat metadata: aktor, aksi, ID eviden, layanan, checkpoint, status, MIME, ukuran, dan SHA-256. Isi berkas, nama asli, serta alasan perbaikan tidak dicatat dalam audit.
+
+## 2026-10-11 (Langkah 7C – Checklist Sel)
+
+- Keputusan disetujui sementara oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6: satu sel adalah pasangan layanan dan checkpoint. Matriks dibentuk dari CROSS JOIN aktual `services` × `evidence_checkpoints`; jumlah sel berasal dari hasil query dan sel tidak disimpan.
+- Status sel dihitung dengan prioritas `VALID` bila ada minimal satu eviden `TERVERIFIKASI`; selain itu `ADA_BELUM_VERIFIKASI` bila ada eviden `DIUNGGAH`; selain itu `PERLU_PERBAIKAN` bila hanya ada eviden `PERLU_PERBAIKAN`; selain itu `KOSONG`.
+- Checklist adalah instrumen kendali internal prototipe, bukan indikator resmi LKE/PMPZI. Tidak menampilkan persentase atau skor.
+- Layanan nonaktif tetap disertakan dalam matriks dan diberi label nonaktif. Jumlah layanan dan sel aktual harus dilaporkan dari fixture/data yang diperiksa; rencana 11 layanan × 9 checkpoint menghasilkan 99 hanya bila data aktual cocok.
+- Status keputusan: sementara disetujui oleh pemilik proyek, MENUNGGU KONFIRMASI POKJA 6.

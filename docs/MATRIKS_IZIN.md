@@ -51,6 +51,7 @@
 | GET /admin/eviden/{id} (`admin.evidence.view`) | TIDAK | TIDAK | TIDAK | YA |
 | GET /admin/eviden/{id}/berkas (`admin.evidence.download`) | TIDAK | TIDAK | TIDAK | YA |
 | POST /admin/eviden/{id}/verifikasi (`admin.evidence.verify`, CSRF) | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/checklist-99 (`admin.checklist.view`) | TIDAK | TIDAK | TIDAK | YA |
 | GET /portal/aduan/{id} (tiket milik sendiri) | TIDAK | YA | YA | TIDAK |
 | GET /pengajuan/diterima | TIDAK | YA | YA | TIDAK |
 | GET /admin/pengajuan | TIDAK | TIDAK | TIDAK | YA |
@@ -81,6 +82,7 @@ Catatan implementasi Tahap 2A:
 - Rute `/survei` yang sudah ada melayani dua jalur: survei berkode untuk pengajuan berstatus SELESAI (satu kali per pengajuan) dan survei INFORMASI tanpa kode lacak (tidak terverifikasi). Keduanya memakai CSRF, honeypot, dan kuota IP terpisah; jalur INFORMASI dibatasi tiga kiriman per IP per layanan per jam. Jalur INFORMASI hanya dipilih di menu `/survei`, tanpa tautan dari halaman layanan. Tidak ada kemampuan/rute baru; POST tetap memakai `surveys.submit` untuk GUEST, SISWA, GURU, dan ADMIN. Rekap dan ekspor gabungan hanya ADMIN; kedua sumber tetap dilabeli dan direkap terpisah.
 - Rute eviden memakai kemampuan `admin.evidence.view`, `admin.evidence.upload`, `admin.evidence.download`, dan `admin.evidence.verify`; keempatnya hanya untuk ADMIN. POST unggah dan verifikasi wajib CSRF. Izin diperiksa di server lewat `Permissions.php`.
 - Satu eviden adalah satu berkas untuk satu layanan dan satu checkpoint. Status hanya dapat diputuskan dari `DIUNGGAH`, keputusan final, dan perbaikan dilakukan dengan unggahan baru. Pengunggah dapat memverifikasi sendiri; tampilan menandainya secara eksplisit. Detail dan unduhan hanya tersedia bagi ADMIN.
+- GET `/admin/checklist-99` memakai kemampuan `admin.checklist.view` (ADMIN). Checklist membentuk pasangan layanan-checkpoint dari data aktual, menghitung status dari `evidence_items`, dan tidak menyimpan baris sel atau menyediakan rute POST.
 
 ## 3. Aturan khusus
 

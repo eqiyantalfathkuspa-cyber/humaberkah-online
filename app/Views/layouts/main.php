@@ -7,6 +7,7 @@ $canAccessAdmin = App\Policies\Permissions::can($currentRole, 'admin.dashboard')
 $canManageServices = App\Policies\Permissions::can($currentRole, 'admin.services.manage');
 $canManageApplications = App\Policies\Permissions::can($currentRole, 'admin.applications.manage');
 $canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.complaints.manage');
+$canViewChecklist = App\Policies\Permissions::can($currentRole, 'admin.checklist.view');
 ?>
 <!doctype html>
 <html lang="id">
@@ -51,6 +52,9 @@ $canManageComplaints = App\Policies\Permissions::can($currentRole, 'admin.compla
                     <?php endif; ?>
                     <a href="/admin/survei">Rekap survei</a>
                     <a href="/admin/eviden">Eviden</a>
+                    <?php if ($canViewChecklist): ?>
+                        <a href="/admin/checklist-99">Checklist eviden</a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </nav>
         </header>

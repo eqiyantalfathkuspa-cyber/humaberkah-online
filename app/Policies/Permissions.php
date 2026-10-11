@@ -44,6 +44,7 @@ final class Permissions
         'admin.evidence.upload' => ['ADMIN'],
         'admin.evidence.download' => ['ADMIN'],
         'admin.evidence.verify' => ['ADMIN'],
+        'admin.checklist.view' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool
