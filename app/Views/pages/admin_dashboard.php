@@ -13,6 +13,7 @@ $average = static fn (string $key): string => ($surveyMetrics[$key] ?? null) ===
     <div class="section-header">
         <h2>Dashboard Admin</h2>
     </div>
+    <p><a class="btn secondary" href="/admin/madani">Dashboard dan laporan MADANI</a></p>
     <h3>Pengajuan layanan</h3>
     <ul>
         <?php foreach ($applicationStatusLabels as $status => $label): ?>

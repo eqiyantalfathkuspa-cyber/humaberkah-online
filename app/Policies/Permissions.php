@@ -52,6 +52,8 @@ final class Permissions
         'admin.rtl.update_status' => ['ADMIN'],
         'admin.impact.view' => ['ADMIN'],
         'admin.impact.create' => ['ADMIN'],
+        'admin.madani.view' => ['ADMIN'],
+        'admin.madani.export' => ['ADMIN'],
     ];
 
     public static function can(?string $role, string $ability): bool

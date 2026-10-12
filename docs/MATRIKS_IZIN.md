@@ -62,6 +62,8 @@
 | GET /admin/dampak (`admin.impact.view`) | TIDAK | TIDAK | TIDAK | YA |
 | GET /admin/dampak/{id} (`admin.impact.view`) | TIDAK | TIDAK | TIDAK | YA |
 | POST /admin/dampak (`admin.impact.create`, CSRF) | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/madani (`admin.madani.view`) | TIDAK | TIDAK | TIDAK | YA |
+| GET /admin/madani/ekspor (`admin.madani.export`) | TIDAK | TIDAK | TIDAK | YA |
 | GET /portal/aduan/{id} (tiket milik sendiri) | TIDAK | YA | YA | TIDAK |
 | GET /pengajuan/diterima | TIDAK | YA | YA | TIDAK |
 | GET /admin/pengajuan | TIDAK | TIDAK | TIDAK | YA |
@@ -73,8 +75,9 @@
 | Mengelola pengguna | TIDAK | TIDAK | TIDAK | YA |
 | Membaca audit log sistem | TIDAK | TIDAK | TIDAK | YA |
 
-Catatan implementasi Tahap 2A:
+Catatan implementasi:
 - Role per rute diambil dari `app/Policies/Permissions.php` dan tidak ditulis ulang di `Router.php`.
+- Dashboard MADANI dan ekspor CSV agregat hanya ADMIN melalui `admin.madani.view` dan `admin.madani.export`; keduanya hanya GET dan tidak membuat snapshot atau data baru.
 - `GET /logout` bukan rute legal; rute yang valid hanya `POST /logout`.
 - Seluruh POST pengelolaan pengguna wajib memakai token CSRF dan setiap tindakan dicatat di `audit_logs`.
 - POST perubahan standar layanan wajib memakai CSRF; semua ADMIN dapat mengubah mode dan standar layanan, dan perubahan mencatat nilai lama serta baru di `audit_logs`.

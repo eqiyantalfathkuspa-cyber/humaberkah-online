@@ -23,6 +23,7 @@ Status pengujian di tabel mengikuti pilihan tingkat bukti yang ditetapkan untuk 
 | Evaluasi MADANI | 8B | `/admin/evaluasi`, `/admin/evaluasi/{id}` | Tes otomatis saja (belum diuji di browser menurut laporan yang tersedia; pemilik melaporkan satu catatan tersimpan di basis data kerja, tanpa rincian metode) |
 | RTL MADANI | 8C | `/admin/rtl`, `/admin/rtl/{id}`, `POST /admin/rtl/{id}/status` | Tes otomatis saja (belum diuji di browser; pemilik melewati uji tersebut dan melaporkan basis data kerja masih 0 baris) |
 | Before/after MADANI | 8D | `/admin/dampak`, `/admin/dampak/{id}` | Tes otomatis saja (belum diuji di browser; pemilik melewati uji tersebut dan melaporkan basis data kerja masih 0 baris) |
+| Dashboard dan laporan MADANI | 8E | `/admin/madani`, `/admin/madani/ekspor` | Tes otomatis saja (belum diuji di browser) |
 
 **Dilaporkan pemilik proyek:** pada mesin pemilik, HEAD `8139fe1`, `php tests/run.php` menghasilkan 265 `[LOLOS]`, 0 `[GAGAL]`, exit code 0. Angka tersebut adalah hasil yang dilaporkan pemilik, bukan pengukuran yang dijalankan saat menyusun dokumen ini.
 
@@ -89,6 +90,8 @@ Role di bawah diturunkan dari ability pada `app/Core/Router.php` dan `app/Polici
 | GET | `/admin/dampak` | `admin.impact.view` | ADMIN |
 | GET | `/admin/dampak/{id}` | `admin.impact.view` | ADMIN |
 | POST | `/admin/dampak` | `admin.impact.create` (CSRF) | ADMIN |
+| GET | `/admin/madani` | `admin.madani.view` | ADMIN |
+| GET | `/admin/madani/ekspor` | `admin.madani.export` | ADMIN |
 
 ## 4. Skema dan migrasi
 

@@ -212,3 +212,13 @@
 - Append-only pada tabel catatan MADANI (`madani_evaluations`, `madani_rtl`, `madani_rtl_status_log`, dan `madani_before_after`) ditegakkan pada lapisan aplikasi dan melalui ketiadaan rute edit/hapus, bukan oleh database. Untuk deployment, gunakan akun database aplikasi khusus dengan hak minimum serta tanpa `DELETE`/`UPDATE` pada tabel-tabel catatan tersebut.
 - Batas PHP `upload_max_filesize`, `post_max_size`, dan `max_file_uploads` pada PHP-FPM/web server harus diperiksa terpisah dari nilai PHP CLI.
 - Zona waktu PHP server memengaruhi validasi tanggal masa depan pada catatan before/after.
+
+## Langkah 8E — Dashboard MADANI dan laporan agregat
+
+- Nilai awal, MENUNGGU POKJA 6: audiens hanya ADMIN. Dashboard dan ekspor bersifat hanya-baca; tidak ada tabel snapshot dan tidak ada migrasi baru.
+- Metrik awal berasal dari query basis data: jumlah evaluasi MADANI per layanan; status terbaru RTL dan jumlah RTL belum selesai yang lewat tenggat menurut tanggal PHP server; jumlah catatan before/after per layanan; eviden per status; sel checklist per status; serta aduan dan pengajuan per status.
+- Periode awal maksimal 366 hari inklusif dan filter layanan harus merujuk layanan yang ada. Periode tidak valid ditolak. Acuan tanggal: evaluasi memakai irisan periode evaluasi dengan filter; RTL, eviden, pengajuan, dan aduan memakai `created_at`; before/after memakai `after_observed_on`. Checklist adalah snapshot status saat ini karena pasangan layanan-checkpoint tidak memiliki tanggal historis dan tidak dipengaruhi filter periode. Aduan tidak memiliki relasi layanan sehingga filter layanan tidak mengubah hitungan aduan.
+- Hitungan nol ditampilkan sebagai nol. Rata-rata, persentase, atau rasio tanpa penyebut ditampilkan `BELUM ADA DATA`. Tidak ada skor gabungan, peringkat, atau klaim pencapaian PMPZI/LKE/dampak.
+- Ekspor CSV hanya memuat agregat tanpa isi evaluasi, narasi, nama berkas, kontak, atau identitas. Nilai sel yang diawali `=`, `+`, `-`, atau `@` diberi awalan kutip tunggal. Ekspor memakai header CSV/unduhan dan `Cache-Control: no-store`.
+- Setiap halaman memuat penafian prototipe, bukan bukti kepatuhan, dengan data uji fiktif.
+- MENUNGGU POKJA 6: definisi metrik dan penyebut, kemungkinan audiens selain ADMIN, kebutuhan ekspor resmi, serta ambang publikasi. Perubahan definisi dapat memerlukan perubahan implementasi; bila diperlukan perubahan skema, lakukan melalui migrasi baru yang terpisah.

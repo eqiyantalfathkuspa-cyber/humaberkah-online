@@ -11,6 +11,7 @@ $canViewChecklist = App\Policies\Permissions::can($currentRole, 'admin.checklist
 $canViewEvaluations = App\Policies\Permissions::can($currentRole, 'admin.evaluations.view');
 $canViewRtl = App\Policies\Permissions::can($currentRole, 'admin.rtl.view');
 $canViewImpact = App\Policies\Permissions::can($currentRole, 'admin.impact.view');
+$canViewMadani = App\Policies\Permissions::can($currentRole, 'admin.madani.view');
 ?>
 <!doctype html>
 <html lang="id">
@@ -66,6 +67,9 @@ $canViewImpact = App\Policies\Permissions::can($currentRole, 'admin.impact.view'
                     <?php endif; ?>
                     <?php if ($canViewImpact): ?>
                         <a href="/admin/dampak">Catatan Before/After</a>
+                    <?php endif; ?>
+                    <?php if ($canViewMadani): ?>
+                        <a href="/admin/madani">Dashboard MADANI</a>
                     <?php endif; ?>
                 <?php endif; ?>
             </nav>

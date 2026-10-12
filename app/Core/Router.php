@@ -12,6 +12,7 @@ use App\Controllers\EvidenceController;
 use App\Controllers\EvaluationController;
 use App\Controllers\RtlController;
 use App\Controllers\AuthController;
+use App\Controllers\MadaniController;
 use App\Controllers\PortalController;
 use App\Controllers\ServiceController;
 use App\Controllers\SurveyController;
@@ -152,6 +153,14 @@ final class Router
                 '/admin/dampak/{id}' => [
                     'handler' => [BeforeAfterController::class, 'detail'],
                     'ability' => 'admin.impact.view',
+                ],
+                '/admin/madani' => [
+                    'handler' => [MadaniController::class, 'index'],
+                    'ability' => 'admin.madani.view',
+                ],
+                '/admin/madani/ekspor' => [
+                    'handler' => [MadaniController::class, 'export'],
+                    'ability' => 'admin.madani.export',
                 ],
                 '/admin/eviden/{id}/berkas' => [
                     'handler' => [EvidenceController::class, 'download'],
