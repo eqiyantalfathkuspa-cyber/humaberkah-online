@@ -9,6 +9,8 @@ use App\Core\ComplaintWorkflow;
 use App\Core\Csrf;
 use App\Core\Db;
 use App\Core\IdGen;
+use App\Core\IpQuotaHash;
+use App\Core\QuotaCleaner;
 use App\Core\TrackingCode;
 use App\Core\View;
 use Throwable;
@@ -51,7 +53,8 @@ final class ComplaintsController
             self::renderForm('Pengajuan tidak dapat diproses dari koneksi ini. Silakan coba lagi.', 503);
             return;
         }
-        $ipHash = hash('sha256', $ipAddress);
+        $ipHash = IpQuotaHash::forAddress($ipAddress);
+        QuotaCleaner::maybeClean($database);
         $pdo = Db::pdo($database);
         $result = ApplicationTrackingLimiter::withIpLock(
             $ipAddress,

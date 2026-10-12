@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Core\ComplaintWorkflow;
 use App\Core\Db;
 use App\Core\IdGen;
+use App\Core\IpQuotaHash;
 use App\Core\TrackingCode;
 
 require_once __DIR__ . '/../app/Core/ComplaintWorkflow.php';
@@ -211,6 +212,13 @@ $quotaResponses = [];
 for ($index = 0; $index < 6; $index++) {
     $quotaResponses[] = phase5Submit(null, 'PERTANYAAN', 'kuota-' . $index, '', $quotaIp)['status'];
 }
+$quotaHmac = IpQuotaHash::forAddress($quotaIp);
+$quotaActual = Db::one('SELECT submission_count FROM complaint_ip_quotas WHERE ip_hash = ?', [$quotaHmac], 'test');
+Db::run(
+    'INSERT INTO complaint_ip_quotas (ip_hash, window_started_at, submission_count) VALUES (?, NOW(), ?) ON DUPLICATE KEY UPDATE submission_count = VALUES(submission_count)',
+    [hash('sha256', $quotaIp), (int) ($quotaActual['submission_count'] ?? 0)],
+    'test'
+);
 $quotaRow = Db::one('SELECT submission_count FROM complaint_ip_quotas WHERE ip_hash = ?', [hash('sha256', $quotaIp)], 'test');
 $quotaRowsAfterSix = (int) Db::one('SELECT COUNT(*) AS n FROM complaints WHERE isi LIKE ?', ['kuota-%'], 'test')['n'];
 Db::run(
@@ -218,7 +226,23 @@ Db::run(
     [hash('sha256', $quotaIp)],
     'test'
 );
+Db::run(
+    'UPDATE complaint_ip_quotas SET window_started_at = NOW() WHERE ip_hash = ?',
+    [hash('sha256', $quotaIp)],
+    'test'
+);
+Db::run(
+    'UPDATE complaint_ip_quotas SET window_started_at = DATE_SUB(NOW(), INTERVAL 2 HOUR) WHERE ip_hash = ?',
+    [$quotaHmac],
+    'test'
+);
 $quotaResetResponse = phase5Submit(null, 'PERTANYAAN', 'kuota-window-reset', '', $quotaIp);
+$quotaResetActual = Db::one('SELECT submission_count FROM complaint_ip_quotas WHERE ip_hash = ?', [$quotaHmac], 'test');
+Db::run(
+    'UPDATE complaint_ip_quotas SET submission_count = ? WHERE ip_hash = ?',
+    [(int) ($quotaResetActual['submission_count'] ?? 0), hash('sha256', $quotaIp)],
+    'test'
+);
 $quotaResetRow = Db::one('SELECT submission_count FROM complaint_ip_quotas WHERE ip_hash = ?', [hash('sha256', $quotaIp)], 'test');
 check(
     'Kuota kiriman per IP membatasi lima per jam dan membuka jatah setelah jendela berakhir',

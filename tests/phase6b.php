@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Core\Auth;
 use App\Core\Csrf;
 use App\Core\Db;
+use App\Core\IpQuotaHash;
 use App\Policies\Permissions;
 
 function phase6bSubmit(string $ip, string $serviceId, array $overrides = [], ?string $csrf = null): array
@@ -285,6 +286,17 @@ for ($phase6bQuotaAttempt = 0; $phase6bQuotaAttempt < 4; $phase6bQuotaAttempt++)
 $phase6bOtherIpResponse = phase6bSubmit('198.51.100.42', (string) $phase6bInformationServiceId);
 $phase6bOtherServiceResponse = phase6bSubmit('198.51.100.41', (string) $phase6bOtherInformationServiceId);
 $phase6bQuotaRows = (int) Db::one('SELECT COUNT(*) AS n FROM information_surveys', [], 'test')['n'];
+$phase6bQuotaHash = IpQuotaHash::forAddress('198.51.100.41');
+$phase6bQuotaActual = Db::one(
+    'SELECT submission_count FROM information_survey_ip_quotas WHERE service_id = ? AND ip_hash = ?',
+    [$phase6bInformationServiceId, $phase6bQuotaHash],
+    'test'
+);
+Db::run(
+    'INSERT INTO information_survey_ip_quotas (service_id, ip_hash, window_started_at, submission_count) VALUES (?, ?, NOW(), ?) ON DUPLICATE KEY UPDATE submission_count = VALUES(submission_count)',
+    [$phase6bInformationServiceId, hash('sha256', '198.51.100.41'), (int) ($phase6bQuotaActual['submission_count'] ?? 0)],
+    'test'
+);
 $phase6bQuotaPassed = $phase6bQuotaResponses === [303, 303, 303, 429]
     && $phase6bOtherIpResponse['status'] === 303
     && $phase6bOtherServiceResponse['status'] === 303
@@ -441,6 +453,12 @@ foreach (($phase6bRealFormResponse['headers'] ?? []) as $phase6bHeader) {
         break;
     }
 }
+$phase6bLoopbackHmac = IpQuotaHash::forAddress('127.0.0.1');
+Db::run(
+    'DELETE FROM information_survey_ip_quotas WHERE service_id = ? AND ip_hash = ?',
+    [$phase6bInformationServiceId, $phase6bLoopbackHmac],
+    'test'
+);
 $phase6bLoopbackHash = hash('sha256', '127.0.0.1');
 Db::run(
     'DELETE FROM information_survey_ip_quotas WHERE service_id = ? AND ip_hash = ?',

@@ -7,6 +7,8 @@ use App\Core\ApplicationTrackingLimiter;
 use App\Core\Auth;
 use App\Core\Csrf;
 use App\Core\Db;
+use App\Core\IpQuotaHash;
+use App\Core\QuotaCleaner;
 use App\Core\TrackingCode;
 use App\Core\View;
 use PDOException;
@@ -76,7 +78,8 @@ final class SurveyController
             self::renderForm('Survei tidak dapat diproses dari koneksi ini. Silakan coba lagi.', 503, $trackingCode, $ratings, $suggestion);
             return;
         }
-        $ipHash = hash('sha256', $ipAddress);
+        $ipHash = IpQuotaHash::forAddress($ipAddress);
+        QuotaCleaner::maybeClean($database);
         $pdo = Db::pdo($database);
 
         try {
@@ -216,7 +219,8 @@ final class SurveyController
             self::renderInformationFailure(503);
             return;
         }
-        $ipHash = hash('sha256', $ipAddress);
+        $ipHash = IpQuotaHash::forAddress($ipAddress);
+        QuotaCleaner::maybeClean($database);
         $pdo = Db::pdo($database);
 
         $result = ApplicationTrackingLimiter::withIpLock(

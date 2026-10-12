@@ -222,3 +222,11 @@
 - Ekspor CSV hanya memuat agregat tanpa isi evaluasi, narasi, nama berkas, kontak, atau identitas. Nilai sel yang diawali `=`, `+`, `-`, atau `@` diberi awalan kutip tunggal. Ekspor memakai header CSV/unduhan dan `Cache-Control: no-store`.
 - Setiap halaman memuat penafian prototipe, bukan bukti kepatuhan, dengan data uji fiktif.
 - MENUNGGU POKJA 6: definisi metrik dan penyebut, kemungkinan audiens selain ADMIN, kebutuhan ekspor resmi, serta ambang publikasi. Perubahan definisi dapat memerlukan perubahan implementasi; bila diperlukan perubahan skema, lakukan melalui migrasi baru yang terpisah.
+
+## 2026-10-12 (Langkah 9 – Hardening pra-produksi)
+
+- Keputusan: pseudonim IP pada kuota aduan, survei berkode, dan survei INFORMASI memakai HMAC-SHA256 atas `REMOTE_ADDR`, dengan kunci rahasia dari `security.ip_hash_key` atau override lingkungan `HUMA_IP_HASH_KEY`. Kunci harus string minimal 32 byte; bila tidak tersedia/tidak valid, kiriman gagal tertutup dengan respons 500 generik sebelum kuota atau data ditulis. Tidak ada fallback SHA-256 polos.
+- Keputusan: baris kuota lama yang berisi SHA-256 polos dibiarkan kedaluwarsa alami, bukan diubah melalui migrasi. Jendela kuota satu jam membuat baris lama tidak aktif paling lama satu jam setelah `window_started_at`; karena digest lama tidak cocok dengan HMAC, batas kuota dapat mulai lagi selama sisa jendela transisi. Pembersih hanya menghapus baris setelah jendela satu jam lewat. Tidak diperlukan migrasi 015.
+- Keputusan: pembersih bersama menghapus hanya baris lebih tua atau sama dengan satu jam dari tiga tabel kuota. Request publik memanggilnya dengan peluang 1/1000 setelah kunci lolos validasi; operasi manual tersedia melalui `bin/bersihkan-kuota.php`. Audit, riwayat, dan tabel append-only tidak menjadi sasaran pembersihan.
+- Alasan: menghilangkan pseudonim IP tanpa kunci, mempertahankan hitungan aktif dan sejarah migrasi, serta membatasi biaya pembersihan per request.
+- Operasional: ganti nilai contoh `security.ip_hash_key` dengan secret acak minimal 32 byte atau set `HUMA_IP_HASH_KEY` pada environment server. Jangan memakai nilai contoh atau menyimpan secret di repositori. Rotasi kunci membuat ruang kuota baru; baris dari kunci lama tetap sampai kedaluwarsa.

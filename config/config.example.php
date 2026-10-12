@@ -26,6 +26,8 @@ return [
         ],
     ],
     'security' => [
+        // EXAMPLE ONLY: replace with a random secret of at least 32 bytes.
+        'ip_hash_key' => 'EXAMPLE_ONLY_CHANGE_ME',
         'session_lifetime_seconds' => 7200,
         'login_attempt_limit' => 5,
         'ip_attempt_limit' => 30,

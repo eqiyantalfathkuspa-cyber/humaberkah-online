@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Core\ApplicationWorkflow;
 use App\Core\Auth;
 use App\Core\Db;
+use App\Core\IpQuotaHash;
 use App\Core\TrackingCode;
 use App\Policies\Permissions;
 
@@ -47,6 +48,11 @@ function phase6PostRequest(array $identity, string $trackingCode, array $extra =
 
 function phase6ResetLoopbackQuota(): void
 {
+    Db::run(
+        'DELETE FROM survey_ip_quotas WHERE ip_hash = ?',
+        [IpQuotaHash::forAddress('127.0.0.1')],
+        'test'
+    );
     Db::run(
         'DELETE FROM survey_ip_quotas WHERE ip_hash = ?',
         [hash('sha256', '127.0.0.1')],

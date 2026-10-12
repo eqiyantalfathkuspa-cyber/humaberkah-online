@@ -174,9 +174,17 @@ Isi halaman blueprint 10, 14, 15, dan 16 belum diverifikasi terhadap implementas
 - Batas `upload_max_filesize`, `post_max_size`, dan `max_file_uploads` pada PHP-FPM/web server perlu diperiksa terpisah dari nilai PHP CLI.
 - Zona waktu PHP server memengaruhi validasi tanggal masa depan before/after.
 - Kuota dan lockout berbasis alamat IP dapat berbagi dampak pada pengguna di balik NAT atau Wi-Fi bersama. Untuk survei INFORMASI, keputusan sementara membatasi per IP per layanan per jam; limiter lain memiliki batas sesuai modul masing-masing.
+- Kuota aduan, survei berkode, dan survei INFORMASI kini memakai HMAC-SHA256 berkunci; secret minimal 32 byte wajib dikonfigurasi sebelum menerima kiriman publik. Nilai contoh tidak aman dipakai. Hash SHA-256 polos lama dibiarkan kedaluwarsa dalam sisa jendela maksimum satu jam; selama masa transisi, kuota bagi alamat tersebut dapat dimulai kembali.
+- Pembersih hanya menghapus baris kedaluwarsa pada tiga tabel kuota, dengan sampling 1/1000 pada request atau melalui CLI. Prosedur backup database dan `storage/private` tersedia di `docs/CADANGAN_PEMULIHAN.md`; backup/pemulihan belum dijalankan dalam langkah ini.
 - Sistem tidak mengirim notifikasi untuk alur KAHAYAN AMANAH atau RTL menurut keputusan yang tercatat.
 - Tidak ada skor/persentase atau laporan MADANI. Dashboard/laporan MADANI Langkah 8E ditunda sampai Pokja 6 menyetujui definisi metrik dan kebutuhan pelaporan.
 - Temuan audit sebelumnya mencatat kemungkinan file orphan serta keterbatasan `GROUP_CONCAT`; catatan dan arahan deployment terkait ada di `docs/DECISIONS.md`. Penyebutan keterbatasan tidak berarti sistem aman atau siap produksi.
+
+### Catatan pra-produksi
+
+- Ledger migrator dapat melaporkan signature `unknown` untuk migrasi yang tidak memiliki spesifikasi signature; checksum dan status ledger tetap tersedia, tetapi `unknown` bukan validasi struktur skema.
+- Filter layanan dashboard MADANI tidak mengubah agregat aduan karena aduan tidak memiliki relasi layanan.
+- Checklist adalah snapshot status saat ini, bukan data historis; filter periode atau layanan tidak merekonstruksi status checklist masa lalu.
 
 ## 8. Daftar periksa persiapan deployment
 
@@ -236,3 +244,4 @@ Daftar berikut adalah `git log --oneline` yang dibaca saat menyusun dokumen; ura
 | `docs/RENCANA_LANGKAH_8.md` | Rencana MADANI, pemisahan langkah 8B–8E, dan keputusan yang diperlukan sebelum pelaporan. |
 | `docs/RENCANA_TES.md` | Rencana skenario uji; cuplikan yang tersedia memuat uji migrasi, `id_counters`, dan keadaan kosong. |
 | `docs/SERAH_TERIMA.md` | Ringkasan serah terima, bukti pemilik, peta izin, migrasi, keterbatasan, dan pekerjaan lanjutan. |
+| `docs/CADANGAN_PEMULIHAN.md` | Prosedur backup database dan `storage/private`, verifikasi hasil, serta pemulihan ke database baru. |

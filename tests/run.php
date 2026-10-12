@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+putenv('HUMA_IP_HASH_KEY=phase9-test-only-key-never-use-outside-fixtures-32-bytes');
 require __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../app/Core/SqlStatementParser.php';
 
@@ -963,6 +964,7 @@ require __DIR__ . '/phase8c.php';
 require __DIR__ . '/phase8d.php';
 require __DIR__ . '/phase-post-audit.php';
 require __DIR__ . '/phase8e.php';
+require __DIR__ . '/phase9.php';
 
 print PHP_EOL . ($failed === 0 ? 'SEMUA TES LOLOS' : $failed . ' TES GAGAL') . PHP_EOL;
 ob_end_flush();
