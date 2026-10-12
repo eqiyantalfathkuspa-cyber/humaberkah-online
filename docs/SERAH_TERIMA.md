@@ -6,30 +6,40 @@ HUMA MANTAP adalah prototipe internal layanan publik dan instrumen kerja Pokja 6
 
 ## 2. Status per fitur
 
-Status pengujian di tabel mengikuti pilihan tingkat bukti yang ditetapkan untuk serah terima. Semua hasil browser di bawah adalah **dilaporkan pemilik proyek**; tidak dijalankan ulang dalam penyusunan dokumen ini.
+Kolom verifikasi membedakan bukti yang dijalankan agen pada sesi serah terima ini dari pengujian browser yang hanya **dilaporkan pemilik proyek**. Lulusnya suite bukan bukti uji browser atau kesiapan produksi.
 
-| Fitur | Langkah | Rute utama | Tingkat bukti |
+| Fitur | Langkah | Status implementasi | Verifikasi agen pada sesi ini | Laporan pemilik |
 |---|---|---|---|
-| Autentikasi dan pengelolaan pengguna | 2A–2B | `/login`, `POST /logout`, `/admin/pengguna` | Tes otomatis + diuji sebagian di browser (login dan logout dilaporkan; pengelolaan pengguna tidak dilaporkan diuji di browser) |
-| Katalog layanan | 3 | `/layanan`, `/layanan/{code}` | Tes otomatis saja (belum diuji di browser) |
-| Pengajuan layanan dan lampiran | 4 | `/layanan/{code}/ajukan`, `/pengajuan/diterima`, `/admin/pengajuan/{id}/berkas/{docId}` | Tes otomatis + diuji sebagian di browser (pemilik melaporkan lampiran KUR-02 diunggah dan gambar dilihat di admin; cakupan layanan lain tidak dilaporkan) |
-| Kode lacak pengajuan | 4 | `/lacak` | Tes otomatis saja (belum diuji di browser) |
-| KAHAYAN AMANAH / aduan | 5 | `/kahayan`, `/lacak-aduan`, `/admin/aduan` | Tes otomatis saja (belum diuji di browser) |
-| Survei berkode | 6 | `/survei`, `/admin/survei` | Tes otomatis + diuji sebagian di browser (pemilik melaporkan survei berkode, rekap, dan rata-rata tampil; rincian skenario lain tidak dilaporkan) |
-| Survei layanan INFORMASI | 6B | `/survei`, `/admin/survei` | Tes otomatis + diuji sebagian di browser (pemilik melaporkan survei INFORMASI dengan kuota 3 per IP per layanan per jam; perilaku tersebut diterima pemilik) |
-| Dashboard admin | 6 | `/admin` | Tes otomatis saja (belum diuji di browser; uji tampilan `/admin/survei` tercatat terpisah pada baris survei) |
-| Eviden | 7B | `/admin/eviden`, `/admin/eviden/{id}/berkas` | Tes otomatis + diuji sebagian di browser (pemilik melaporkan unggah JPG/PNG, isi unduhan identik, serta penolakan PDF dan berkas palsu) |
-| Checklist | 7C | `/admin/checklist-99` | Tes otomatis + diuji sebagian di browser (pemilik melaporkan uji browser setelah migrasi 011; rincian skenario tidak dilaporkan) |
-| Evaluasi MADANI | 8B | `/admin/evaluasi`, `/admin/evaluasi/{id}` | Tes otomatis saja (belum diuji di browser menurut laporan yang tersedia; pemilik melaporkan satu catatan tersimpan di basis data kerja, tanpa rincian metode) |
-| RTL MADANI | 8C | `/admin/rtl`, `/admin/rtl/{id}`, `POST /admin/rtl/{id}/status` | Tes otomatis saja (belum diuji di browser; pemilik melewati uji tersebut dan melaporkan basis data kerja masih 0 baris) |
-| Before/after MADANI | 8D | `/admin/dampak`, `/admin/dampak/{id}` | Tes otomatis saja (belum diuji di browser; pemilik melewati uji tersebut dan melaporkan basis data kerja masih 0 baris) |
-| Dashboard dan laporan MADANI | 8E | `/admin/madani`, `/admin/madani/ekspor` | Tes otomatis saja (belum diuji di browser) |
+| Autentikasi dan pengguna | 2A–2B | Diimplementasikan | Suite saat ini lulus; route/izin diuji otomatis. | Pemilik sebelumnya melaporkan login/logout browser diuji sebagian; pengelolaan pengguna tidak dilaporkan diuji di browser. |
+| Katalog layanan | 3 | Diimplementasikan | Suite saat ini lulus. | Tidak ada hasil browser yang dilaporkan. |
+| Pengajuan, lampiran, dan pelacakan | 4 | Diimplementasikan | Suite saat ini lulus. | Pemilik melaporkan satu uji unggah/lihat lampiran KUR-02; cakupan lain tidak dilaporkan. |
+| KAHAYAN AMANAH / aduan | 5 | Diimplementasikan | Suite saat ini lulus; kiriman `/kahayan` melalui entry point asli diuji. | Belum ada hasil browser yang dilaporkan. |
+| Survei berkode dan INFORMASI | 6, 6B | Diimplementasikan | Suite saat ini lulus; kuota 5/jam dan 3/IP/layanan/jam diuji. | Pemilik melaporkan uji browser sebagian untuk survei, rekap, dan kuota INFORMASI. |
+| Dashboard admin | 6 | Diimplementasikan | Suite saat ini lulus. | Belum ada hasil browser yang dilaporkan. |
+| Eviden dan checklist | 7B, 7C | Diimplementasikan | Suite saat ini lulus. | Pemilik melaporkan uji browser sebagian untuk unggah/unduh eviden dan checklist. |
+| Evaluasi, RTL, before/after MADANI | 8B–8D | Diimplementasikan | Suite saat ini lulus. | Pemilik sebelumnya melaporkan evaluasi tersimpan; uji browser RTL/before-after tidak dilaporkan. |
+| Dashboard dan laporan MADANI | 8E | Diimplementasikan | Suite saat ini lulus; akses, filter, keadaan kosong, dan ekspor diperiksa otomatis. | Tidak ada hasil browser yang dilaporkan. |
+| Hardening pra-produksi | 9 | Diimplementasikan | Suite saat ini lulus; HMAC, fail-closed, pembersihan, CLI, dan mutasi diuji. Panduan backup ditulis, bukan dijalankan. | Tidak ada hasil browser/backup yang dilaporkan. |
 
-**Dilaporkan pemilik proyek:** pada mesin pemilik, HEAD `8139fe1`, `php tests/run.php` menghasilkan 265 `[LOLOS]`, 0 `[GAGAL]`, exit code 0. Angka tersebut adalah hasil yang dilaporkan pemilik, bukan pengukuran yang dijalankan saat menyusun dokumen ini.
+### Verifikasi agen pada sesi ini
+
+- **FACT, diverifikasi:** HEAD `0b597a6` (`Langkah 9: HMAC ip_hash, pembersihan kuota, prosedur cadangan`); worktree bersih sebelum perubahan dokumen ini.
+- **FACT, diverifikasi:** PHP CLI Laragon `8.3.33`; ekstensi `pdo_mysql`, `mbstring`, dan `fileinfo` tersedia.
+- **FACT, diverifikasi:** `php tests/run.php` dijalankan satu kali pada sesi ini dengan PHP Laragon 8.3.33: 288 `[LOLOS]`, 0 `[GAGAL]`, exit code 0. Jumlah dihitung hanya dari baris hasil tersebut.
+- **FACT, diverifikasi:** perbandingan rute Router/Permissions dengan tabel di dokumen menemukan 59 rute di masing-masing sumber dan tidak menemukan selisih path, metode, ability, atau role.
+- **FACT, diverifikasi:** migrasi yang tersedia bernomor 001–014; tidak ada migrasi 015. Migrator tidak dijalankan.
+- **FACT, diverifikasi:** fase yang dimuat `tests/run.php`, berurutan: bootstrap dan pemeriksaan parser di `run.php`, lalu `phase2b.php`, `phase5.php`, `phase6.php`, `phase6b.php`, `phase7c.php`, `phase7b.php`, `phase8b.php`, `phase8c.php`, `phase8d.php`, `phase-post-audit.php`, `phase8e.php`, dan `phase9.php`.
+- **Belum diverifikasi agen:** alur di browser, migrasi pada database kerja, pemulihan backup, serta operasi `mysqldump`.
+
+### Laporan pemilik proyek sebelumnya
+
+Pemilik sebelumnya melaporkan 265 `[LOLOS]`, 0 `[GAGAL]`, exit code 0 pada HEAD `8139fe1`, beserta beberapa uji browser parsial yang disebut pada tabel. Itu adalah laporan historis pemilik, bukan hasil sesi ini; HEAD dan jumlah tes tersebut sudah bukan hasil terkini.
 
 ## 3. Peta rute dan izin
 
 Role di bawah diturunkan dari ability pada `app/Core/Router.php` dan `app/Policies/Permissions.php`. Semua POST yang didaftarkan Router memakai middleware CSRF. `Semua` berarti GUEST, SISWA, GURU, dan ADMIN. Otorisasi tetap diperiksa server-side; navigasi antarmuka bukan pengganti izin. Daftar ini menyajikan rute aplikasi yang terdaftar, bukan rute hasil fallback 404/405.
+
+**FACT, diverifikasi agen pada sesi ini:** 59 pasangan metode/path pada tabel cocok dengan 59 rute Router; ability dan role cocok dengan `Permissions.php`. Selisih: tidak ada.
 
 | Metode | Path | Kemampuan | Role |
 |---|---|---|---|
@@ -114,6 +124,8 @@ Migrasi yang tersedia dan urutannya di `database/migrations/`:
 | `013_madani_rtl.sql` | Membuat RTL MADANI dan log riwayat statusnya. |
 | `014_madani_before_after.sql` | Membuat catatan before/after MADANI deskriptif. |
 
+**FACT, diverifikasi agen:** inventory berakhir pada `014_madani_before_after.sql`; tidak ada `015`. Tidak ada migrasi yang dibuat atau dijalankan pada serah terima ini.
+
 **Aturan perubahan skema:** jangan mengedit migrasi yang sudah ada atau signature historisnya. Perubahan skema setelah 014 harus diajukan sebagai migrasi bernomor baru dan signature untuk objek baru, setelah keputusan yang relevan disetujui.
 
 **Urutan operasi yang direkomendasikan untuk operator (belum dijalankan dalam penyusunan dokumen ini):**
@@ -132,10 +144,10 @@ Jalankan server lokal dari root proyek:
 php -S localhost:8000 -t public
 ```
 
-Suite otomatis:
+Suite otomatis. Perintah yang dijalankan pada sesi ini menggunakan PHP Laragon 8.3.33:
 
 ```powershell
-$output = & php tests/run.php 2>&1
+$output = & 'C:\laragon\bin\php\php-8.3.33-Win32-vs16-x64\php.exe' tests/run.php 2>&1
 $exitCode = $LASTEXITCODE
 $passed = @($output | Select-String '^\[LOLOS\]').Count
 $failed = @($output | Select-String '^\[GAGAL\]').Count
@@ -147,24 +159,25 @@ $output
 
 Simpan `$LASTEXITCODE` segera sesudah proses berakhir; jangan memakai `$?` sebagai kode keluar proses. Jumlah harus dihitung dari keluaran proses yang benar-benar dijalankan. Suite memerlukan beberapa menit menurut informasi pemilik; jangan menjalankan beberapa suite sekaligus.
 
-`tests/run.php` memuat bootstrap, parser SQL, lalu fase `phase2b.php`, `phase5.php`, `phase6.php`, `phase6b.php`, `phase7c.php`, `phase7b.php`, `phase8b.php`, `phase8c.php`, `phase8d.php`, dan `phase-post-audit.php`. Bootstrap membuat database fixture unik bernama berawalan `humamantap_test_` dengan token kepemilikan, menjalankan pengujian terhadap fixture itu, dan mendaftarkan pembersihan saat shutdown. Pembersihan memverifikasi token sebelum menghapus database fixture; bila kepemilikan tidak dapat dibuktikan, database dibiarkan utuh. Tes tidak boleh diarahkan ke `humamantap_dev`.
+`tests/run.php` memuat bootstrap dan pemeriksaan parser SQL di `run.php`, lalu fase `phase2b.php`, `phase5.php`, `phase6.php`, `phase6b.php`, `phase7c.php`, `phase7b.php`, `phase8b.php`, `phase8c.php`, `phase8d.php`, `phase-post-audit.php`, `phase8e.php`, dan `phase9.php`. Bootstrap membuat database fixture unik bernama berawalan `humamantap_test_` dengan token kepemilikan, menjalankan pengujian terhadap fixture itu, dan mendaftarkan pembersihan saat shutdown. Pembersihan memverifikasi token sebelum menghapus database fixture; bila kepemilikan tidak dapat dibuktikan, database dibiarkan utuh. Tes tidak boleh diarahkan ke `humamantap_dev`.
 
 **Jika proses tes terputus:** pembersihan shutdown mungkin tidak sempat berjalan. Jangan menghapus database berdasarkan tebakan atau menghapus `humamantap_test` bersama. Identifikasi fixture nonce yang tertinggal dan bukti token kepemilikannya sesuai prosedur bootstrap terlebih dahulu; bila kepemilikan tidak bisa dibuktikan, biarkan database utuh dan minta operator melakukan rekonsiliasi. Jangan menjalankan ulang tes bertumpuk.
 
-## 6. Keputusan sementara yang menunggu Pokja 6
+## 6. Keputusan terbuka Pokja 6
 
-Butir berikut merangkum `docs/DECISIONS.md`; semuanya tetap berstatus sementara/menunggu konfirmasi bila dinyatakan demikian di log keputusan. Perubahan kebijakan yang memengaruhi skema memerlukan migrasi baru, bukan perubahan migrasi lama.
+Daftar terkonsolidasi berikut merangkum butir `MENUNGGU POKJA 6` dan keputusan belum final di `docs/DECISIONS.md`. Tidak ada jawaban yang dipilih dalam serah terima ini.
 
-| Modul | Nilai sementara yang dipakai | Dampak bila keputusan diubah |
-|---|---|---|
-| Survei | Tiga aspek KECEPATAN, KEJELASAN, KERAMAHAN skala 1–5; saran opsional maksimal 1.000 karakter; label dan rekap survei INFORMASI dipisah dari survei berkode; survei INFORMASI dibatasi tiga kiriman per IP per layanan per jam; ambang lima responden dilaporkan dalam keputusan. | Perubahan pertanyaan, skala, batas, kuota, atau pemisahan sumber dapat memerlukan validasi aplikasi dan migrasi korektif bila tipe/struktur penyimpanan berubah. |
-| Eviden dan checklist | Rencana sementara 11 layanan × 9 checkpoint EV-01–EV-09; status eviden DIUNGGAH, TERVERIFIKASI, PERLU_PERBAIKAN; maksimal tiga gambar JPG/PNG per unggahan, maksimal 5 MiB per gambar; checklist dihitung dari pasangan layanan-checkpoint aktual dan prioritas status, bukan disimpan. Kriteria bukti per checkpoint belum ditetapkan. | Perubahan daftar checkpoint, status, relasi, atau metadata dapat memerlukan migrasi baru; perubahan aturan unggah/retensi perlu perubahan aplikasi dan prosedur penyimpanan. |
-| Evaluasi | Catatan teks per layanan dan periode, ringkasan wajib, temuan/kesimpulan opsional; append-only, koreksi sebagai catatan baru pada layanan sama; tidak ada skor atau persentase; ADMIN saja. | Perubahan bentuk data, unit, periode, koreksi, atau kriteria dapat memerlukan migrasi korektif baru serta perubahan validasi/tampilan. |
-| RTL | RTL sementara terkait satu evaluasi; uraian, penanggung jawab fiktif, dan tenggat wajib; status DIRENCANAKAN → BERJALAN → SELESAI (dengan transisi langsung DIRENCANAKAN → SELESAI); riwayat status append-only; ADMIN saja; tidak ada notifikasi. | Perubahan relasi, alur status, PIC, atau riwayat memerlukan perubahan aturan; perubahan kolom/relasi memerlukan migrasi baru. |
-| Before/after | Catatan naratif per layanan: judul, teks dan tanggal sebelum/sesudah, sumber wajib; RTL opsional tetapi bila diisi harus selesai dan untuk layanan sama; tanggal sebelum ≤ sesudah dan tanggal sesudah tidak di masa depan; koreksi append-only pada layanan sama; tanpa angka, skor, persentase, atau perhitungan selisih; ADMIN saja. | Perubahan definisi narasi/pengukuran, sumber, hubungan RTL, atau koreksi dapat memerlukan migrasi korektif dan persetujuan sebelum implementasi. |
-| Lain-lain | Pemisahan tugas eviden awalnya meminta dua akun ADMIN untuk membuktikan pemeriksaan selain pengunggah; implementasi saat ini memperbolehkan pengunggah memverifikasi dirinya sendiri dan menandainya. Kebijakan identitas/SLA/kategori aduan dan unit tindak lanjut, sub-role admin, kebijakan layanan tertentu, serta definisi metrik/laporan belum seluruhnya final. | Perubahan kebijakan role atau alur server memerlukan revisi izin, kode dan tes; perubahan skema memerlukan migrasi baru. |
+- Katalog dan kategori: nama/label resmi kategori HUM, PIC tiap kategori, sub-role ADMIN, serta tarif, SLA, unit penanggung jawab, dan standar layanan.
+- Pengajuan: apakah Guest boleh mengajukan; kolom formulir/kontak yang diperlukan; klasifikasi dan perlindungan data KES-02/KES-04; status/transisi pengajuan; batas pengajuan/pelacakan; dan pemulihan kode lacak yang hilang.
+- Dokumen dan berkas: dokumen wajib per layanan, apakah KES-02/KES-04 menerima lampiran, jenis/jumlah/batas ukuran berkas (nilai prototipe JPG/PNG, maksimal tiga berkas dan 5 MiB per berkas belum menjadi kebijakan final Pokja 6), serta masa simpan, pemulihan berkas orphan, dan kriteria retensi eviden.
+- KAHAYAN AMANAH: kebijakan identitas/kontak pelapor, SLA, kategori pengaduan, unit/pihak tindak lanjut, serta status/transisi operasional yang disetujui.
+- Survei: pertanyaan dan skala resmi, keberlakuan survei pada layanan INFORMASI, ambang minimum responden, serta audiens dan publikasi hasil.
+- Privasi dan retensi: apakah alamat IP atau pseudonim lain pada tabel selain tabel kuota boleh disimpan, tujuan/masa simpan, dan kebijakan retensinya; termasuk dampak shared IP/NAT.
+- Eviden dan checklist: kriteria bukti per checkpoint, konfirmasi pemetaan layanan × checkpoint, retensi, serta pemisahan tugas/verifikasi oleh akun ADMIN yang berbeda.
+- MADANI 8B–8D: definisi evaluasi/kriteria/indikator, definisi RTL/PIC/alur status, dan definisi before/after beserta sumber dan batas klaim.
+- MADANI 8E: definisi metrik dan penyebut, audiens yang diizinkan, kebutuhan ekspor resmi, ambang publikasi, serta konfirmasi bahwa agregat aduan tidak berubah oleh filter layanan dan checklist tetap snapshot.
 
-Isi halaman blueprint 10, 14, 15, dan 16 belum diverifikasi terhadap implementasi. Keputusan yang dicatat sementara oleh pemilik proyek bukan keputusan resmi Pokja 6 sampai dikonfirmasi.
+Konfirmasi dapat mengubah kebijakan, validasi, tes, atau kebutuhan skema; perubahan skema harus melalui migrasi baru yang disetujui, bukan perubahan migrasi historis.
 
 ## 7. Keterbatasan yang diketahui
 
@@ -186,7 +199,14 @@ Isi halaman blueprint 10, 14, 15, dan 16 belum diverifikasi terhadap implementas
 - Filter layanan dashboard MADANI tidak mengubah agregat aduan karena aduan tidak memiliki relasi layanan.
 - Checklist adalah snapshot status saat ini, bukan data historis; filter periode atau layanan tidak merekonstruksi status checklist masa lalu.
 
-## 8. Daftar periksa persiapan deployment
+## 8. Prasyarat operasi
+
+- Sediakan `security.ip_hash_key` berupa secret acak minimal 32 byte, atau set `HUMA_IP_HASH_KEY` pada environment server. Nilai contoh di `config.example.php` bukan secret untuk digunakan. Kunci hilang/pendek membuat kiriman publik gagal tertutup. Rotasi kunci memulai ruang kuota baru; jatah lama tidak ikut dipetakan dan baris lama kedaluwarsa setelah jendela satu jam.
+- Gunakan PHP 8.3; ekstensi yang diverifikasi tersedia pada CLI Laragon sesi ini adalah `pdo_mysql`, `mbstring`, dan `fileinfo`. Jangan menjalankan aplikasi dengan PHP 8.0.
+- Akun database yang menjalankan migrasi yang membuat trigger harus memiliki hak `TRIGGER`; kebutuhan hak lain bergantung pada migrasi.
+- Buat dan verifikasi cadangan database serta `storage/private` sebelum migrasi; ikuti [docs/CADANGAN_PEMULIHAN.md](docs/CADANGAN_PEMULIHAN.md). Backup dan pemulihan tidak dijalankan oleh agen pada sesi ini.
+
+## 9. Daftar periksa persiapan deployment
 
 Daftar ini adalah pekerjaan yang perlu diperiksa, bukan pernyataan bahwa pekerjaan telah dilakukan.
 
@@ -201,7 +221,7 @@ Daftar ini adalah pekerjaan yang perlu diperiksa, bukan pernyataan bahwa pekerja
 - [ ] Hapus akun uji dan data uji hanya setelah identifikasi dan persetujuan operator; jangan menghapus data tanpa verifikasi.
 - [ ] Tetapkan dan konsistenkan zona waktu server PHP, database, dan prosedur operasi.
 
-## 9. Pekerjaan yang belum dilakukan dan rekomendasi urutan
+## 10. Pekerjaan yang belum dilakukan dan rekomendasi urutan
 
 1. Lakukan uji browser RTL dan before/after setelah persetujuan pemilik; saat ini keduanya dilaporkan belum diuji di browser dan dilewati.
 2. Minta konfirmasi Pokja 6 atas keputusan sementara seluruh modul, khususnya definisi/isi blueprint halaman 10, 14, 15, dan 16 sebelum membangun metrik atau laporan.
@@ -210,7 +230,7 @@ Daftar ini adalah pekerjaan yang perlu diperiksa, bukan pernyataan bahwa pekerja
 5. Selaraskan format `docs/MATRIKS_IZIN.md` dengan inventaris rute literal. Perbandingan Router/Permissions dengan matriks tidak menemukan perbedaan role yang teridentifikasi pada rute terdaftar, tetapi beberapa baris matriks masih berupa nama fungsi umum (contohnya “Login ke akun”, “Portal pengguna”, “Dashboard admin”, dan “Membaca audit log sistem”) alih-alih metode dan path literal; bagian bawah juga mengulang beberapa kemampuan sebagai baris umum. Ini adalah temuan kelengkapan/pemetaan dokumentasi, bukan temuan perubahan izin yang diterapkan.
 6. Selesaikan daftar periksa deployment, tinjau risiko audit yang masih berlaku, dan lakukan validasi operasional terpisah sebelum penggunaan di lingkungan lain. Dokumen ini tidak menyatakan deployment telah disiapkan.
 
-## 10. Lampiran
+## 11. Lampiran
 
 ### Riwayat commit
 
