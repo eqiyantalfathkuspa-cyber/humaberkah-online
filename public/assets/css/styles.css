@@ -26,6 +26,8 @@
     --tone-3: #0b6b3a;
     --tone-4: #b42318;
     --tone-5: #6b7280;
+    --a11y-bg: #12284c;
+    --a11y-fg: #ffffff;
 }
 
 * { box-sizing: border-box; }
@@ -462,6 +464,60 @@ h1, h2, h3, h4 {
     max-width: 1160px;
     margin: 0 auto;
     padding: 18px 16px 28px;
+}
+
+.a11y-tools {
+    display: none;
+    position: fixed;
+    left: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 60;
+    gap: 6px;
+}
+
+.js .a11y-tools {
+    display: flex;
+}
+
+.js.floating-actions-obscured .a11y-tools,
+.js.floating-actions-obscured .fab-kahayan {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.a11y-tools button {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    color: var(--a11y-fg);
+    background: var(--a11y-bg);
+    border: 0;
+    border-radius: 50%;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.fab-kahayan {
+    position: fixed;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    color: #1b1b1b;
+    background: var(--gold);
+    border-radius: 30px;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+}
+
+.fab-kahayan svg {
+    width: 20px;
+    height: 20px;
 }
 
 .hero {
@@ -1707,6 +1763,14 @@ table.data-table tbody tr:hover,
 }
 
 @media (max-width: 860px) {
+    .content {
+        padding-bottom: 72px;
+    }
+
+    .fab-kahayan {
+        max-width: calc(100vw - 154px);
+    }
+
     .hero-grid,
     .home-cols {
         grid-template-columns: minmax(0, 1fr);
@@ -1715,6 +1779,11 @@ table.data-table tbody tr:hover,
     .carousel-copy h2,
     .carousel-copy p {
         max-width: 100%;
+    }
+
+    .carousel-controls {
+        top: 16px;
+        bottom: auto;
     }
 
     .topbar {
@@ -1940,6 +2009,8 @@ table.data-table tbody tr:hover,
         --green-ink: #4cc38a;
         --green-d: #0f5a37;
         --navy: #dbe6ff;
+        --a11y-bg: #dbe6ff;
+        --a11y-fg: #12284c;
         --cream: #1d2330;
         --bg: #11151d;
         --card: #1a202c;
@@ -2083,4 +2154,11 @@ table.data-table tbody tr:hover,
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+}
+
+@media print {
+    .a11y-tools,
+    .fab-kahayan {
+        display: none;
+    }
 }

@@ -197,4 +197,87 @@
       }, 4500);
     }
   }
+
+  var floatingActions = [
+    document.querySelector('.a11y-tools'),
+    document.querySelector('.fab-kahayan')
+  ].filter(Boolean);
+  var submitButtons = Array.prototype.slice.call(
+    document.querySelectorAll('.content button[type="submit"]')
+  );
+
+  function overlaps(first, second) {
+    var firstRect = first.getBoundingClientRect();
+    var secondRect = second.getBoundingClientRect();
+    return firstRect.left < secondRect.right
+      && firstRect.right > secondRect.left
+      && firstRect.top < secondRect.bottom
+      && firstRect.bottom > secondRect.top;
+  }
+
+  function updateFloatingActions() {
+    var obscuresSubmit = window.matchMedia('(max-width: 860px)').matches
+      && submitButtons.some(function (submit) {
+        return floatingActions.some(function (action) {
+          return overlaps(action, submit);
+        });
+      });
+    document.documentElement.classList.toggle('floating-actions-obscured', obscuresSubmit);
+  }
+
+  if (floatingActions.length > 0 && submitButtons.length > 0) {
+    window.addEventListener('resize', updateFloatingActions, { passive: true });
+    window.addEventListener('scroll', updateFloatingActions, { passive: true });
+    updateFloatingActions();
+  }
+
+  var fontSizeKey = 'hm-fs';
+  var fontSize = 100;
+  try {
+    var storedFontSize = parseInt(window.localStorage.getItem(fontSizeKey), 10);
+    if (storedFontSize >= 85 && storedFontSize <= 130) {
+      fontSize = storedFontSize;
+    }
+  } catch (error) {
+    // Storage can be unavailable in restricted browser contexts.
+  }
+
+  function setFontSize(value) {
+    fontSize = Math.min(130, Math.max(85, value));
+    document.documentElement.style.fontSize = fontSize + '%';
+    updateFloatingActions();
+    try {
+      window.localStorage.setItem(fontSizeKey, String(fontSize));
+    } catch (error) {
+      // Text scaling remains available when persistence is unavailable.
+    }
+  }
+
+  setFontSize(fontSize);
+  var increaseFontButton = document.getElementById('aplus');
+  var decreaseFontButton = document.getElementById('aminus');
+  if (increaseFontButton) {
+    increaseFontButton.addEventListener('click', function () {
+      setFontSize(fontSize + 10);
+    });
+  }
+  if (decreaseFontButton) {
+    decreaseFontButton.addEventListener('click', function () {
+      setFontSize(fontSize - 10);
+    });
+  }
+
+  var dateElement = document.querySelector('.topbar-date');
+  if (dateElement) {
+    try {
+      dateElement.textContent = new Date().toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    } catch (error) {
+      // Keep the server-rendered d-m-Y date if locale formatting is unavailable.
+    }
+  }
 })();
