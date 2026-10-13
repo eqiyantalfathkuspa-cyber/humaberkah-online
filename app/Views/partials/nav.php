@@ -4,7 +4,7 @@
         <ul class="menu" id="menuList">
             <li><a href="/">Beranda</a></li>
             <li class="has-sub">
-                <a href="/layanan" aria-haspopup="true">Layanan</a>
+                <a href="/layanan">Layanan</a>
                 <ul class="sub">
                     <li><a href="/layanan">Katalog layanan</a></li>
                     <li><a href="/lacak">Lacak tiket</a></li>
