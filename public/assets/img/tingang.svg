@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" aria-hidden="true">
+  <path fill="#12284c" d="M60 70C60 40 110 30 140 50C170 40 200 60 205 90L236 142L190 126L175 152L150 116C120 126 80 116 60 70Z"/>
+  <path fill="#d4a017" d="M60 62C48 44 26 48 20 62C34 58 46 62 58 74Z"/>
+  <path fill="#0b6b3a" d="M60 70C30 60 10 62 4 76C20 78 40 84 60 90Z"/>
+  <path fill="#fff" opacity=".85" d="M196 96L232 140L190 126Z"/>
+  <circle cx="82" cy="66" r="4" fill="#fff"/>
+</svg>

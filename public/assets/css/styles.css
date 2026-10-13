@@ -14,6 +14,11 @@
     --danger: #a12727;
     --danger-soft: #fdecec;
     --focus: #1f3c88;
+    --green-d: #254937;
+    --card: var(--white);
+    --bg: var(--cream);
+    --line: var(--border);
+    --muted: var(--grey);
 }
 
 * { box-sizing: border-box; }
@@ -300,6 +305,14 @@ h1, h2, h3 {
 
 .btn.danger {
     background: var(--danger);
+}
+
+.dayak {
+    height: 8px;
+    background:
+        linear-gradient(135deg, var(--gold) 25%, transparent 25%) -8px 0 / 16px 16px,
+        linear-gradient(225deg, var(--gold) 25%, transparent 25%) -8px 0 / 16px 16px,
+        var(--green-d);
 }
 
 @media (max-width: 760px) {
