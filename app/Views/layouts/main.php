@@ -12,6 +12,11 @@ $canViewEvaluations = App\Policies\Permissions::can($currentRole, 'admin.evaluat
 $canViewRtl = App\Policies\Permissions::can($currentRole, 'admin.rtl.view');
 $canViewImpact = App\Policies\Permissions::can($currentRole, 'admin.impact.view');
 $canViewMadani = App\Policies\Permissions::can($currentRole, 'admin.madani.view');
+$canViewPortal = App\Policies\Permissions::can($currentRole, 'portal.view');
+$canViewUsers = App\Policies\Permissions::can($currentRole, 'admin.users.manage');
+$canViewAudit = App\Policies\Permissions::can($currentRole, 'admin.audit.view');
+$canViewSurveys = App\Policies\Permissions::can($currentRole, 'admin.surveys.view');
+$canViewEvidence = App\Policies\Permissions::can($currentRole, 'admin.evidence.view');
 ?>
 <!doctype html>
 <html lang="id">
@@ -20,64 +25,20 @@ $canViewMadani = App\Policies\Permissions::can($currentRole, 'admin.madani.view'
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($title ?? 'HUMA MANTAP') ?></title>
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="/assets/js/site.js" defer></script>
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Lewati ke konten</a>
     <div class="page-shell">
-        <header class="topbar">
-            <div class="brand-wrap">
-                <div class="brand-mark" aria-label="Logo placeholder">MAN</div>
-                <div>
-                    <div class="eyebrow">PROTOTIPE</div>
-                    <h1 class="brand-title">HUMA MANTAP</h1>
-                </div>
-            </div>
-            <nav class="topnav" aria-label="Navigasi utama">
-                <a href="/">Beranda</a>
-                <a href="/layanan">Layanan</a>
-                <?php if ($currentRole !== 'ADMIN'): ?>
-                    <a href="/kahayan">KAHAYAN AMANAH</a>
-                <?php endif; ?>
-                <a href="/lacak">Cek status pengajuan</a>
-                <a href="/survei">Survei kepuasan</a>
-                <a href="/lacak-aduan">Lacak aduan</a>
-                <a href="/laporan">Laporan</a>
-                <?php if ($canAccessAdmin): ?>
-                    <a href="/admin">Dashboard admin</a>
-                    <a href="/admin/pengguna">Pengguna</a>
-                    <a href="/admin/audit">Audit</a>
-                    <?php if ($canManageServices): ?>
-                        <a href="/admin/layanan">Kelola layanan</a>
-                    <?php endif; ?>
-                    <?php if ($canManageApplications): ?>
-                        <a href="/admin/pengajuan">Antrean pengajuan</a>
-                    <?php endif; ?>
-                    <?php if ($canManageComplaints): ?>
-                        <a href="/admin/aduan">Antrean KAHAYAN AMANAH</a>
-                    <?php endif; ?>
-                    <a href="/admin/survei">Rekap survei</a>
-                    <a href="/admin/eviden">Eviden</a>
-                    <?php if ($canViewChecklist): ?>
-                        <a href="/admin/checklist-99">Checklist eviden</a>
-                    <?php endif; ?>
-                    <?php if ($canViewEvaluations): ?>
-                        <a href="/admin/evaluasi">Evaluasi layanan</a>
-                    <?php endif; ?>
-                    <?php if ($canViewRtl): ?>
-                        <a href="/admin/rtl">Rencana Tindak Lanjut</a>
-                    <?php endif; ?>
-                    <?php if ($canViewImpact): ?>
-                        <a href="/admin/dampak">Catatan Before/After</a>
-                    <?php endif; ?>
-                    <?php if ($canViewMadani): ?>
-                        <a href="/admin/madani">Dashboard MADANI</a>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </nav>
-        </header>
+        <div class="dayak" aria-hidden="true"></div>
+        <?php require __DIR__ . '/../partials/topbar.php'; ?>
+        <?php require __DIR__ . '/../partials/header.php'; ?>
+        <?php require __DIR__ . '/../partials/nav.php'; ?>
 
-        <main class="content">
+        <main class="content" id="main-content" tabindex="-1">
             <?php require $viewPath; ?>
         </main>
+        <?php require __DIR__ . '/../partials/footer.php'; ?>
     </div>
 </body>
 </html>

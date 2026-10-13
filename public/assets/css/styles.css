@@ -30,6 +30,21 @@ body {
     color: var(--text);
 }
 
+.skip-link {
+    position: absolute;
+    left: -10000px;
+    top: 16px;
+    z-index: 1000;
+    padding: 10px 14px;
+    background: var(--card);
+    color: var(--navy);
+    border: 2px solid var(--gold);
+}
+
+.skip-link:focus {
+    left: 16px;
+}
+
 h1, h2, h3 {
     font-family: Georgia, serif;
     margin-top: 0;
@@ -42,55 +57,294 @@ h1, h2, h3 {
 }
 
 .topbar {
+    margin: -24px -24px 0;
+    padding: 8px 24px;
+    background: var(--navy);
+    color: var(--white);
+}
+
+.topbar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 24px;
-    background: var(--navy);
-    color: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
+    gap: 10px 24px;
+    max-width: 1152px;
+    margin: 0 auto;
 }
 
-.brand-wrap {
+.topbar-identity,
+.ticker {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
 }
 
-.brand-mark {
-    width: 56px;
-    height: 56px;
-    display: grid;
-    place-items: center;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--gold), #e6d29a);
-    color: var(--navy);
-    font-weight: 700;
+.topbar-identity {
+    flex: 0 0 auto;
 }
 
 .eyebrow {
     font-size: 0.7rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    opacity: 0.8;
+    color: var(--gold);
+}
+
+.topbar-app-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.topbar-date {
+    flex: 0 0 auto;
+    font-size: 0.82rem;
+}
+
+.ticker {
+    min-width: 0;
+    flex: 1 1 320px;
+}
+
+.ticker-label {
+    flex: 0 0 auto;
+    color: var(--gold);
+    text-transform: uppercase;
+}
+
+.ticker-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.site-header {
+    padding: 18px 8px;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+}
+
+.site-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1152px;
+    margin: 0 auto;
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.brand-logo {
+    display: block;
+    width: min(500px, 62vw);
+    height: auto;
 }
 
 .brand-title {
     margin: 0;
-    font-size: 1.7rem;
+    font-size: 1.2rem;
+    white-space: nowrap;
 }
 
-.topnav {
+.tingang {
+    display: block;
+    flex: 0 0 auto;
+    width: 160px;
+    height: auto;
+}
+
+.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--green);
+}
+
+.site-nav-inner {
+    max-width: 1152px;
+    margin: 0 auto;
+}
+
+.menu,
+.sub,
+.menu-group-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.menu {
     display: flex;
-    gap: 18px;
     flex-wrap: wrap;
+    align-items: stretch;
 }
 
-.topnav a {
+.menu > li {
+    position: relative;
+}
+
+.menu a {
+    display: block;
+    padding: 13px 15px;
     color: var(--white);
-    text-decoration: none;
     font-weight: 600;
+    text-decoration: none;
+}
+
+.menu > li:hover > a,
+.menu > li:focus-within > a,
+.menu > li.open > a {
+    background: var(--green-d);
+    box-shadow: inset 0 -3px var(--gold);
+}
+
+.has-sub > a::after {
+    content: " \25BE";
+    font-size: 0.72rem;
+}
+
+.sub {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 60;
+    min-width: 240px;
+    max-width: min(360px, 90vw);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--gold);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.has-sub:hover > .sub,
+.has-sub:focus-within > .sub,
+.has-sub.open > .sub {
+    display: block;
+}
+
+.sub a {
+    color: var(--text);
+    font-weight: 500;
+    border-bottom: 1px solid var(--line);
+}
+
+.sub a:hover,
+.sub a:focus-visible {
+    background: var(--cream);
+    color: var(--green);
+}
+
+.admin-menu {
+    min-width: 290px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+}
+
+.menu-group {
+    padding: 5px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.menu-group-title {
+    display: block;
+    padding: 7px 15px 3px;
+    color: var(--green);
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.menu-group-items a {
+    padding-left: 23px;
+}
+
+.nav-toggle {
+    display: none;
+    margin: 7px 10px 7px auto;
+    padding: 9px 13px;
+    color: var(--white);
+    background: var(--green-d);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+    font: inherit;
+    font-weight: 700;
+}
+
+.menu a:focus-visible,
+.nav-toggle:focus-visible,
+.skip-link:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+}
+
+.site-footer {
+    margin: 36px -24px -24px;
+    padding-top: 26px;
+    background: var(--navy);
+    color: var(--white);
+}
+
+.footer-inner {
+    max-width: 1152px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.footer-column h2 {
+    margin-bottom: 10px;
+    color: var(--gold);
+    font: inherit;
+    font-weight: 700;
+}
+
+.footer-column p,
+.footer-column ul {
+    margin: 0 0 10px;
+    padding: 0;
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column li + li {
+    margin-top: 7px;
+}
+
+.footer-column a {
+    color: var(--white);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.privacy-notice {
+    margin: 20px 0 0;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.footer-bottom {
+    padding: 10px 24px;
+    color: var(--navy);
+    background: var(--gold);
+    text-align: center;
+}
+
+.footer-bottom p {
+    margin: 0;
 }
 
 .content {
@@ -315,8 +569,91 @@ h1, h2, h3 {
         var(--green-d);
 }
 
-@media (max-width: 760px) {
-    .topbar,
+@media (max-width: 860px) {
+    .topbar {
+        margin-right: -16px;
+        margin-left: -16px;
+        padding: 8px 16px;
+    }
+
+    .topbar-inner {
+        flex-wrap: wrap;
+    }
+
+    .ticker {
+        flex-basis: 100%;
+    }
+
+    .site-header-inner {
+        gap: 10px;
+    }
+
+    .brand-link {
+        gap: 10px;
+    }
+
+    .brand-logo {
+        width: min(400px, 58vw);
+    }
+
+    .tingang {
+        width: 120px;
+    }
+
+    .nav-toggle {
+        display: none;
+    }
+
+    html.js .nav-toggle {
+        display: block;
+    }
+
+    .menu {
+        flex-direction: column;
+    }
+
+    html.js .menu {
+        display: none;
+    }
+
+    html.js .site-nav.open .menu {
+        display: flex;
+    }
+
+    .menu > li {
+        width: 100%;
+    }
+
+    .sub {
+        position: static;
+        min-width: 0;
+        max-width: none;
+        box-shadow: none;
+        background: var(--green-d);
+        border: 0;
+    }
+
+    .sub a {
+        padding-left: 28px;
+        color: var(--white);
+        border-bottom-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .menu-group-title {
+        padding-left: 28px;
+        color: var(--gold);
+    }
+
+    .site-footer {
+        margin-right: -16px;
+        margin-left: -16px;
+        margin-bottom: -16px;
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .hero,
     .stats-grid,
     .info-grid {
@@ -324,15 +661,44 @@ h1, h2, h3 {
         display: block;
     }
 
-    .topbar {
-        padding: 16px 18px;
-    }
-
-    .topnav {
-        margin-top: 14px;
-    }
-
     .page-shell {
         padding: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .topbar-date {
+        margin-left: auto;
+    }
+
+    .site-header-inner {
+        align-items: flex-start;
+    }
+
+    .brand-link {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .brand-logo {
+        width: min(360px, 70vw);
+    }
+
+    .brand-title {
+        font-size: 1rem;
+        white-space: normal;
+    }
+
+    .tingang {
+        width: 88px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .site-footer {
+        margin-top: 24px;
     }
 }
