@@ -1,4 +1,5 @@
 <footer class="site-footer">
+    <div class="dayak" aria-hidden="true"></div>
     <div class="footer-inner">
         <div class="footer-grid">
             <section class="footer-column">
@@ -32,7 +33,6 @@
         </div>
         <p class="privacy-notice">Peringatan privasi: gunakan data fiktif saja. Jangan masukkan data pribadi, identitas siswa, atau informasi BK.</p>
     </div>
-    <div class="dayak" aria-hidden="true"></div>
     <div class="footer-bottom">
         <p>&copy; <?= e(date('Y')) ?> HUMA MANTAP</p>
     </div>

@@ -87,25 +87,27 @@ h1, h2, h3, h4 {
 }
 
 .page-shell {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px;
+    max-width: none;
+    margin: 0;
+    padding: 0;
 }
 
 .topbar {
-    margin: -24px -24px 0;
-    padding: 8px 24px;
-    background: var(--navy);
+    margin: 0;
+    padding: 0;
+    background: var(--green-d);
     color: var(--white);
+    font-size: 0.82rem;
 }
 
 .topbar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px 24px;
-    max-width: 1152px;
+    gap: 16px;
+    max-width: 1160px;
     margin: 0 auto;
+    padding: 6px 16px;
 }
 
 .topbar-identity,
@@ -153,7 +155,9 @@ h1, h2, h3, h4 {
 }
 
 .site-header {
-    padding: 18px 8px;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
     background: var(--card);
     border-bottom: 1px solid var(--line);
 }
@@ -163,8 +167,9 @@ h1, h2, h3, h4 {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    max-width: 1152px;
+    max-width: 1160px;
     margin: 0 auto;
+    padding: 12px 16px;
 }
 
 .brand-link {
@@ -178,33 +183,41 @@ h1, h2, h3, h4 {
 
 .brand-logo {
     display: block;
-    width: min(500px, 62vw);
-    height: auto;
+    width: auto;
+    height: 64px;
+    max-width: 100%;
 }
 
 .brand-title {
-    margin: 0;
-    font-size: 1.2rem;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
 }
 
 .tingang {
     display: block;
     flex: 0 0 auto;
-    width: 160px;
+    width: 150px;
     height: auto;
+    opacity: 0.9;
 }
 
 .site-nav {
     position: sticky;
-    top: 0;
+    top: env(safe-area-inset-top, 0px);
     z-index: 50;
     background: var(--green);
 }
 
 .site-nav-inner {
-    max-width: 1152px;
+    display: flex;
+    align-items: center;
+    max-width: 1160px;
     margin: 0 auto;
+    padding: 0 16px;
 }
 
 .menu,
@@ -227,15 +240,17 @@ h1, h2, h3, h4 {
 
 .menu a {
     display: block;
-    padding: 13px 15px;
+    padding: 14px 16px;
     color: var(--white);
     font-weight: 600;
+    font-size: 0.93rem;
     text-decoration: none;
 }
 
 .menu > li:hover > a,
 .menu > li:focus-within > a,
-.menu > li.open > a {
+.menu > li.open > a,
+.menu > li > a[aria-current="page"] {
     background: var(--green-d);
     box-shadow: inset 0 -3px var(--gold);
 }
@@ -251,7 +266,7 @@ h1, h2, h3, h4 {
     top: 100%;
     left: 0;
     z-index: 60;
-    min-width: 240px;
+    min-width: 230px;
     max-width: min(360px, 90vw);
     background: var(--card);
     border: 1px solid var(--line);
@@ -272,7 +287,21 @@ h1, h2, h3, h4 {
 .sub a {
     color: var(--text);
     font-weight: 500;
+    padding: 10px 16px;
     border-bottom: 1px solid var(--line);
+}
+
+.sub .sub {
+    top: -3px;
+    left: 100%;
+}
+
+.sub .has-sub > a::after {
+    content: " \25B8";
+}
+
+.sub li {
+    position: relative;
 }
 
 .sub a:hover,
@@ -310,11 +339,36 @@ h1, h2, h3, h4 {
     margin: 7px 10px 7px auto;
     padding: 9px 13px;
     color: var(--white);
-    background: var(--green-d);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 4px;
+    background: none;
+    border: 0;
+    border-radius: 0;
     font: inherit;
+    font-size: 1rem;
     font-weight: 700;
+    cursor: pointer;
+}
+
+.menu-logout-form {
+    margin: 0;
+}
+
+.menu-logout-button {
+    display: block;
+    padding: 14px 16px;
+    color: var(--white);
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 0.93rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.menu-logout-button:hover,
+.menu-logout-button:focus-visible {
+    background: var(--green-d);
+    box-shadow: inset 0 -3px var(--gold);
 }
 
 .menu a:focus-visible,
@@ -325,28 +379,29 @@ h1, h2, h3, h4 {
 }
 
 .site-footer {
-    margin: 36px -24px -24px;
-    padding-top: 26px;
-    background: var(--navy);
+    margin: 10px 0 0;
+    padding: 0;
+    background: var(--green-d);
     color: var(--white);
 }
 
 .footer-inner {
-    max-width: 1152px;
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 16px;
 }
 
 .footer-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 26px 16px;
 }
 
 .footer-column h2 {
-    margin-bottom: 10px;
+    margin: 0 0 8px;
     color: var(--gold-hi);
-    font: inherit;
+    font-size: 0.95rem;
     font-weight: 700;
 }
 
@@ -366,21 +421,37 @@ h1, h2, h3, h4 {
 
 .footer-column a {
     color: var(--white);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    display: block;
+    margin: 3px 0;
+    opacity: 0.92;
+    font-size: 0.86rem;
+    text-decoration: none;
+}
+
+.footer-column p {
+    display: block;
+    margin: 3px 0;
+    opacity: 0.92;
+    font-size: 0.86rem;
+}
+
+.footer-column a:hover {
+    color: var(--gold-hi);
 }
 
 .privacy-notice {
-    margin: 20px 0 0;
-    padding: 14px 0;
+    margin: 0;
+    padding: 12px 16px;
+    font-size: 0.82rem;
     border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .footer-bottom {
-    padding: 10px 24px;
-    color: var(--navy);
-    background: var(--gold);
+    padding: 10px;
+    color: #e9efe9;
+    background: #052f1a;
     text-align: center;
+    font-size: 0.8rem;
 }
 
 .footer-bottom p {
@@ -388,7 +459,9 @@ h1, h2, h3, h4 {
 }
 
 .content {
-    padding-top: 32px;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 18px 16px 28px;
 }
 
 .hero {
@@ -1439,11 +1512,6 @@ table.data-table tbody tr:hover,
 }
 
 @media (max-width: 1160px) {
-    .page-shell {
-        max-width: 1160px;
-        width: 100%;
-    }
-
     .carousel-slide {
         min-height: 300px;
     }
@@ -1451,9 +1519,8 @@ table.data-table tbody tr:hover,
 
 @media (max-width: 860px) {
     .topbar {
-        margin-right: -16px;
-        margin-left: -16px;
-        padding: 8px 16px;
+        margin: 0;
+        padding: 0;
     }
 
     .topbar-inner {
@@ -1473,11 +1540,13 @@ table.data-table tbody tr:hover,
     }
 
     .brand-logo {
-        width: min(400px, 58vw);
+        width: auto;
+        height: 64px;
+        max-width: 100%;
     }
 
     .tingang {
-        width: 120px;
+        width: 90px;
     }
 
     .nav-toggle {
@@ -1486,6 +1555,15 @@ table.data-table tbody tr:hover,
 
     html.js .nav-toggle {
         display: block;
+    }
+
+    .nav-toggle::before {
+        content: "\2630  ";
+    }
+
+    .site-nav-inner {
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .menu {
@@ -1501,6 +1579,10 @@ table.data-table tbody tr:hover,
     }
 
     .menu > li {
+        width: 100%;
+    }
+
+    .menu-logout-button {
         width: 100%;
     }
 
@@ -1525,13 +1607,13 @@ table.data-table tbody tr:hover,
     }
 
     .site-footer {
-        margin-right: -16px;
-        margin-left: -16px;
-        margin-bottom: -16px;
+        margin-right: 0;
+        margin-left: 0;
+        margin-bottom: 0;
     }
 
     .footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr 1fr;
     }
 
     .hero,
@@ -1539,10 +1621,6 @@ table.data-table tbody tr:hover,
     .info-grid {
         grid-template-columns: 1fr;
         display: block;
-    }
-
-    .page-shell {
-        padding: 16px;
     }
 
     .home-lower {
@@ -1570,12 +1648,13 @@ table.data-table tbody tr:hover,
     }
 
     .brand-logo {
-        width: min(360px, 70vw);
+        width: auto;
+        height: 64px;
+        max-width: 100%;
     }
 
     .brand-title {
-        font-size: 1rem;
-        white-space: normal;
+        white-space: nowrap;
     }
 
     .tingang {
@@ -1687,16 +1766,16 @@ table.data-table tbody tr:hover,
     .topbar,
     .site-footer {
         color: var(--white);
-        background: #0D131A;
+        background: var(--green-d);
     }
 
     .site-header {
-        background: #FFFFFF;
+        background: var(--card);
     }
 
     .site-header .brand-link,
     .site-header .brand-title {
-        color: #182B3D;
+        color: var(--text);
     }
 
     .site-nav {
@@ -1782,8 +1861,8 @@ table.data-table tbody tr:hover,
     }
 
     .footer-bottom {
-        color: #18212B;
-        background: var(--gold);
+        color: #e9efe9;
+        background: #052f1a;
     }
 
     .sub a:hover,

@@ -1,12 +1,8 @@
 <div class="topbar">
     <div class="topbar-inner">
-        <div class="topbar-identity">
-            <span class="eyebrow">PROTOTIPE</span>
-            <span class="topbar-app-name">HUMA MANTAP</span>
-        </div>
         <time class="topbar-date" datetime="<?= e(date('Y-m-d')) ?>"><?= e(date('d-m-Y')) ?></time>
         <div class="ticker" aria-label="Informasi terbaru">
-            <strong class="ticker-label">Terbaru</strong>
+            <strong class="ticker-label">Terbaru:</strong>
             <span
                 class="ticker-text"
                 id="tick"
