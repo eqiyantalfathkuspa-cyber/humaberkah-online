@@ -10,6 +10,41 @@ $query = array_filter([
 $queryString = http_build_query($query);
 $sourceUrl = static fn (string $path): string => $path . ($queryString === '' ? '' : '?' . $queryString);
 $label = static fn (array $labels, string $key): string => (string) ($labels[$key] ?? $key);
+$evidenceTones = [
+    'DIUNGGAH' => 1,
+    'TERVERIFIKASI' => 3,
+    'PERLU_PERBAIKAN' => 4,
+];
+$checklistPresentation = [
+    'VALID' => ['tone' => 3],
+    'ADA_BELUM_VERIFIKASI' => ['tone' => 2],
+    'PERLU_PERBAIKAN' => ['tone' => 4],
+    'KOSONG' => ['tone' => 5],
+];
+$applicationTones = [
+    'DIAJUKAN' => 1,
+    'DIPROSES' => 2,
+    'SELESAI' => 3,
+    'DITOLAK' => 4,
+];
+$complaintTones = [
+    'DITERIMA' => 1,
+    'DIKLASIFIKASI' => 5,
+    'DITINDAKLANJUTI' => 2,
+    'SELESAI' => 3,
+    'DITOLAK' => 4,
+];
+$checklistCounts = [];
+$checklistTotal = 0;
+foreach ($checklistPresentation as $status => $presentation) {
+    $checklistCounts[$status] = max(0, (int) ($report['checklist_statuses'][$status] ?? 0));
+    $checklistTotal += $checklistCounts[$status];
+}
+$checklistAriaLabel = 'Valid ' . $checklistCounts['VALID']
+    . ', Ada belum diverifikasi ' . $checklistCounts['ADA_BELUM_VERIFIKASI']
+    . ', Perlu perbaikan ' . $checklistCounts['PERLU_PERBAIKAN']
+    . ', Kosong ' . $checklistCounts['KOSONG']
+    . ' dari ' . $checklistTotal . ' sel';
 ?>
 <section class="page-panel">
     <div class="section-header">
@@ -52,6 +87,12 @@ $label = static fn (array $labels, string $key): string => (string) ($labels[$ke
         </tbody>
     </table></div>
 
+    <div class="kpi-row">
+        <article class="kpi"><span>Total pengajuan</span><strong><?= e((string) (int) array_sum($report['application_statuses'])) ?></strong></article>
+        <article class="kpi"><span>Total aduan</span><strong><?= e((string) (int) array_sum($report['complaint_statuses'])) ?></strong></article>
+        <article class="kpi"><span>Total RTL</span><strong><?= e((string) (int) array_sum($report['rtl_statuses'])) ?></strong></article>
+        <article class="kpi"><span>Total eviden</span><strong><?= e((string) (int) array_sum($report['evidence_statuses'])) ?></strong></article>
+    </div>
     <div class="dash-grid">
         <section class="dash-panel">
             <h3>RTL berdasarkan status terbaru</h3>
@@ -118,34 +159,107 @@ $label = static fn (array $labels, string $key): string => (string) ($labels[$ke
                 <?php endforeach; ?>
             </svg>
         </section>
+        <section class="dash-panel">
+            <h3>Eviden per status</h3>
+            <?php
+            $donutItems = [];
+            foreach ($report['evidence_statuses'] as $status => $total) {
+                $donutItems[] = [
+                    'label' => $label($report['evidence_labels'], (string) $status),
+                    'count' => max(0, (int) $total),
+                    'tone' => (int) ($evidenceTones[$status] ?? 5),
+                ];
+            }
+            $donutTitle = 'Eviden per status';
+            ?>
+            <div class="chart-row">
+                <?php require __DIR__ . '/../partials/donut.php'; ?>
+                <ul class="st-list">
+                    <?php foreach ($report['evidence_statuses'] as $status => $total):
+                        $statusLabel = $label($report['evidence_labels'], (string) $status);
+                        $statusCount = max(0, (int) $total);
+                    ?>
+                        <li class="tone-<?= (int) ($evidenceTones[$status] ?? 5) ?>">
+                            <a href="<?= e($sourceUrl('/admin/eviden')) ?>"><span class="st-name"><?= e($statusLabel) ?>: </span><strong class="st-num"><?= e((string) $statusCount) ?></strong></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </section>
+        <section class="dash-panel">
+            <h3>Sel checklist per status</h3>
+            <div class="cl99" role="img" aria-label="<?= e($checklistAriaLabel) ?>">
+                <?php foreach ($checklistPresentation as $status => $presentation): ?>
+                    <?php for ($cellIndex = 0; $cellIndex < $checklistCounts[$status]; $cellIndex++): ?>
+                        <span class="tone-<?= (int) $presentation['tone'] ?>" aria-hidden="true"></span>
+                    <?php endfor; ?>
+                <?php endforeach; ?>
+            </div>
+            <ul class="st-list">
+                <?php foreach ($report['checklist_statuses'] as $status => $total):
+                    $statusLabel = $label($report['checklist_labels'], (string) $status);
+                    $statusCount = max(0, (int) $total);
+                ?>
+                    <li class="tone-<?= (int) ($checklistPresentation[$status]['tone'] ?? 5) ?>">
+                        <a href="<?= e($sourceUrl('/admin/checklist-99')) ?>"><span class="st-name"><?= e($statusLabel) ?>: </span><strong class="st-num"><?= e((string) $statusCount) ?></strong></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+        <section class="dash-panel">
+            <h3>Pengajuan per status</h3>
+            <?php
+            $donutItems = [];
+            foreach ($report['application_statuses'] as $status => $total) {
+                $donutItems[] = [
+                    'label' => $label($report['application_labels'], (string) $status),
+                    'count' => max(0, (int) $total),
+                    'tone' => (int) ($applicationTones[$status] ?? 5),
+                ];
+            }
+            $donutTitle = 'Pengajuan per status';
+            ?>
+            <div class="chart-row">
+                <?php require __DIR__ . '/../partials/donut.php'; ?>
+                <ul class="st-list">
+                    <?php foreach ($report['application_statuses'] as $status => $total):
+                        $statusLabel = $label($report['application_labels'], (string) $status);
+                        $statusCount = max(0, (int) $total);
+                    ?>
+                        <li class="tone-<?= (int) ($applicationTones[$status] ?? 5) ?>">
+                            <a href="<?= e($sourceUrl('/admin/pengajuan')) ?>"><span class="st-name"><?= e($statusLabel) ?>: </span><strong class="st-num"><?= e((string) $statusCount) ?></strong></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </section>
+        <section class="dash-panel">
+            <h3>Aduan per status</h3>
+            <?php
+            $donutItems = [];
+            foreach ($report['complaint_statuses'] as $status => $total) {
+                $donutItems[] = [
+                    'label' => $label($report['complaint_labels'], (string) $status),
+                    'count' => max(0, (int) $total),
+                    'tone' => (int) ($complaintTones[$status] ?? 5),
+                ];
+            }
+            $donutTitle = 'Aduan per status';
+            ?>
+            <div class="chart-row">
+                <?php require __DIR__ . '/../partials/donut.php'; ?>
+                <ul class="st-list">
+                    <?php foreach ($report['complaint_statuses'] as $status => $total):
+                        $statusLabel = $label($report['complaint_labels'], (string) $status);
+                        $statusCount = max(0, (int) $total);
+                    ?>
+                        <li class="tone-<?= (int) ($complaintTones[$status] ?? 5) ?>">
+                            <a href="<?= e($sourceUrl('/admin/aduan')) ?>"><span class="st-name"><?= e($statusLabel) ?>: </span><strong class="st-num"><?= e((string) $statusCount) ?></strong></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </section>
     </div>
-
-    <h3>Eviden per status</h3>
-    <ul>
-        <?php foreach ($report['evidence_statuses'] as $status => $total): ?>
-            <li><a href="<?= e($sourceUrl('/admin/eviden')) ?>"><?= e($label($report['evidence_labels'], (string) $status)) ?>: <?= e((string) $total) ?></a></li>
-        <?php endforeach; ?>
-    </ul>
-
-    <h3>Sel checklist per status</h3>
-    <ul>
-        <?php foreach ($report['checklist_statuses'] as $status => $total): ?>
-            <li><a href="<?= e($sourceUrl('/admin/checklist-99')) ?>"><?= e($label($report['checklist_labels'], (string) $status)) ?>: <?= e((string) $total) ?></a></li>
-        <?php endforeach; ?>
-    </ul>
-
-    <h3>Pengajuan per status</h3>
-    <ul>
-        <?php foreach ($report['application_statuses'] as $status => $total): ?>
-            <li><a href="<?= e($sourceUrl('/admin/pengajuan')) ?>"><?= e($label($report['application_labels'], (string) $status)) ?>: <?= e((string) $total) ?></a></li>
-        <?php endforeach; ?>
-    </ul>
-
-    <h3>Aduan per status</h3>
-    <ul>
-        <?php foreach ($report['complaint_statuses'] as $status => $total): ?>
-            <li><a href="<?= e($sourceUrl('/admin/aduan')) ?>"><?= e($label($report['complaint_labels'], (string) $status)) ?>: <?= e((string) $total) ?></a></li>
-        <?php endforeach; ?>
-    </ul>
     <p>Checklist merupakan snapshot status saat ini dan tidak dibatasi oleh filter periode. Aduan tidak terhubung ke layanan; filter layanan tidak mengubah hitungan aduan.</p>
 </section>
