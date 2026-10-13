@@ -5,14 +5,14 @@
     --green: #0b6b3a;
     --green-ink: #0b6b3a;
     --green-d: #084d2a;
-    --cream: #fbf6e8;
-    --bg: #f4f1e8;
+    --cream: #f7f8fa;
+    --bg: #ffffff;
     --card: #ffffff;
     --text: #1d2433;
     --muted: #5d6678;
     --grey: #5d6678;
-    --line: #e3dcc8;
-    --border: #e3dcc8;
+    --line: #e2e8f0;
+    --border: #e2e8f0;
     --white: #ffffff;
     --blue: #1F3C88;
     --orange: #C77B30;
@@ -97,9 +97,10 @@ h1, h2, h3, h4 {
 .topbar {
     margin: 0;
     padding: 0;
-    background: var(--green-d);
-    color: var(--white);
+    background: var(--card);
+    color: var(--text);
     font-size: 0.82rem;
+    border-bottom: 1px solid var(--line);
 }
 
 .topbar-inner {
@@ -211,7 +212,8 @@ h1, h2, h3, h4 {
     position: sticky;
     top: env(safe-area-inset-top, 0px);
     z-index: 50;
-    background: var(--green);
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
 }
 
 .site-nav-inner {
@@ -243,7 +245,7 @@ h1, h2, h3, h4 {
 .menu a {
     display: block;
     padding: 14px 16px;
-    color: var(--white);
+    color: var(--text);
     font-weight: 600;
     font-size: 0.93rem;
     text-decoration: none;
@@ -253,7 +255,8 @@ h1, h2, h3, h4 {
 .menu > li:focus-within > a,
 .menu > li.open > a,
 .menu > li > a[aria-current="page"] {
-    background: var(--green-d);
+    background: var(--cream);
+    color: var(--green-ink);
     box-shadow: inset 0 -3px var(--gold);
 }
 
@@ -340,7 +343,7 @@ h1, h2, h3, h4 {
     display: none;
     margin: 7px 10px 7px auto;
     padding: 9px 13px;
-    color: var(--white);
+    color: var(--green-ink);
     background: none;
     border: 0;
     border-radius: 0;
@@ -357,7 +360,7 @@ h1, h2, h3, h4 {
 .menu-logout-button {
     display: block;
     padding: 14px 16px;
-    color: var(--white);
+    color: var(--text);
     background: none;
     border: 0;
     font: inherit;
@@ -369,7 +372,8 @@ h1, h2, h3, h4 {
 
 .menu-logout-button:hover,
 .menu-logout-button:focus-visible {
-    background: var(--green-d);
+    background: var(--cream);
+    color: var(--green-ink);
     box-shadow: inset 0 -3px var(--gold);
 }
 
@@ -383,8 +387,9 @@ h1, h2, h3, h4 {
 .site-footer {
     margin: 10px 0 0;
     padding: 0;
-    background: var(--green-d);
-    color: var(--white);
+    background: var(--card);
+    color: var(--text);
+    border-top: 1px solid var(--line);
 }
 
 .footer-inner {
@@ -402,7 +407,7 @@ h1, h2, h3, h4 {
 
 .footer-column h2 {
     margin: 0 0 8px;
-    color: var(--gold-hi);
+    color: var(--green-ink);
     font-size: 0.95rem;
     font-weight: 700;
 }
@@ -422,7 +427,7 @@ h1, h2, h3, h4 {
 }
 
 .footer-column a {
-    color: var(--white);
+    color: var(--text);
     display: block;
     margin: 3px 0;
     opacity: 0.92;
@@ -445,13 +450,14 @@ h1, h2, h3, h4 {
     margin: 0;
     padding: 12px 16px;
     font-size: 0.82rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid var(--line);
 }
 
 .footer-bottom {
     padding: 10px;
-    color: #e9efe9;
-    background: #052f1a;
+    color: var(--muted);
+    background: var(--cream);
+    border-top: 1px solid var(--line);
     text-align: center;
     font-size: 0.8rem;
 }
@@ -569,10 +575,10 @@ h1, h2, h3, h4 {
 .error-box,
 .page-panel,
 .auth-card {
-    background: rgba(255,255,255,0.8);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: none;
 }
 
 .stats-panel {
@@ -638,7 +644,7 @@ h1, h2, h3, h4 {
 .auth-card {
     width: min(100%, 460px);
     padding: 28px;
-    background: rgba(255,255,255,0.95);
+    background: var(--card);
 }
 
 .auth-banner {
@@ -668,9 +674,9 @@ h1, h2, h3, h4 {
 
 .auth-form input {
     width: 100%;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 2px solid var(--border);
+    padding: 9px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--green-ink);
     font-size: 1rem;
 }
 
@@ -737,11 +743,11 @@ form input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([
 form select,
 form textarea {
     max-width: 100%;
-    padding: 10px 12px;
+    padding: 9px 10px;
     color: var(--text);
     background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 5px;
+    border: 1px solid var(--green-ink);
+    border-radius: 6px;
     font: inherit;
 }
 
@@ -759,7 +765,8 @@ form input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([
 form select:focus-visible,
 form textarea:focus-visible {
     outline: 3px solid var(--focus);
-    outline-offset: 3px;
+    outline-offset: 1px;
+    border-color: var(--green-ink);
 }
 
 a:focus-visible,
@@ -770,7 +777,16 @@ button:focus-visible,
 }
 
 .page-panel {
-    padding: 28px;
+    padding: 16px;
+}
+
+.page-panel > h1:first-child,
+.page-panel > h2:first-child {
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    color: var(--green-ink);
+    border-bottom: 2px solid var(--green);
+    font-size: 1.25rem;
 }
 
 .page-panel p a:not(.btn),
@@ -906,12 +922,34 @@ button:focus-visible {
     transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+.page-panel,
+.info-card,
+.error-box,
+.auth-card,
+.dash-panel {
+    border-radius: 10px;
+    box-shadow: none;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+    transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
 a.page-panel:hover,
 a.stats-panel:hover,
 a.info-card:hover,
 a.stat-card:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow);
+}
+
+.info-card:hover,
+a.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+    transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
 .section-header h2,
@@ -927,7 +965,7 @@ a.stat-card:hover {
     max-width: 100%;
     overflow-x: auto;
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 10px;
     background: var(--card);
 }
 
@@ -967,8 +1005,8 @@ table.data-table td,
 table.data-table thead th,
 .table-wrap thead th,
 .table-scroll thead th {
-    color: var(--white);
-    background: var(--green);
+    color: var(--text);
+    background: var(--cream);
     font-weight: 700;
 }
 
@@ -981,7 +1019,7 @@ table.data-table tbody tr:nth-child(even),
 table.data-table tbody tr:hover,
 .table-wrap tbody tr:hover,
 .table-scroll tbody tr:hover {
-    background: var(--line);
+    background: var(--cream);
 }
 
 .page-panel .data-table,
@@ -1006,7 +1044,7 @@ table.data-table tbody tr:hover,
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 10px;
-    min-height: 300px;
+    min-height: max(300px, 18.75rem);
     background: var(--green-d);
     color: var(--white);
 }
@@ -1047,9 +1085,9 @@ table.data-table tbody tr:hover,
 }
 
 .carousel-copy {
-    position: relative;
     z-index: 1;
     max-width: 62ch;
+    padding-bottom: 0.75rem;
 }
 
 .carousel-copy h2,
@@ -1071,7 +1109,7 @@ table.data-table tbody tr:hover,
     opacity: 0.92;
 }
 
-.carousel-copy .kicker {
+.carousel-slide .kicker {
     position: absolute;
     top: 18px;
     left: 32px;
@@ -1369,8 +1407,8 @@ table.data-table tbody tr:hover,
     padding: 16px;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+    border-radius: 10px;
+    box-shadow: none;
 }
 
 .dash-panel h2,
@@ -1768,7 +1806,10 @@ table.data-table tbody tr:hover,
     }
 
     .fab-kahayan {
-        max-width: calc(100vw - 154px);
+        max-width: calc(100vw - 136px);
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        white-space: nowrap;
     }
 
     .hero-grid,
@@ -1779,6 +1820,10 @@ table.data-table tbody tr:hover,
     .carousel-copy h2,
     .carousel-copy p {
         max-width: 100%;
+    }
+
+    .home-carousel {
+        min-height: max(350px, 20rem);
     }
 
     .carousel-controls {
@@ -1859,19 +1904,19 @@ table.data-table tbody tr:hover,
         min-width: 0;
         max-width: none;
         box-shadow: none;
-        background: var(--green-d);
+        background: var(--card);
         border: 0;
     }
 
     .sub a {
         padding-left: 28px;
-        color: var(--white);
-        border-bottom-color: rgba(255, 255, 255, 0.16);
+        color: var(--text);
+        border-bottom-color: var(--line);
     }
 
     .menu-group-title {
         padding-left: 28px;
-        color: var(--gold);
+        color: var(--green-ink);
     }
 
     .site-footer {
@@ -2035,8 +2080,9 @@ table.data-table tbody tr:hover,
 
     .topbar,
     .site-footer {
-        color: var(--white);
-        background: var(--green-d);
+        color: var(--text);
+        background: var(--card);
+        border-color: var(--line);
     }
 
     .site-header {
@@ -2049,7 +2095,27 @@ table.data-table tbody tr:hover,
     }
 
     .site-nav {
-        background: var(--green);
+        background: var(--card);
+        border-color: var(--line);
+    }
+
+    .menu a,
+    .menu-logout-button,
+    .nav-toggle,
+    .sub a {
+        color: var(--text);
+    }
+
+    .menu > li:hover > a,
+    .menu > li:focus-within > a,
+    .menu > li.open > a,
+    .menu > li > a[aria-current="page"],
+    .menu-logout-button:hover,
+    .menu-logout-button:focus-visible,
+    .sub a:hover,
+    .sub a:focus-visible {
+        color: var(--green-ink);
+        background: var(--cream);
     }
 
     .hero,
@@ -2124,10 +2190,11 @@ table.data-table tbody tr:hover,
     .auth-banner {
         color: var(--text);
         background: var(--card);
+        border: 1px solid var(--line);
     }
 
     .footer-column h2 {
-        color: var(--gold-hi);
+        color: var(--green-ink);
     }
 
     .menu-group-title {
@@ -2135,15 +2202,19 @@ table.data-table tbody tr:hover,
     }
 
     .footer-bottom {
-        color: #e9efe9;
-        background: #052f1a;
+        color: var(--muted);
+        background: var(--cream);
+        border-color: var(--line);
     }
 
-    .sub a:hover,
-    .sub a:focus-visible {
-        color: var(--green-ink);
-        background: #101820;
+    .sub {
+        background: var(--card);
     }
+
+    .sub a {
+        border-bottom-color: var(--line);
+    }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
