@@ -1086,6 +1086,7 @@ table.data-table tbody tr:hover,
 }
 
 .st-alert {
+    display: block;
     margin: 10px 0;
     padding: 10px 12px;
     color: var(--text);
@@ -1094,6 +1095,7 @@ table.data-table tbody tr:hover,
     border-left-width: 5px;
     border-radius: 8px;
     font-weight: 600;
+    text-decoration: none;
 }
 
 .stackbar,

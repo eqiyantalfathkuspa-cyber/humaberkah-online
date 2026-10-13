@@ -52,13 +52,73 @@ $label = static fn (array $labels, string $key): string => (string) ($labels[$ke
         </tbody>
     </table></div>
 
-    <h3>RTL berdasarkan status terbaru</h3>
-    <ul>
-        <?php foreach ($report['rtl_statuses'] as $status => $total): ?>
-            <li><a href="<?= e($sourceUrl('/admin/rtl')) ?>"><?= e((string) $status) ?>: <?= e((string) $total) ?></a></li>
-        <?php endforeach; ?>
-        <li><a href="<?= e($sourceUrl('/admin/rtl')) ?>">Belum selesai dan lewat tenggat: <?= e((string) $report['rtl_overdue']) ?></a></li>
-    </ul>
+    <div class="dash-grid">
+        <section class="dash-panel">
+            <h3>RTL berdasarkan status terbaru</h3>
+            <?php
+            $rtlLabels = [
+                'DIRENCANAKAN' => 'Direncanakan',
+                'BERJALAN' => 'Berjalan',
+                'SELESAI' => 'Selesai',
+            ];
+            $rtlTones = [
+                'DIRENCANAKAN' => 1,
+                'BERJALAN' => 2,
+                'SELESAI' => 3,
+            ];
+            $donutItems = [];
+            $rtlStackValues = [];
+            $rtlStackTones = [];
+            $rtlStackLabel = 'Komposisi status RTL';
+            foreach ($report['rtl_statuses'] as $status => $total) {
+                $rtlCount = max(0, (int) $total);
+                $rtlLabel = $rtlLabels[$status] ?? (string) $status;
+                $rtlTone = (int) ($rtlTones[$status] ?? 5);
+                $donutItems[] = [
+                    'label' => $rtlLabel,
+                    'count' => $rtlCount,
+                    'tone' => $rtlTone,
+                ];
+                $rtlStackValues[] = $rtlCount;
+                $rtlStackTones[] = $rtlTone;
+                $rtlStackLabel .= ', ' . $rtlLabel . ' ' . $rtlCount;
+            }
+            $donutTitle = 'RTL berdasarkan status terbaru';
+            ?>
+            <div class="chart-row">
+                <?php require __DIR__ . '/../partials/donut.php'; ?>
+                <ul class="st-list">
+                    <?php foreach ($report['rtl_statuses'] as $status => $total):
+                        $rtlCount = max(0, (int) $total);
+                        $rtlLabel = $rtlLabels[$status] ?? (string) $status;
+                        $rtlTone = (int) ($rtlTones[$status] ?? 5);
+                    ?>
+                        <li class="tone-<?= $rtlTone ?>">
+                            <a href="<?= e($sourceUrl('/admin/rtl')) ?>"><span class="st-name"><?= e($rtlLabel) ?></span><strong class="st-num"><?= e((string) $rtlCount) ?></strong></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <a class="st-alert" href="<?= e($sourceUrl('/admin/rtl')) ?>">Belum selesai dan lewat tenggat: <?= e((string) max(0, (int) $report['rtl_overdue'])) ?></a>
+            <?php
+            $rtlStackTotal = array_sum($rtlStackValues);
+            $rtlStackDenominator = max(1, $rtlStackTotal);
+            $rtlStackOffset = 0.0;
+            ?>
+            <svg class="stackbar" viewBox="0 0 100 8" role="img" aria-label="<?= e($rtlStackLabel) ?>" preserveAspectRatio="none">
+                <rect class="bg" width="100" height="8" rx="4"/>
+                <?php foreach ($rtlStackValues as $index => $rtlStackValue):
+                    $rtlStackWidth = $rtlStackValue / $rtlStackDenominator * 100;
+                    if ($rtlStackWidth <= 0) {
+                        continue;
+                    }
+                ?>
+                    <rect class="seg tone-<?= (int) $rtlStackTones[$index] ?>" x="<?= round($rtlStackOffset, 2) ?>" width="<?= round($rtlStackWidth, 2) ?>" height="8"/>
+                    <?php $rtlStackOffset += $rtlStackWidth; ?>
+                <?php endforeach; ?>
+            </svg>
+        </section>
+    </div>
 
     <h3>Eviden per status</h3>
     <ul>
