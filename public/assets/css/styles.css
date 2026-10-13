@@ -735,6 +735,155 @@ table.data-table tbody tr:hover,
     margin: 0;
 }
 
+.home-page {
+    display: grid;
+    gap: 28px;
+}
+
+.home-carousel {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--green-d);
+    color: var(--white);
+}
+
+.carousel-slide {
+    position: relative;
+    display: grid;
+    min-height: 320px;
+    align-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    padding: 34px;
+}
+
+.home-carousel.carousel-ready .carousel-slide:not(.is-active) {
+    display: none;
+}
+
+.carousel-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 62ch;
+}
+
+.carousel-copy h2,
+.carousel-copy p {
+    color: var(--white);
+}
+
+.carousel-copy h2 {
+    margin-bottom: 12px;
+    font-size: 2rem;
+}
+
+.carousel-copy .kicker {
+    color: var(--white);
+}
+
+.carousel-tingang {
+    position: absolute;
+    right: 4%;
+    bottom: 4%;
+    z-index: 0;
+    width: 240px;
+    height: auto;
+    opacity: 0.14;
+    pointer-events: none;
+}
+
+.carousel-controls {
+    display: none;
+    position: absolute;
+    right: 20px;
+    bottom: 18px;
+    z-index: 2;
+    gap: 8px;
+}
+
+.home-carousel.carousel-ready .carousel-controls {
+    display: flex;
+}
+
+.carousel-controls button {
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    aspect-ratio: 1;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    background: transparent;
+}
+
+.carousel-controls button[aria-pressed="true"] {
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.home-quick,
+.home-catalogue,
+.home-journey {
+    padding: 22px;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.home-quick h2,
+.home-catalogue h2,
+.home-journey h2 {
+    display: table;
+    margin-bottom: 16px;
+    padding-bottom: 7px;
+    border-bottom: 2px solid var(--green);
+}
+
+.quick-service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.quick-service {
+    display: block;
+    min-height: 52px;
+    padding: 15px;
+    color: var(--text);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.quick-service:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.home-lower {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 20px;
+}
+
+.home-lower ol {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding-left: 24px;
+}
+
+.home-catalogue p,
+.home-journey li {
+    color: var(--muted);
+}
+
 .dayak {
     height: 8px;
     background:
@@ -747,6 +896,10 @@ table.data-table tbody tr:hover,
     .page-shell {
         max-width: 1160px;
         width: 100%;
+    }
+
+    .carousel-slide {
+        min-height: 300px;
     }
 }
 
@@ -845,6 +998,15 @@ table.data-table tbody tr:hover,
     .page-shell {
         padding: 16px;
     }
+
+    .home-lower {
+        grid-template-columns: 1fr;
+    }
+
+    .carousel-slide {
+        min-height: 280px;
+        padding: 26px;
+    }
 }
 
 @media (max-width: 600px) {
@@ -879,6 +1041,10 @@ table.data-table tbody tr:hover,
         gap: 18px;
     }
 
+    .quick-service-grid {
+        grid-template-columns: 1fr;
+    }
+
     .btn,
     button[type="submit"] {
         width: 100%;
@@ -894,6 +1060,17 @@ table.data-table tbody tr:hover,
 
     .site-footer {
         margin-top: 24px;
+    }
+
+    .carousel-copy h2 {
+        font-size: 1.65rem;
+    }
+
+    .carousel-tingang {
+        right: -15px;
+        bottom: 0;
+        width: 150px;
+        opacity: 0.1;
     }
 }
 
@@ -955,6 +1132,25 @@ table.data-table tbody tr:hover,
     .logo-box {
         color: var(--text);
         background: rgba(228, 189, 96, 0.12);
+    }
+
+    .home-carousel {
+        color: var(--white);
+        background: var(--green-d);
+    }
+
+    .quick-service {
+        color: var(--text);
+        background: var(--card);
+        border-color: var(--border);
+    }
+
+    .home-quick,
+    .home-catalogue,
+    .home-journey {
+        color: var(--text);
+        background: var(--card);
+        border-color: var(--border);
     }
 
     .btn:not(.primary):not(.danger) {
