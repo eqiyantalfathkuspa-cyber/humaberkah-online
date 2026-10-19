@@ -4,8 +4,7 @@
 ?>
 <section class="auth-shell">
     <div class="auth-card">
-        <div class="auth-banner">PROTOTIPE</div>
-        <h2>Masuk ke HUMA MANTAP</h2>
+        <h2>Masuk ke HUMA BERKAH</h2>
         <p class="auth-copy">Pilih jenis akun sesuai identitas Anda.</p>
         <?php if ($error !== ''): ?>
             <div class="auth-error"><?= e($error) ?></div>
@@ -25,16 +24,16 @@
             <label>
                 <span>Jenis akun</span>
                 <select name="login_role" required>
-                    <option value="SISWA_GURU">Siswa / Guru</option>
-                    <option value="ADMIN">Admin Pokja 6</option>
+                    <option value="SISWA_GURU">Siswa / Guru / Tendik</option>
+                    <option value="ADMIN">Admin</option>
                 </select>
             </label>
             <button type="submit" class="btn primary">Masuk</button>
         </form>
         <div class="auth-choices">
-            <a href="/">Guest</a>
-            <span>Siswa / Guru</span>
-            <span>Admin Pokja 6</span>
+            <a href="/"> Tamu </a>
+            <span>Siswa / Guru / Tendik </span>
+            <span>Admin </span>
         </div>
     </div>
 </section>

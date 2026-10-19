@@ -45,7 +45,7 @@ if ($username === '') {
     exit(1);
 }
 
-$fullName = trim((string) ($argv[2] ?? 'Admin Pokja 6'));
+$fullName = trim((string) ($argv[2] ?? 'Admin'));
 $database = Config::activeDatabaseName();
 $pdo = Db::pdo($database);
 $roleRow = Db::one('SELECT id FROM roles WHERE code = ?', ['ADMIN'], 'default');

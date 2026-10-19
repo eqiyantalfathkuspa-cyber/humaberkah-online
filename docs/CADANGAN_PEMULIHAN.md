@@ -1,4 +1,4 @@
-# Cadangan dan Pemulihan HUMA MANTAP
+# Cadangan dan Pemulihan HUMA BERKAH
 
 Panduan operasional ini belum dijalankan sebagai bagian dari Langkah 9. Simpan semua artefak cadangan di luar folder proyek dan jangan menaruh kredensial atau secret di repositori.
 

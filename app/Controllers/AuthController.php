@@ -41,7 +41,7 @@ final class AuthController
         $user = $result['user'] ?? Auth::user();
         $roleCode = strtoupper((string) ($user['role_code'] ?? $user['role'] ?? ''));
         if (!headers_sent()) {
-            header('Location: ' . ($roleCode === 'ADMIN' ? '/admin' : '/portal'), true, 302);
+            header('Location: ' . ($roleCode === 'ADMIN' ? '/admin' : '/'), true, 302);
         }
     }
 

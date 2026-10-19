@@ -78,7 +78,7 @@ final class Router
             'GET' => [
                 '/' => [
                     'handler' => static function (): void {
-                        View::render('pages/home', ['title' => 'HUMA MANTAP']);
+                        View::render('pages/home', ['title' => 'HUMA BERKAH']);
                     },
                     'ability' => 'home.public',
                 ],

@@ -31,7 +31,6 @@ $availableModes = ($service['code'] ?? '') === 'HUM-02'
                 </select>
             <?php endif; ?>
         </label>
-        <label><span>Tarif</span><input type="text" name="fee_text" maxlength="500" value="<?= e((string) ($service['fee_text'] ?? '')) ?>"></label>
         <label><span>SLA</span><input type="text" name="sla_text" maxlength="500" value="<?= e((string) ($service['sla_text'] ?? '')) ?>"></label>
         <label><span>Unit penanggung jawab</span><input type="text" name="responsible_unit" maxlength="500" value="<?= e((string) ($service['responsible_unit'] ?? '')) ?>"></label>
         <label><span>Dokumen wajib (keterangan teks)</span><textarea name="required_documents_text" maxlength="4000" rows="5"><?= e((string) ($service['required_documents_text'] ?? '')) ?></textarea></label>

@@ -37,12 +37,24 @@ $catalogCountsAfterFirstApply = [
     'standards' => (int) Db::one('SELECT COUNT(*) AS n FROM service_standards', [], 'test')['n'],
 ];
 $emptyStandards = (int) Db::one(
-    'SELECT COUNT(*) AS n FROM service_standards WHERE fee_text IS NOT NULL OR sla_text IS NOT NULL OR responsible_unit IS NOT NULL OR required_documents_text IS NOT NULL',
+    'SELECT COUNT(*) AS n FROM service_standards WHERE sla_text IS NOT NULL OR responsible_unit IS NOT NULL OR required_documents_text IS NOT NULL',
     [],
     'test'
 )['n'];
+$feeColumn = Db::one(
+    'SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+    ['service_standards', 'fee_text'],
+    'test'
+);
+check('Migrasi katalog menghapus kolom tarif dari basis data', $feeColumn === null);
 foreach ($catalogStatements as $catalogStatement) {
     $catalogPdo->exec($catalogStatement);
+}
+$renameTu02Statements = SqlStatementParser::parse(
+    (string) file_get_contents(__DIR__ . '/../database/migrations/016_rename_tu02.sql')
+);
+foreach ($renameTu02Statements as $statement) {
+    $catalogPdo->exec($statement);
 }
 $catalogCountsAfterSecondApply = [
     'categories' => (int) Db::one('SELECT COUNT(*) AS n FROM service_categories', [], 'test')['n'],
@@ -55,6 +67,10 @@ check(
     $catalogCountsAfterFirstApply === ['categories' => 5, 'services' => 11, 'steps' => 88, 'standards' => 11]
         && $catalogCountsAfterSecondApply === $catalogCountsAfterFirstApply
         && $emptyStandards === 0
+);
+check(
+    'Nama TU-02 tersimpan sebagai ADMINISTRASI MANDIRI',
+    Db::one('SELECT name FROM services WHERE code = ?', ['TU-02'], 'test')['name'] === 'ADMINISTRASI MANDIRI'
 );
 
 $flowchart = (string) file_get_contents(__DIR__ . '/../docs/FLOWCHART_PELAYANAN.md');
@@ -592,7 +608,7 @@ $postRoutes = [
     '/admin/pengguna/' . $siswa['id'] . '/role' => ['admin.users.role', ['role' => 'GURU']],
     '/admin/pengguna/' . $adminTarget['id'] . '/nonaktif' => ['admin.users.deactivate', []],
     '/admin/pengguna/' . $guru['id'] . '/reset-sandi' => ['admin.users.reset_password', ['password' => 'secret-matrix-reset-' . $suffix]],
-    '/admin/layanan/TU-01' => ['admin.services.update', ['mode' => 'FORMULIR', 'fee_text' => '', 'sla_text' => '', 'responsible_unit' => '', 'required_documents_text' => '']],
+    '/admin/layanan/TU-01' => ['admin.services.update', ['mode' => 'FORMULIR', 'sla_text' => '', 'responsible_unit' => '', 'required_documents_text' => '']],
     '/layanan/TU-01/ajukan' => ['applications.submit', ['request_text' => 'Uji matriks']],
     '/lacak' => ['applications.track.lookup', ['tracking_code' => 'invalid-matrix-code']],
     '/admin/pengajuan/' . $matrixApplicationId . '/status' => ['admin.applications.status', ['status' => 'DIPROSES']],
@@ -660,7 +676,7 @@ $adminPosts = [
     '/admin/pengguna/' . $siswa['id'] . '/role' => ['role' => 'GURU'],
     '/admin/pengguna/' . $adminTarget['id'] . '/nonaktif' => [],
     '/admin/pengguna/' . $guru['id'] . '/reset-sandi' => ['password' => 'secret-reset-' . $suffix],
-    '/admin/layanan/TU-01' => ['mode' => 'FORMULIR', 'fee_text' => '', 'sla_text' => '', 'responsible_unit' => '', 'required_documents_text' => ''],
+    '/admin/layanan/TU-01' => ['mode' => 'FORMULIR', 'sla_text' => '', 'responsible_unit' => '', 'required_documents_text' => ''],
     '/lacak' => ['tracking_code' => 'invalid-csrf-code'],
     '/admin/pengajuan/' . $matrixApplicationId . '/status' => ['status' => 'DIPROSES'],
 ];
@@ -706,6 +722,11 @@ check(
     str_contains($catalogDetailResponse['body'], 'BELUM DITETAPKAN')
         && str_contains($catalogDetailResponse['body'], 'Isi konseling dan data pribadi sensitif tidak disimpan di sistem.')
         && str_contains($catalogDetailResponse['body'], ServiceCatalog::INFORMATION_STEPS_NOTICE)
+);
+check(
+    'Detail TU-02 memakai judul ADMINISTRASI MANDIRI',
+    str_contains($formCatalogDetailResponse['body'], '<title>TU-02 — ADMINISTRASI MANDIRI</title>')
+        && str_contains($formCatalogDetailResponse['body'], '<h2>TU-02 — ADMINISTRASI MANDIRI</h2>')
 );
 $informationStepNoticeCount = substr_count($catalogDetailResponse['body'], ServiceCatalog::INFORMATION_STEPS_NOTICE);
 check(
@@ -1420,7 +1441,6 @@ $unknownAdminEdit = phase2bRequest('GET', '/admin/layanan/NO-99/ubah');
 $unknownAdminUpdate = phase2bRequest('POST', '/admin/layanan/NO-99', [
     '_csrf' => Csrf::token(),
     'mode' => 'FORMULIR',
-    'fee_text' => '',
     'sla_text' => '',
     'responsible_unit' => '',
     'required_documents_text' => '',
@@ -1430,7 +1450,6 @@ check('Kode layanan admin tidak dikenal menghasilkan 404', $unknownAdminEdit['st
 $invalidServiceMode = phase2bRequest('POST', '/admin/layanan/TU-01', [
     '_csrf' => Csrf::token(),
     'mode' => 'TIDAK_VALID',
-    'fee_text' => '',
     'sla_text' => '',
     'responsible_unit' => '',
     'required_documents_text' => '',
@@ -1438,7 +1457,6 @@ $invalidServiceMode = phase2bRequest('POST', '/admin/layanan/TU-01', [
 $invalidComplaintMode = phase2bRequest('POST', '/admin/layanan/HUM-02', [
     '_csrf' => Csrf::token(),
     'mode' => 'FORMULIR',
-    'fee_text' => '',
     'sla_text' => '',
     'responsible_unit' => '',
     'required_documents_text' => '',
@@ -1446,7 +1464,6 @@ $invalidComplaintMode = phase2bRequest('POST', '/admin/layanan/HUM-02', [
 $complaintModeForOtherService = phase2bRequest('POST', '/admin/layanan/TU-01', [
     '_csrf' => Csrf::token(),
     'mode' => 'MODUL_PENGADUAN',
-    'fee_text' => '',
     'sla_text' => '',
     'responsible_unit' => '',
     'required_documents_text' => '',
@@ -1454,8 +1471,7 @@ $complaintModeForOtherService = phase2bRequest('POST', '/admin/layanan/TU-01', [
 $oversizedStandard = phase2bRequest('POST', '/admin/layanan/TU-01', [
     '_csrf' => Csrf::token(),
     'mode' => 'FORMULIR',
-    'fee_text' => str_repeat('x', 501),
-    'sla_text' => '',
+    'sla_text' => str_repeat('x', 501),
     'responsible_unit' => '',
     'required_documents_text' => '',
 ]);
@@ -1467,18 +1483,16 @@ check(
         && $oversizedStandard['status'] === 422
 );
 
-$xssStandard = '<script>alert("xss")</script> "kutip"';
 $sqlStandard = "' OR 1=1 --";
 $serviceUpdateResponse = phase2bRequest('POST', '/admin/layanan/TU-01', [
     '_csrf' => Csrf::token(),
     'mode' => 'INFORMASI',
-    'fee_text' => '  ' . $xssStandard . '  ',
     'sla_text' => '   ',
     'responsible_unit' => $sqlStandard,
     'required_documents_text' => '<img src=x onerror="alert(1)"> dokumen',
 ]);
 $updatedService = Db::one(
-    'SELECT s.id, s.mode, ss.fee_text, ss.sla_text, ss.responsible_unit, ss.required_documents_text, ss.updated_by FROM services s INNER JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
+    'SELECT s.id, s.mode, ss.sla_text, ss.responsible_unit, ss.required_documents_text, ss.updated_by FROM services s INNER JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
     ['TU-01'],
     'test'
 );
@@ -1493,7 +1507,6 @@ check(
     $serviceUpdateResponse['status'] === 200
         && $updatedService !== null
         && $updatedService['mode'] === 'INFORMASI'
-        && $updatedService['fee_text'] === $xssStandard
         && $updatedService['sla_text'] === null
         && $updatedService['responsible_unit'] === $sqlStandard
         && $updatedService['required_documents_text'] === '<img src=x onerror="alert(1)"> dokumen'
@@ -1521,7 +1534,9 @@ $updatedAdminIndex = phase2bRequest('GET', '/admin/layanan');
 check(
     'Nilai standar layanan di-escape pada detail publik dan halaman admin',
     !str_contains($updatedPublicDetail['body'], '<script>')
+        && !str_contains($updatedPublicDetail['body'], 'Tarif')
         && !str_contains($updatedPublicDetail['body'], '<img src=x')
+        && !str_contains($updatedAdminEdit['body'], 'Tarif')
         && !str_contains($updatedAdminEdit['body'], '<script>')
         && !str_contains($updatedAdminEdit['body'], '<img src=x')
         && !str_contains($updatedAdminIndex['body'], '<script>')
@@ -1533,7 +1548,7 @@ check(
         && !str_contains($formCatalogDetailResponse['body'], 'Pengajuan melalui website menyusul pada Langkah 4.')
         && str_contains($formCatalogDetailResponse['body'], 'Login sebagai SISWA atau GURU untuk mengajukan layanan.')
         && str_contains($updatedAdminIndex['body'], 'Informasi langsung di website')
-        && str_contains($updatedAdminIndex['body'], '>3 / 4<')
+        && str_contains($updatedAdminIndex['body'], '>2 / 3<')
 );
 check(
     'SQL pada teks standar disimpan sebagai teks literal',
@@ -1543,7 +1558,6 @@ check(
 $maximumStandard = str_repeat('é🙂', 250);
 $maximumDocuments = str_repeat('é🙂', 2000);
 $maximumStandards = [
-    'fee_text' => $maximumStandard,
     'sla_text' => $maximumStandard,
     'responsible_unit' => $maximumStandard,
     'required_documents_text' => $maximumDocuments,
@@ -1553,7 +1567,7 @@ $maximumStandardsResponse = phase2bRequest('POST', '/admin/layanan/TU-01', [
     'mode' => 'INFORMASI',
 ] + $maximumStandards);
 $maximumStandardsService = Db::one(
-    'SELECT s.id, s.mode, ss.fee_text, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
+    'SELECT s.id, s.mode, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
     ['TU-01'],
     'test'
 );
@@ -1578,14 +1592,12 @@ check(
         && (int) $auditMessageColumn['max_length'] === 65535
         && $maximumStandardsService !== null
         && $maximumStandardsService['mode'] === 'INFORMASI'
-        && $maximumStandardsService['fee_text'] === $maximumStandard
         && $maximumStandardsService['sla_text'] === $maximumStandard
         && $maximumStandardsService['responsible_unit'] === $maximumStandard
         && $maximumStandardsService['required_documents_text'] === $maximumDocuments
         && $maximumStandardsAudit !== null
         && is_array($maximumStandardsAuditValues)
         && ($maximumStandardsAuditValues['new']['mode'] ?? null) === 'INFORMASI'
-        && ($maximumStandardsAuditValues['new']['fee_text'] ?? null) === $maximumStandard
         && ($maximumStandardsAuditValues['new']['sla_text'] ?? null) === $maximumStandard
         && ($maximumStandardsAuditValues['new']['responsible_unit'] ?? null) === $maximumStandard
         && ($maximumStandardsAuditValues['new']['required_documents_text'] ?? null) === $maximumDocuments
@@ -1595,7 +1607,6 @@ check(
 $maximumStandardB = str_repeat('🙂é', 250);
 $maximumDocumentsB = str_repeat('🙂é', 2000);
 $maximumStandardsB = [
-    'fee_text' => $maximumStandardB,
     'sla_text' => $maximumStandardB,
     'responsible_unit' => $maximumStandardB,
     'required_documents_text' => $maximumDocumentsB,
@@ -1618,11 +1629,9 @@ check(
     $maximumStandardsBResponse['status'] === 200
         && $maximumStandardsBAudit !== null
         && is_array($maximumStandardsBAuditValues)
-        && ($maximumStandardsBAuditValues['old']['fee_text'] ?? null) === $maximumStandard
         && ($maximumStandardsBAuditValues['old']['sla_text'] ?? null) === $maximumStandard
         && ($maximumStandardsBAuditValues['old']['responsible_unit'] ?? null) === $maximumStandard
         && ($maximumStandardsBAuditValues['old']['required_documents_text'] ?? null) === $maximumDocuments
-        && ($maximumStandardsBAuditValues['new']['fee_text'] ?? null) === $maximumStandardB
         && ($maximumStandardsBAuditValues['new']['sla_text'] ?? null) === $maximumStandardB
         && ($maximumStandardsBAuditValues['new']['responsible_unit'] ?? null) === $maximumStandardB
         && ($maximumStandardsBAuditValues['new']['required_documents_text'] ?? null) === $maximumDocumentsB
@@ -1632,16 +1641,18 @@ check(
 foreach ($catalogStatements as $catalogStatement) {
     $catalogPdo->exec($catalogStatement);
 }
+foreach ($renameTu02Statements as $statement) {
+    $catalogPdo->exec($statement);
+}
 $serviceAfterCatalogRerun = Db::one(
-    'SELECT s.mode, ss.fee_text, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
+    'SELECT s.mode, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
     ['TU-01'],
     'test'
 );
 check(
-    'Migrasi katalog ulang mempertahankan mode dan keempat standar yang disimpan admin',
+    'Migrasi katalog ulang mempertahankan mode dan ketiga standar yang disimpan admin',
     $serviceAfterCatalogRerun !== null
         && $serviceAfterCatalogRerun['mode'] === 'INFORMASI'
-        && $serviceAfterCatalogRerun['fee_text'] === $maximumStandardB
         && $serviceAfterCatalogRerun['sla_text'] === $maximumStandardB
         && $serviceAfterCatalogRerun['responsible_unit'] === $maximumStandardB
         && $serviceAfterCatalogRerun['required_documents_text'] === $maximumDocumentsB

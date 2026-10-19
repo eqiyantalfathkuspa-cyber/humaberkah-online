@@ -64,14 +64,18 @@ function runMigrationProcess(string $directory, string $database = 'test', ?stri
     return [$exitCode, $stdout . $stderr];
 }
 
-$cmd = 'php ' . escapeshellarg(__DIR__ . '/../bin/jalankan-migrasi.php') . ' test';
+$cmd = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(__DIR__ . '/../bin/jalankan-migrasi.php') . ' test 2>&1';
 exec($cmd, $migOutput, $migCode);
 check('Migrasi basis data pengujian berjalan dengan benar', $migCode === 0, implode(PHP_EOL, $migOutput));
+if ($migCode !== 0) {
+    ob_end_flush();
+    exit(1);
+}
 
 ob_start();
 $homeResult = Router::dispatch('GET', '/');
 $homeOutput = ob_get_clean();
-check('Router 200 untuk rute dikenal', $homeResult['status'] === 200 && str_contains($homeOutput, 'HUMA MANTAP'), $homeOutput);
+check('Router 200 untuk rute dikenal', $homeResult['status'] === 200 && str_contains($homeOutput, 'HUMA BERKAH'), $homeOutput);
 
 ob_start();
 $notFound = Router::dispatch('GET', '/rute-tidak-ada');
@@ -197,6 +201,8 @@ check(
         '012_madani_evaluations.sql' => 1,
         '013_madani_rtl.sql' => 2,
         '014_madani_before_after.sql' => 1,
+        '015_remove_service_fee.sql' => 1,
+        '016_rename_tu02.sql' => 1,
     ],
     json_encode($migrationStatementCounts)
 );

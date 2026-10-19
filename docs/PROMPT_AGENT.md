@@ -1,4 +1,4 @@
-# PROMPT AGENT V2: BANGUN WEBSITE HUMA MANTAP DARI NOL
+# PROMPT AGENT V2: BANGUN WEBSITE HUMA BERKAH DARI NOL
 
 ## PHP + MySQL (Laragon), tanpa framework, prototipe PMPZI Pokja 6
 
@@ -8,7 +8,7 @@ Simpan sebagai `docs/PROMPT_AGENT.md` di proyek baru. Simpan juga `docs/BLUEPRIN
 
 ## 1. PERAN DAN TUJUAN
 
-Anda insinyur perangkat lunak senior. Bangun HUMA MANTAP, website pelayanan publik MAN Kota Palangka Raya (Pokja 6), sebagai satu aplikasi dengan tiga role, bukan tiga website.
+Anda insinyur perangkat lunak senior. Bangun HUMA BERKAH, website pelayanan publik MAN Kota Palangka Raya (Pokja 6), sebagai satu aplikasi dengan tiga role, bukan tiga website.
 
 - HUMA LAYAN: masyarakat, siswa, guru, orang tua, dan calon siswa memperoleh layanan.
 - KAHAYAN AMANAH dan MADANI: aspirasi, pengaduan, survei, eviden, evaluasi, RTL, dan monitoring oleh Pokja 6.
@@ -83,13 +83,13 @@ Aturan akses:
 - Pengguna hanya bisa melihat permohonan dan pengaduan miliknya. Akses ke milik orang lain -> 404.
 - Identitas dan isi pengaduan tidak pernah tampil di halaman publik.
 - NISN/NIP saja bukan autentikasi yang aman. Di prototipe, akun hanya dibuat oleh ADMIN (atau `seed-demo.php`) dengan kata sandi ter-hash. Tidak ada login hanya dengan NISN/NIP.
-- Layar login menampilkan tiga pilihan: Masuk sebagai Guest / Siswa-Guru / Admin Pokja 6. Guest langsung ke beranda tanpa sesi login.
+- Layar login menampilkan tiga pilihan: Masuk sebagai Guest / Siswa-Guru / Admin. Guest langsung ke beranda tanpa sesi login.
 
 ## 5. SIKLUS LAYANAN DAN KATALOG
 
 Seluruh layanan mengikuti 8 tahap: 1 Akses layanan, 2 Informasi layanan, 3 Pengajuan/permintaan, 4 Verifikasi, 5 Proses layanan, 6 Produk/hasil layanan, 7 Umpan balik (KAHAYAN AMANAH), 8 Evaluasi, RTL & dampak (MADANI).
 
-Lima kategori, sebelas layanan: TU-01, TU-02, KUR-01, KUR-02, KES-01, KES-02, KES-03, KES-04, SAR-01, HUM-01, HUM-02.
+Lima kategori ditampilkan dengan label TATA USAHA, KURIKULUM, KESISWAAN, SARANA PRASARANA, dan HUMAS. TU-01 bernama Srikandi. Katalog berisi sebelas layanan: TU-01, TU-02, KUR-01, KUR-02, KES-01, KES-02, KES-03, KES-04, SAR-01, HUM-01, HUM-02.
 
 Tiap layanan memiliki mode: FORMULIR, INFORMASI, atau TATAP_MUKA.
 
@@ -173,7 +173,7 @@ Blok kode contoh dalam prompt ini memperlihatkan pola `Db`, `Csrf`, `Auth`, `IdG
 
 1. Pemetaan `mode` per layanan (FORMULIR / INFORMASI / TATAP_MUKA), usulan di bagian 5.
 2. Sub-peran ADMIN (mis. petugas layanan, verifikator) dan siapa PIC tiap kategori.
-3. Tarif, waktu standar, dan unit penanggung jawab tiap layanan (`DATA REQUIRED` dari Pokja 6).
+3. Waktu standar dan unit penanggung jawab tiap layanan (`DATA REQUIRED` dari Pokja 6); layanan tidak menggunakan atau menyimpan tarif.
 4. Daftar dokumen wajib per layanan.
 5. Logo resmi MAN Kota Palangka Raya.
 6. Kebijakan angka penguncian login dan masa sesi.

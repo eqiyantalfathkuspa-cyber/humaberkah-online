@@ -8,7 +8,7 @@ $selectedServiceId = $selectedServiceId ?? null;
 ?>
 <section class="page-panel">
     <div class="section-header"><h2>Evaluasi layanan</h2></div>
-    <p class="lede">Catatan internal prototipe. Ini bukan penilaian resmi dan tidak menyatakan kepatuhan PMPZI/LKE.</p>
+    <p class="lede">Catatan internal. Ini bukan penilaian resmi dan tidak menyatakan kepatuhan PMPZI/LKE.</p>
     <p>Peringatan privasi: gunakan data fiktif saja. Jangan masukkan data pribadi, identitas siswa, atau informasi BK.</p>
 
     <?php if (($error ?? '') !== ''): ?>

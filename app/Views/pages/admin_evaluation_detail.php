@@ -5,7 +5,7 @@ $correctedBy = trim((string) ($evaluation['corrected_by_ids'] ?? ''));
 ?>
 <section class="page-panel">
     <div class="section-header"><h2>Detail evaluasi</h2></div>
-    <p class="lede">Catatan internal prototipe; bukan pernyataan kepatuhan PMPZI/LKE.</p>
+    <p class="lede">Catatan internal; bukan pernyataan kepatuhan PMPZI/LKE.</p>
     <dl class="data-table">
         <dt>Layanan</dt><dd><?= e((string) $evaluation['service_code'] . ' — ' . $evaluation['service_name']) ?></dd>
         <dt>Periode</dt><dd><?= e((string) $evaluation['period_start'] . ' s.d. ' . (string) $evaluation['period_end']) ?></dd>

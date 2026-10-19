@@ -1,25 +1,25 @@
-# FLOWCHART PELAYANAN HUMA MANTAP
+# FLOWCHART PELAYANAN HUMA BERKAH
 
 ## 1. Kategori dan layanan
 
-### A. Tata Usaha (TU)
-- TU-01: Layanan Informasi Umum / Pengurusan Administrasi Umum
-- TU-02: Layanan Pengelolaan Dokumen dan Data Administratif
+### A. TATA USAHA (TU)
+- TU-01: Srikandi
+- TU-02: ADMINISTRASI MANDIRI
 
-### B. Kurikulum (KUR)
+### B. KURIKULUM (KUR)
 - KUR-01: Layanan Informasi Kurikulum dan Pembelajaran
 - KUR-02: Layanan Pengajuan / Penyesuaian Administrasi Kurikulum
 
-### C. Kesiswaan (KES)
+### C. KESISWAAN (KES)
 - KES-01: Layanan Informasi BK / Konseling / Kesejahteraan Siswa
 - KES-02: Layanan Pengajuan Kegiatan / Permohonan Siswa
 - KES-03: Layanan Informasi PMBM / Pendaftaran / Layanan Informasi Siswa
 - KES-04: Layanan Pengelolaan Data Kesiswaan / Mutasi / Kebutuhan Khusus
 
-### D. Sarana Prasarana (SAR)
+### D. SARANA PRASARANA (SAR)
 - SAR-01: Layanan Sarana dan Prasarana
 
-### E. Hubungan Masyarakat / Humasi (HUM)
+### E. HUMAS (HUM)
 - HUM-01: Layanan Pengelolaan dan Koordinasi Program Hubungan Masyarakat
 - HUM-02: Modul Pengaduan / Aspirasi / KAHAYAN AMANAH
 
@@ -40,17 +40,17 @@ Untuk setiap layanan, berlaku urutan tahap berikut:
 
 | Kode | Nama layanan | Kategori | Mode awal (final) | Catatan |
 |---|---|---|---|---|
-| TU-01 | Layanan Informasi Umum / Pengurusan Administrasi Umum | Tata Usaha | FORMULIR | pengajuan administrasi umum |
-| TU-02 | Layanan Pengelolaan Dokumen dan Data Administratif | Tata Usaha | FORMULIR | dokumen administratif |
-| KUR-01 | Layanan Informasi Kurikulum dan Pembelajaran | Kurikulum | INFORMASI | informasi dan orientasi |
-| KUR-02 | Layanan Pengajuan / Penyesuaian Administrasi Kurikulum | Kurikulum | FORMULIR | pengajuan/penyesuaian |
-| KES-01 | Layanan Informasi BK / Konseling / Kesejahteraan Siswa | Kesiswaan | INFORMASI | data sensitif tidak disimpan |
-| KES-02 | Layanan Pengajuan Kegiatan / Permohonan Siswa | Kesiswaan | FORMULIR | pengajuan layanan siswa |
-| KES-03 | Layanan Informasi PMBM / Pendaftaran / Layanan Informasi Siswa | Kesiswaan | INFORMASI | halaman informasi |
-| KES-04 | Layanan Pengelolaan Data Kesiswaan / Mutasi / Kebutuhan Khusus | Kesiswaan | FORMULIR | pengelolaan data administratif |
-| SAR-01 | Layanan Sarana dan Prasarana | Sarana Prasarana | FORMULIR | kebutuhan fasilitas |
-| HUM-01 | Layanan Pengelolaan dan Koordinasi Program Hubungan Masyarakat | Humasi | FORMULIR | pengelolaan koordinasi |
-| HUM-02 | Modul Pengaduan / Aspirasi / KAHAYAN AMANAH | Humasi | MODUL_PENGADUAN | pengaduan dan aspirasi |
+| TU-01 | Srikandi | TATA USAHA | FORMULIR | pengajuan administrasi umum |
+| TU-02 | ADMINISTRASI MANDIRI | TATA USAHA | FORMULIR | dokumen administratif |
+| KUR-01 | Layanan Informasi Kurikulum dan Pembelajaran | KURIKULUM | INFORMASI | informasi dan orientasi |
+| KUR-02 | Layanan Pengajuan / Penyesuaian Administrasi Kurikulum | KURIKULUM | FORMULIR | pengajuan/penyesuaian |
+| KES-01 | Layanan Informasi BK / Konseling / Kesejahteraan Siswa | KESISWAAN | INFORMASI | data sensitif tidak disimpan |
+| KES-02 | Layanan Pengajuan Kegiatan / Permohonan Siswa | KESISWAAN | FORMULIR | pengajuan layanan siswa |
+| KES-03 | Layanan Informasi PMBM / Pendaftaran / Layanan Informasi Siswa | KESISWAAN | INFORMASI | halaman informasi |
+| KES-04 | Layanan Pengelolaan Data Kesiswaan / Mutasi / Kebutuhan Khusus | KESISWAAN | FORMULIR | pengelolaan data administratif |
+| SAR-01 | Layanan Sarana dan Prasarana | SARANA PRASARANA | FORMULIR | kebutuhan fasilitas |
+| HUM-01 | Layanan Pengelolaan dan Koordinasi Program Hubungan Masyarakat | HUMAS | FORMULIR | pengelolaan koordinasi |
+| HUM-02 | Modul Pengaduan / Aspirasi / KAHAYAN AMANAH | HUMAS | MODUL_PENGADUAN | pengaduan dan aspirasi |
 
 ## 4. Catatan penting
 

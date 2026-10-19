@@ -8,7 +8,7 @@ $complaintStatusLabels = $complaintStatusLabels ?? [];
     <div class="section-header">
         <h2>Portal pengguna</h2>
     </div>
-    <p class="lede">Portal SISWA / GURU menampilkan status pengajuan dan tiket KAHAYAN milik Anda.</p>
+    <p class="lede">Portal SISWA / GURU / TENDIK menampilkan status pengajuan dan tiket KAHAYAN milik Anda.</p>
     <h3>Tiket KAHAYAN AMANAH milik Anda</h3>
     <?php if ($complaints === []): ?>
         <p>Belum ada tiket.</p>

@@ -1,4 +1,4 @@
-# MATRIKS IZIN HUMA MANTAP
+# MATRIKS IZIN HUMA BERKAH
 
 ## 1. Prinsip dasar
 
@@ -87,7 +87,7 @@ Catatan implementasi:
 - Pengajuan sukses memakai redirect ke halaman yang menampilkan kode lacak satu kali dari flash sesi; batas awal adalah 5 pengajuan per jam per akun (MENUNGGU POKJA 6).
 - Lampiran pengajuan hanya tersedia pada TU-01, TU-02, KUR-02, SAR-01, dan HUM-01; hanya ADMIN dapat mengunduhnya melalui GET /admin/pengajuan/{id}/berkas/{docId}. Halaman lacak dan portal tidak memaparkan lampiran atau nama berkas. KES-02 dan KES-04 menolak lampiran sampai keputusan tertulis Pokja 6.
 - ADMIN tidak dapat menonaktifkan atau menurunkan role dirinya sendiri.
-- Login "Siswa / Guru" hanya mencari role SISWA atau GURU; login "Admin Pokja 6" hanya mencari role ADMIN. Pesan kegagalan tidak membedakan penyebab.
+- Login "Siswa / Guru" hanya mencari role SISWA atau GURU; login "Admin" hanya mencari role ADMIN. Pesan kegagalan tidak membedakan penyebab.
 - Pola parameter didukung Router, tetapi rute contoh yang bukan bagian aplikasi tidak didaftarkan.
 - KAHAYAN AMANAH/HUM-02 menerima kiriman Guest, SISWA, dan GURU. Isi dan identitas hanya tampak pada rute ADMIN; cek kode melalui POST tidak memuat isi atau kontak.
 - Seluruh POST KAHAYAN memakai CSRF. Kuota awal kiriman adalah 5 per IP per jam; GET/POST lacak memakai kode yang tidak masuk URL dan respons privat memakai no-store/no-referrer.

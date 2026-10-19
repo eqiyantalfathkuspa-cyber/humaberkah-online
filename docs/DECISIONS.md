@@ -52,7 +52,7 @@
 - Alasan: menjaga semua perubahan akun tetap terbatas pada ADMIN dan dapat ditelusuri, tanpa menyimpan sandi pada catatan audit.
 - Status: sandi pembuatan dan reset minimal 10 karakter; ADMIN tidak dapat menonaktifkan atau menurunkan role dirinya sendiri.
 
-- Keputusan tahap 2A: pilihan login "Siswa / Guru" hanya mencari role SISWA atau GURU, sedangkan "Admin Pokja 6" hanya mencari ADMIN; semua kegagalan login memakai pesan yang sama.
+- Keputusan tahap 2A: pilihan login "Siswa / Guru" hanya mencari role SISWA atau GURU, sedangkan "Admin" hanya mencari ADMIN; semua kegagalan login memakai pesan yang sama.
 - Alasan: membatasi pencarian akun sesuai identitas yang dipilih tanpa membocorkan apakah akun ditemukan, sandi salah, atau akun terkunci.
 - Status: diterapkan pada query autentikasi role-aware.
 
@@ -66,7 +66,7 @@
 - Alasan: mempertahankan urutan delapan tahap referensi yang sama sambil memperjelas bahwa proses pengajuan/verifikasi tidak berlaku pada informasi yang dibaca langsung.
 - Status: diterapkan sebagai satu konstanta `ServiceCatalog::INFORMATION_STEPS_NOTICE` agar dapat diubah di satu tempat.
 
-- Keputusan final Pokja 6: tarif, SLA, unit penanggung jawab, dan dokumen wajib tidak memiliki nilai bawaan; nilai kosong ditampilkan sebagai BELUM DITETAPKAN. Dokumen wajib pada Langkah 3 hanya berupa keterangan teks.
+- Keputusan final Pokja 6: layanan tidak menggunakan atau menyimpan tarif. SLA, unit penanggung jawab, dan dokumen wajib tidak memiliki nilai bawaan; nilai kosong ditampilkan sebagai BELUM DITETAPKAN. Dokumen wajib pada Langkah 3 hanya berupa keterangan teks.
 - Alasan: mencegah prototipe menyajikan angka atau standar layanan yang belum ditetapkan secara resmi.
 - Status: kolom standar dimulai NULL; unggahan berkas belum dibuat dan akan mengikuti batas JPG/PNG maksimal 5 MB pada Langkah 4.
 

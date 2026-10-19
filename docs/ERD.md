@@ -111,7 +111,6 @@
 - `standard_name`
 - `sla_days`
 - `responsible_unit`
-- `fee_amount`
 
 ### applications
 - `id`

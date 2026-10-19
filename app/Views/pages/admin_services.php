@@ -28,7 +28,7 @@ $modeLabels = $modeLabels ?? [];
                         <td><?= e((string) $service['name']) ?></td>
                         <td><?= e((string) $service['category_name']) ?></td>
                         <td><?= e((string) ($modeLabels[$service['mode']] ?? $service['mode'])) ?></td>
-                        <td><?= e((string) $service['completed_standards']) ?> / 4</td>
+                        <td><?= e((string) $service['completed_standards']) ?> / 3</td>
                         <td><a class="btn" href="/admin/layanan/<?= e((string) $service['code']) ?>/ubah">Ubah</a></td>
                     </tr>
                 <?php endforeach; ?>

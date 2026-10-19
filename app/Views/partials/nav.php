@@ -105,16 +105,31 @@ $currentPageAttribute = static fn (string $path): string => $currentPath === $pa
                     </ul>
                 </li>
             <?php endif; ?>
-            <?php if ($currentUser === null): ?>
-                <li class="menu-login"><a href="/login"<?= $currentPageAttribute('/login') ?>>Masuk</a></li>
-            <?php else: ?>
-                <li class="menu-logout">
-                    <form method="post" action="/logout" class="menu-logout-form">
-                        <?= App\Core\Csrf::field() ?>
-                        <button type="submit" class="menu-logout-button">Keluar</button>
-                    </form>
-                </li>
-            <?php endif; ?>
         </ul>
+        <?php if ($currentUser === null): ?>
+            <div class="nav-account">
+                <a href="/login"<?= $currentPageAttribute('/login') ?>>Guest</a>
+            </div>
+        <?php else: ?>
+            <div class="nav-account user-menu">
+                <button type="button" class="user-menu-toggle" aria-haspopup="true" aria-expanded="false">
+                    <?= e((string) ($currentUser['full_name'] ?? 'Akun')) ?>
+                </button>
+                <ul class="sub user-menu-sub">
+                    <li class="user-menu-details">
+                        <span>Nama</span>
+                        <strong><?= e((string) ($currentUser['full_name'] ?? '')) ?></strong>
+                        <span>Username</span>
+                        <strong><?= e((string) ($currentUser['identifier'] ?? '')) ?></strong>
+                    </li>
+                    <li>
+                        <form method="post" action="/logout" class="menu-logout-form">
+                            <?= App\Core\Csrf::field() ?>
+                            <button type="submit" class="menu-logout-button">Keluar</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        <?php endif; ?>
     </div>
 </nav>

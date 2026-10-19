@@ -23,7 +23,7 @@ $canViewEvidence = App\Policies\Permissions::can($currentRole, 'admin.evidence.v
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e($title ?? 'HUMA MANTAP') ?></title>
+    <title><?= e($title ?? 'HUMA BERKAH') ?></title>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <script src="/assets/js/site.js" defer></script>
 </head>

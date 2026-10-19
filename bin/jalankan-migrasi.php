@@ -118,13 +118,12 @@ function migrationSchemaState(PDO $pdo, string $migrationName): string
                 'service_categories' => ['id', 'code', 'name', 'created_at', 'updated_at'],
                 'services' => ['id', 'code', 'name', 'category_id', 'mode', 'is_active', 'created_at', 'updated_at'],
                 'service_steps' => ['id', 'service_id', 'step_no', 'step_name'],
-                'service_standards' => ['service_id', 'fee_text', 'sla_text', 'responsible_unit', 'required_documents_text', 'updated_by', 'updated_at'],
+                'service_standards' => ['service_id', 'sla_text', 'responsible_unit', 'required_documents_text', 'updated_by', 'updated_at'],
             ],
             'columnDefinitions' => [
                 'services.category_id' => ['data_type' => 'bigint', 'column_type' => 'bigint unsigned', 'is_nullable' => 'NO'],
                 'services.mode' => ['data_type' => 'enum', 'column_type' => "enum('formulir','informasi','tatap_muka','modul_pengaduan')", 'is_nullable' => 'NO'],
                 'service_steps.step_no' => ['data_type' => 'tinyint', 'column_type' => 'tinyint unsigned', 'is_nullable' => 'NO'],
-                'service_standards.fee_text' => ['data_type' => 'varchar', 'character_maximum_length' => 500, 'is_nullable' => 'YES'],
             ],
             'indexes' => [
                 'service_categories.PRIMARY', 'service_categories.uq_service_categories_code',

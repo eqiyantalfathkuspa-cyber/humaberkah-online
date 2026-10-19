@@ -3,7 +3,7 @@ return [
     // Nama, lingkungan, dan alamat lokal aplikasi.
     'app' => [
         // Nama aplikasi yang ditampilkan.
-        'name' => 'HUMA MANTAP',
+        'name' => 'HUMA BERKAH',
         // Lingkungan aktif; gunakan development untuk lokal.
         'env' => 'development',
         // URL dasar aplikasi untuk pengalihan dan tautan.

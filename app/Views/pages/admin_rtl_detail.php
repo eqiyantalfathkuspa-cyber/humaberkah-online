@@ -10,7 +10,7 @@ $statusLabels = [
 ?>
 <section class="page-panel">
     <div class="section-header"><h2>Detail RTL</h2></div>
-    <p class="lede">Internal prototipe, bukan klaim kepatuhan PMPZI/LKE.</p>
+    <p class="lede">Catatan internal, bukan klaim kepatuhan PMPZI/LKE.</p>
     <p>Peringatan privasi: gunakan data fiktif saja. Jangan masukkan data pribadi, identitas siswa, atau informasi BK.</p>
     <?php if (($error ?? '') !== ''): ?>
         <p class="error" role="alert"><?= e((string) $error) ?></p>

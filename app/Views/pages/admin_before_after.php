@@ -11,7 +11,7 @@ $selectedRtlId = $selectedRtlId ?? null;
 ?>
 <section class="page-panel">
     <div class="section-header"><h2>Catatan Before/After</h2></div>
-    <p class="lede">Catatan deskriptif internal prototipe; bukan bukti sebab-akibat, bukan bukti dampak terukur, dan bukan klaim kepatuhan PMPZI/LKE.</p>
+    <p class="lede">Catatan deskriptif internal; bukan bukti sebab-akibat, bukan bukti dampak terukur, dan bukan klaim kepatuhan PMPZI/LKE.</p>
     <p>Peringatan privasi: gunakan data fiktif saja. Jangan masukkan data pribadi, identitas siswa, atau informasi BK.</p>
     <?php if (($error ?? '') !== ''): ?>
         <p class="error" role="alert"><?= e((string) $error) ?></p>

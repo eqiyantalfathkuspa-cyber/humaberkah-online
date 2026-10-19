@@ -13,7 +13,7 @@ $statusLabels = [
 ?>
 <section class="page-panel">
     <div class="section-header"><h2>Checklist Eviden</h2></div>
-    <p class="lede">Instrumen kendali internal prototipe; bukan indikator resmi LKE/PMPZI. Status dihitung dari eviden dan tidak disimpan sebagai sel. Tidak ada persentase atau skor.</p>
+    <p class="lede">Instrumen kendali internal; bukan indikator resmi LKE/PMPZI. Status dihitung dari eviden dan tidak disimpan sebagai sel. Tidak ada persentase atau skor.</p>
     <p>Jumlah sel: <?= e((string) $cellCount) ?></p>
     <dl class="data-table">
         <?php foreach ($statusLabels as $status => $label): ?>

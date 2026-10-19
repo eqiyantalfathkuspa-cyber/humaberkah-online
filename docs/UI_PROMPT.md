@@ -1,4 +1,4 @@
-# PROMPT AGENT: Redesain UI HUMA MANTAP (MAN Kota Palangka Raya)
+# PROMPT AGENT: Redesain UI HUMA BERKAH (MAN Kota Palangka Raya)
 
 ## Cara memakai (untuk pemilik proyek)
 
@@ -15,7 +15,7 @@ Setelah laporan tahap selesai dan Anda cek di browser, kirim: "Lanjut TAHAP 1", 
 
 ## 1. Peran dan tujuan
 
-Anda mengerjakan **redesain tampilan (UI) saja** untuk aplikasi PHP 8.3 murni + MySQL (tanpa framework) bernama HUMA MANTAP, prototipe layanan publik MAN Kota Palangka Raya (Pokja 6).
+Anda mengerjakan **redesain tampilan (UI) saja** untuk aplikasi PHP 8.3 murni + MySQL (tanpa framework) bernama HUMA BERKAH, prototipe layanan publik MAN Kota Palangka Raya (Pokja 6).
 
 Target tampilan, mengacu pada gaya situs MAN 2 Kudus:
 

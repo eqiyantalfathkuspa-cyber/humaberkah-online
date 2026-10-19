@@ -31,6 +31,11 @@
 }
 
 * { box-sizing: border-box; }
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 html {
     font-size: 100%;
     scroll-padding-top: env(safe-area-inset-top, 0px);
@@ -202,7 +207,8 @@ h1, h2, h3, h4 {
 .brand-logo {
     display: block;
     width: auto;
-    height: 64px;
+    height: auto;
+    max-height: 64px;
     max-width: 100%;
 }
 
@@ -215,12 +221,11 @@ h1, h2, h3, h4 {
     white-space: nowrap;
 }
 
-.tingang {
+.header-partner-logo {
     display: block;
     flex: 0 0 auto;
-    width: 150px;
+    width: 200px;
     height: auto;
-    opacity: 0.9;
 }
 
 .site-nav {
@@ -249,12 +254,18 @@ h1, h2, h3, h4 {
 
 .menu {
     display: flex;
+    flex: 1;
     flex-wrap: wrap;
     align-items: stretch;
 }
 
 .menu > li {
     position: relative;
+}
+
+.nav-account {
+    position: relative;
+    margin-left: auto;
 }
 
 .menu a {
@@ -266,16 +277,47 @@ h1, h2, h3, h4 {
     text-decoration: none;
 }
 
+.nav-account > a {
+    display: block;
+    padding: 14px 16px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.93rem;
+    text-decoration: none;
+}
+
 .menu > li:hover > a,
 .menu > li:focus-within > a,
 .menu > li.open > a,
-.menu > li > a[aria-current="page"] {
+.menu > li > a[aria-current="page"],
+.nav-account:hover > a,
+.nav-account:focus-within > a,
+.nav-account:hover > .user-menu-toggle,
+.nav-account:focus-within > .user-menu-toggle,
+.nav-account.open > .user-menu-toggle {
     background: var(--cream);
     color: var(--green-ink);
     box-shadow: inset 0 -3px var(--gold);
 }
 
 .has-sub > a::after {
+    content: " \25BE";
+    font-size: 0.72rem;
+}
+
+.user-menu-toggle {
+    display: block;
+    padding: 14px 16px;
+    color: var(--text);
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 0.93rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.user-menu-toggle::after {
     content: " \25BE";
     font-size: 0.72rem;
 }
@@ -296,12 +338,42 @@ h1, h2, h3, h4 {
 
 .has-sub:hover > .sub,
 .has-sub:focus-within > .sub,
-.has-sub.open > .sub {
+.has-sub.open > .sub,
+.user-menu:hover > .sub,
+.user-menu:focus-within > .sub,
+.user-menu.open > .sub {
     display: block;
 }
 
 .has-sub > a[aria-expanded="false"] + .sub {
     display: none !important;
+}
+
+.user-menu > .user-menu-toggle[aria-expanded="false"] + .sub {
+    display: none !important;
+}
+
+.user-menu-sub {
+    right: 0;
+    left: auto;
+    min-width: 250px;
+}
+
+.user-menu-details {
+    display: grid;
+    gap: 3px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.user-menu-details span {
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.user-menu-details strong {
+    overflow-wrap: anywhere;
+    font-size: 0.92rem;
 }
 
 .sub a {
@@ -393,6 +465,8 @@ h1, h2, h3, h4 {
 }
 
 .menu a:focus-visible,
+.nav-account > a:focus-visible,
+.user-menu-toggle:focus-visible,
 .nav-toggle:focus-visible,
 .skip-link:focus-visible {
     outline: 3px solid var(--gold);
@@ -660,18 +734,6 @@ h1, h2, h3, h4 {
     width: min(100%, 460px);
     padding: 28px;
     background: var(--card);
-}
-
-.auth-banner {
-    display: inline-block;
-    background: var(--navy);
-    color: var(--white);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
 }
 
 .auth-form {
@@ -1142,7 +1204,7 @@ table.data-table tbody tr:hover,
     text-transform: uppercase;
 }
 
-.carousel-tingang {
+.carousel-art {
     position: absolute;
     top: 16px;
     right: 16px;
@@ -1254,6 +1316,79 @@ table.data-table tbody tr:hover,
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+.journey-heading {
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--green);
+}
+
+.journey-heading-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+}
+
+.journey-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 2px;
+}
+
+.journey-tab {
+    display: block;
+    padding: 5px 14px;
+    color: #ffffff;
+    background: var(--green);
+    border: 0;
+    border-bottom: 3px solid transparent;
+    font: inherit;
+    cursor: pointer;
+}
+
+.journey-tab span {
+    display: inline-block;
+    font-size: 0.92rem;
+}
+
+.journey-tab[aria-selected="true"] {
+    border-bottom-color: var(--gold);
+}
+
+@media (max-width: 600px) {
+    .journey-tab {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+}
+
+.journey-tab:focus-visible,
+.journey-panel:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+}
+
+.journey-panel[hidden] {
+    display: none;
+}
+
+.journey-panel ol {
+    margin-bottom: 12px;
+}
+
+.journey-audience {
+    margin: 0 0 8px;
+    color: var(--green-ink);
+    font-weight: 700;
+}
+
+.journey-panel > p:last-child {
+    margin-bottom: 0;
 }
 
 .home-journey li {
@@ -1798,6 +1933,55 @@ table.data-table tbody tr:hover,
     text-align: center;
 }
 
+.service-external-link {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    margin: 18px 0;
+    padding: 16px;
+    color: var(--text);
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.service-external-link:hover {
+    border-color: var(--green-ink);
+    color: var(--green-ink);
+}
+
+.service-external-link:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+}
+
+.service-external-link > svg {
+    width: 56px;
+    height: 56px;
+    padding: 8px;
+    color: var(--green-ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+}
+
+.service-external-link strong,
+.service-external-link small {
+    display: block;
+}
+
+.service-external-link small {
+    margin-top: 3px;
+    color: var(--muted);
+}
+
+.service-external-arrow {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
 .auth-copy {
     max-width: 60ch;
     margin: 0 0 14px;
@@ -1886,11 +2070,13 @@ table.data-table tbody tr:hover,
         max-width: 100%;
     }
 
-    .tingang {
-        width: 90px;
+    .header-partner-logo {
+        width: 140px;
     }
 
     .nav-toggle {
+        margin-left: 0;
+        margin-right: auto;
         display: none;
     }
 
@@ -1908,7 +2094,10 @@ table.data-table tbody tr:hover,
     }
 
     .menu {
+        width: 100%;
         flex-direction: column;
+        flex: 0 0 100%;
+        order: 2;
     }
 
     html.js .menu {
@@ -1921,6 +2110,24 @@ table.data-table tbody tr:hover,
 
     .menu > li {
         width: 100%;
+    }
+
+    .nav-account {
+        margin-left: 0;
+        order: 1;
+    }
+
+    .user-menu-toggle {
+        width: 100%;
+        text-align: left;
+    }
+
+    .user-menu-sub {
+        min-width: 0;
+    }
+
+    .user-menu-details {
+        padding-left: 28px;
     }
 
     .menu-logout-button {
@@ -1968,6 +2175,17 @@ table.data-table tbody tr:hover,
         grid-template-columns: 1fr;
     }
 
+    .service-external-link {
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .service-external-link > svg {
+        width: 48px;
+        height: 48px;
+    }
+
     .carousel-slide {
         min-height: 280px;
         padding: 26px;
@@ -1976,7 +2194,7 @@ table.data-table tbody tr:hover,
 
 @media (max-width: 600px) {
     .topbar-date {
-        margin-left: auto;
+        margin-left: 0;
     }
 
     .site-header-inner {
@@ -1984,13 +2202,20 @@ table.data-table tbody tr:hover,
     }
 
     .brand-link {
+        flex: 1 1 0;
         align-items: flex-start;
         flex-direction: column;
+        min-width: 0;
+    }
+
+    .brand-link picture {
+        width: 100%;
     }
 
     .brand-logo {
-        width: auto;
-        height: 64px;
+        width: 100%;
+        height: auto;
+        max-height: none;
         max-width: 100%;
     }
 
@@ -1998,8 +2223,15 @@ table.data-table tbody tr:hover,
         white-space: nowrap;
     }
 
-    .tingang {
-        width: 88px;
+    .header-partner {
+        flex: 0 0 auto;
+        min-width: 0;
+    }
+
+    .header-partner-logo {
+        width: 72px;
+        height: auto;
+        max-height: none;
     }
 
     .footer-grid {
@@ -2065,7 +2297,7 @@ table.data-table tbody tr:hover,
         font-size: 1.65rem;
     }
 
-    .carousel-tingang {
+    .carousel-art {
         right: -15px;
         bottom: 0;
         width: 150px;
@@ -2215,12 +2447,6 @@ table.data-table tbody tr:hover,
         background: #762C36;
     }
 
-    .auth-banner {
-        color: var(--text);
-        background: var(--card);
-        border: 1px solid var(--line);
-    }
-
     .footer-column h2 {
         color: var(--green-ink);
     }
@@ -2260,4 +2486,5 @@ table.data-table tbody tr:hover,
     .fab-kahayan {
         display: none;
     }
+}
 }

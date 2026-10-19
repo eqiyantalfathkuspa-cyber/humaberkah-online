@@ -1,0 +1,3 @@
+UPDATE services
+SET name = 'ADMINISTRASI MANDIRI'
+WHERE code = 'TU-02' AND name <> 'ADMINISTRASI MANDIRI';

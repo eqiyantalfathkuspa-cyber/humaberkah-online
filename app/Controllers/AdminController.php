@@ -301,11 +301,11 @@ final class AdminController
     public static function services(): void
     {
         $services = Db::all(
-            'SELECT s.id, s.code, s.name, s.mode, c.name AS category_name, ss.fee_text, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_categories c ON c.id = s.category_id LEFT JOIN service_standards ss ON ss.service_id = s.id ORDER BY c.id, s.code'
+            'SELECT s.id, s.code, s.name, s.mode, c.name AS category_name, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_categories c ON c.id = s.category_id LEFT JOIN service_standards ss ON ss.service_id = s.id ORDER BY c.id, s.code'
         );
         foreach ($services as &$service) {
             $service['completed_standards'] = 0;
-            foreach (['fee_text', 'sla_text', 'responsible_unit', 'required_documents_text'] as $field) {
+            foreach (['sla_text', 'responsible_unit', 'required_documents_text'] as $field) {
                 if (trim((string) ($service[$field] ?? '')) !== '') {
                     $service['completed_standards']++;
                 }
@@ -342,7 +342,6 @@ final class AdminController
         $serviceCode = strtoupper(trim((string) ($params['code'] ?? '')));
         $mode = self::postText('mode');
         $fields = [
-            'fee_text' => ['fee_text', 500],
             'sla_text' => ['sla_text', 500],
             'responsible_unit' => ['responsible_unit', 500],
             'required_documents_text' => ['required_documents_text', 4000],
@@ -378,7 +377,7 @@ final class AdminController
         $pdo->beginTransaction();
         try {
             $oldService = Db::one(
-                'SELECT s.id, s.code, s.mode, ss.fee_text, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s LEFT JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ? FOR UPDATE',
+                'SELECT s.id, s.code, s.mode, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s LEFT JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ? FOR UPDATE',
                 [$serviceCode],
                 $database
             );
@@ -389,15 +388,14 @@ final class AdminController
             }
             $oldValues = [
                 'mode' => $oldService['mode'],
-                'fee_text' => $oldService['fee_text'],
                 'sla_text' => $oldService['sla_text'],
                 'responsible_unit' => $oldService['responsible_unit'],
                 'required_documents_text' => $oldService['required_documents_text'],
             ];
             Db::run('UPDATE services SET mode = ? WHERE id = ?', [$mode, (int) $oldService['id']], $database);
             Db::run(
-                'INSERT INTO service_standards (service_id, fee_text, sla_text, responsible_unit, required_documents_text, updated_by) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE fee_text = VALUES(fee_text), sla_text = VALUES(sla_text), responsible_unit = VALUES(responsible_unit), required_documents_text = VALUES(required_documents_text), updated_by = VALUES(updated_by)',
-                [(int) $oldService['id'], $values['fee_text'], $values['sla_text'], $values['responsible_unit'], $values['required_documents_text'], (int) (Auth::user()['id'] ?? 0)],
+                'INSERT INTO service_standards (service_id, sla_text, responsible_unit, required_documents_text, updated_by) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE sla_text = VALUES(sla_text), responsible_unit = VALUES(responsible_unit), required_documents_text = VALUES(required_documents_text), updated_by = VALUES(updated_by)',
+                [(int) $oldService['id'], $values['sla_text'], $values['responsible_unit'], $values['required_documents_text'], (int) (Auth::user()['id'] ?? 0)],
                 $database
             );
             $actor = Auth::user();
@@ -425,7 +423,7 @@ final class AdminController
     private static function serviceByCode(string $code): ?array
     {
         return Db::one(
-            'SELECT s.id, s.code, s.name, s.mode, c.name AS category_name, ss.fee_text, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_categories c ON c.id = s.category_id LEFT JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
+            'SELECT s.id, s.code, s.name, s.mode, c.name AS category_name, ss.sla_text, ss.responsible_unit, ss.required_documents_text FROM services s INNER JOIN service_categories c ON c.id = s.category_id LEFT JOIN service_standards ss ON ss.service_id = s.id WHERE s.code = ?',
             [strtoupper(trim($code))]
         );
     }

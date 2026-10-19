@@ -1,8 +1,8 @@
-# Serah Terima Prototipe HUMA MANTAP
+# Serah Terima Prototipe HUMA BERKAH
 
 ## 1. Ringkasan dan tujuan
 
-HUMA MANTAP adalah prototipe internal layanan publik dan instrumen kerja Pokja 6. Dokumen ini memisahkan bukti yang dilaporkan pemilik proyek dari cakupan tes otomatis dan hal yang masih menunggu keputusan. Prototipe ini bukan bukti kepatuhan PMPZI/LKE, bukan pernyataan kesiapan produksi, dan tidak membuktikan dampak layanan. Gunakan hanya data uji fiktif; jangan memasukkan data pribadi, identitas siswa, atau informasi BK.
+HUMA BERKAH adalah prototipe internal layanan publik dan instrumen kerja Pokja 6. Dokumen ini memisahkan bukti yang dilaporkan pemilik proyek dari cakupan tes otomatis dan hal yang masih menunggu keputusan. Prototipe ini bukan bukti kepatuhan PMPZI/LKE, bukan pernyataan kesiapan produksi, dan tidak membuktikan dampak layanan. Gunakan hanya data uji fiktif; jangan memasukkan data pribadi, identitas siswa, atau informasi BK.
 
 ## 2. Status per fitur
 
@@ -167,7 +167,7 @@ Simpan `$LASTEXITCODE` segera sesudah proses berakhir; jangan memakai `$?` sebag
 
 Daftar terkonsolidasi berikut merangkum butir `MENUNGGU POKJA 6` dan keputusan belum final di `docs/DECISIONS.md`. Tidak ada jawaban yang dipilih dalam serah terima ini.
 
-- Katalog dan kategori: nama/label resmi kategori HUM, PIC tiap kategori, sub-role ADMIN, serta tarif, SLA, unit penanggung jawab, dan standar layanan.
+- Katalog dan kategori: nama/label resmi kategori HUM, PIC tiap kategori, sub-role ADMIN, SLA, unit penanggung jawab, dan standar layanan. Tarif tidak digunakan atau disimpan.
 - Pengajuan: apakah Guest boleh mengajukan; kolom formulir/kontak yang diperlukan; klasifikasi dan perlindungan data KES-02/KES-04; status/transisi pengajuan; batas pengajuan/pelacakan; dan pemulihan kode lacak yang hilang.
 - Dokumen dan berkas: dokumen wajib per layanan, apakah KES-02/KES-04 menerima lampiran, jenis/jumlah/batas ukuran berkas (nilai prototipe JPG/PNG, maksimal tiga berkas dan 5 MiB per berkas belum menjadi kebijakan final Pokja 6), serta masa simpan, pemulihan berkas orphan, dan kriteria retensi eviden.
 - KAHAYAN AMANAH: kebijakan identitas/kontak pelapor, SLA, kategori pengaduan, unit/pihak tindak lanjut, serta status/transisi operasional yang disetujui.

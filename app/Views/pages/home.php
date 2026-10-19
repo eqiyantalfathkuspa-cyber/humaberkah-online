@@ -4,12 +4,12 @@
         <div class="carousel-slides">
             <article class="carousel-slide is-active" role="group" aria-roledescription="slide" aria-label="Pelayanan publik">
                 <div class="carousel-copy">
-                    <p class="kicker">HUMA LAYAN</p>
+                    <p class="kicker">HUMA AMANAH</p>
                     <h2>Pelayanan publik</h2>
-                    <p>Temukan informasi layanan dan jalur pengajuan yang tersedia dalam prototipe ini.</p>
+                    <p>Temukan informasi layanan dan jalur pengajuan yang tersedia.</p>
                     <a class="btn primary" href="/layanan">Lihat layanan</a>
                 </div>
-                <img class="carousel-tingang" src="/assets/img/tingang.svg" alt="" aria-hidden="true" width="240" height="160">
+                <img class="carousel-art" src="/assets/img/tingang.svg" alt="" aria-hidden="true" width="240" height="160">
             </article>
             <article class="carousel-slide" role="group" aria-roledescription="slide" aria-label="KAHAYAN AMANAH">
                 <div class="carousel-copy">
@@ -22,6 +22,7 @@
                         <a class="btn primary" href="/kahayan">Sampaikan pengaduan</a>
                     <?php endif; ?>
                 </div>
+                <img class="carousel-art" src="/assets/img/perisai-dayak.svg" alt="" aria-hidden="true" width="240" height="160">
             </article>
             <article class="carousel-slide" role="group" aria-roledescription="slide" aria-label="Survei">
                 <div class="carousel-copy">
@@ -30,6 +31,7 @@
                     <p>Survei tersedia untuk menyampaikan umpan balik melalui jalur yang disediakan.</p>
                     <a class="btn primary" href="/survei">Buka survei</a>
                 </div>
+                <img class="carousel-art" src="/assets/img/huma-betang.svg" alt="" aria-hidden="true" width="240" height="160">
             </article>
         </div>
         <div class="carousel-controls" aria-label="Pilih slide">
@@ -87,10 +89,10 @@
                 <p>Jelajahi informasi layanan dan pilih layanan yang sesuai.</p>
                 <a class="btn secondary" href="/layanan">Lihat katalog layanan</a>
             </section>
-            <section class="box motto-hero" aria-label="Motto HUMA MANTAP">
+            <section class="box motto-hero" aria-label="Motto HUMA BERKAH">
                 <img class="motto-bird" src="/assets/img/tingang.svg" alt="" aria-hidden="true">
-                <h1>HUMA MANTAP</h1>
-                <p class="motto-sub">Layanan Publik MAN Kota Palangka Raya</p>
+                <h1>HUMA BERKAH</h1>
+                <p class="motto-sub">Sistem Integrasi Pengelolaan Layanan Publik berbasis Web MAN Kota Palangka Raya</p>
                 <ul class="motto-list">
                     <li>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -119,35 +121,86 @@
                 <section class="pillars" aria-label="Tiga fitur utama">
                     <article class="pillar tone-3">
                         <div class="pillar-no" aria-hidden="true">1</div>
-                        <h3><a href="/layanan">Huma Amanah</a></h3>
-                        <p>Pelayanan publik, informasi layanan, dan pengajuan layanan masyarakat.</p>
+                        <h3><a href="/layanan">HUMA AMANAH</a></h3>
+                        <p><i>Informasi &amp; Pengajuan Layanan</i></p>
                     </article>
                     <article class="pillar tone-2">
                         <div class="pillar-no" aria-hidden="true">2</div>
-                        <h3><a href="/survei">Kahayan Aspirasi</a></h3>
-                        <p>Aspirasi, pengajuan, dan survei untuk penguatan layanan berbasis bukti.</p>
+                        <h3><a href="/survei">KAHAYAN INSPIRASI</a></h3>
+                        <p><i>Aspirasi, Pengaduan &amp; Survei</i></p>
                     </article>
                     <article class="pillar tone-1">
                         <div class="pillar-no" aria-hidden="true">3</div>
                         <?php if ($canViewMadani): ?>
-                            <h3><a href="/admin/madani">Betang Madani</a></h3>
+                            <h3><a href="/admin/madani">BETANG MADANI</a></h3>
                         <?php else: ?>
-                            <h3>Betang Madani</h3>
+                            <h3>BETANG MADANI</h3>
                         <?php endif; ?>
-                        <p>Evaluasi, RTL, dan dampak layanan untuk perbaikan berkelanjutan.</p>
+                        <p><i>Evaluasi, RTL &amp; Dampak Layanan</i></p>
                     </article>
                 </section>
             </section>
         </div>
         <div>
             <section class="box home-journey" aria-labelledby="journey-heading">
-                <h2 id="journey-heading" class="section-title"><span>Alur Pengajuan</span></h2>
-                <ol>
-                    <li>Login sebagai SISWA atau GURU.</li>
-                    <li>Pilih layanan dan isi formulir.</li>
-                    <li>Unggah lampiran JPG/PNG.</li>
-                    <li>Simpan kode tiket lalu lacak.</li>
-                </ol>
+                <div class="journey-heading">
+                    <h2 id="journey-heading" class="journey-heading-label">Alur Pengaduan (anonim)</h2>
+                    <div class="journey-tabs" role="tablist" aria-label="Pilih alur pengaduan">
+                        <button
+                            type="button"
+                            class="journey-tab"
+                            id="journey-tab-huma"
+                            role="tab"
+                            aria-selected="true"
+                            aria-controls="journey-panel-huma"
+                            tabindex="0"
+                            aria-label="Alur Huma Amanah"
+                        ><span>Alur Pengaduan (Gst)</span></button>
+                        <button
+                            type="button"
+                            class="journey-tab"
+                            id="journey-tab-layanan"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="journey-panel-layanan"
+                            tabindex="-1"
+                            aria-label="Alur Pengaduan Layanan"
+                        ><span>Alur Pengaduan (Log)</span></button>
+                    </div>
+                </div>
+                <div
+                    class="journey-panel"
+                    id="journey-panel-huma"
+                    role="tabpanel"
+                    aria-labelledby="journey-tab-huma"
+                    tabindex="0"
+                >
+                    <p class="journey-audience">Untuk Masyarakat (Guest)</p>
+                    <ol>
+                        <li>Buka KAHAYAN AMANAH tanpa perlu login.</li>
+                        <li>Pilih jenis pengaduan, aspirasi, saran, atau pertanyaan.</li>
+                        <li>Tulis isi pesan; kontak bersifat opsional.</li>
+                        <li>Kirim, simpan kode lacak, lalu gunakan untuk memeriksa status.</li>
+                    </ol>
+                    <p><a href="/kahayan">Sampaikan melalui KAHAYAN AMANAH</a></p>
+                </div>
+                <div
+                    class="journey-panel"
+                    id="journey-panel-layanan"
+                    role="tabpanel"
+                    aria-labelledby="journey-tab-layanan"
+                    tabindex="0"
+                    hidden
+                >   <p class="journey-audience">Untuk Siswa/Guru dan Tependik (Login)</p>
+                    <ol>
+                        <li>Login sebagai SISWA atau GURU atau Tependik.</li>
+                        <li>Pilih layanan dan isi formulir.</li>
+                        <li>Unggah lampiran JPG/PNG.</li>
+                        <li>Simpan kode tiket lalu lacak.</li>
+                    </ol>
+                    <p><a href="/layanan">Pilih dan sampaikan aduan melalui LAYAN</a></p>
+
+                </div>
             </section>
             <div class="box">
                 <h2 class="section-title"><span>Ringkasan MADANI</span></h2>

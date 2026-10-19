@@ -12,7 +12,9 @@ final class IpQuotaHash
         $environmentKey = getenv('HUMA_IP_HASH_KEY');
         $security = Config::get('security', []);
         $configuredKey = is_array($security) ? ($security['ip_hash_key'] ?? null) : null;
-        $key = $environmentKey === false ? $configuredKey : $environmentKey;
+        $key = $environmentKey !== false
+            ? $environmentKey
+            : (Config::activeDatabaseKey() === 'test' ? null : $configuredKey);
 
         return self::withKey($address, $key);
     }

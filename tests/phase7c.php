@@ -229,7 +229,7 @@ try {
             && preg_match('/ADA_BELUM_VERIFIKASI\s*\(2\)/s', $phase7cAdminPageBody) === 1
             && preg_match('/PERLU_PERBAIKAN\s*\(1\)/s', $phase7cAdminPageBody) === 1
             && ($phase7cFilterResponse[0]['status'] ?? 0) === 200
-            && str_contains($phase7cAdminPageBody, 'Instrumen kendali internal prototipe; bukan indikator resmi LKE/PMPZI.'),
+            && str_contains($phase7cAdminPageBody, 'Instrumen kendali internal; bukan indikator resmi LKE/PMPZI.'),
         'status=' . (string) ($phase7cAdminPage[0]['status'] ?? 0)
             . '; escaped=' . (str_contains($phase7cAdminPageBody, '&lt;script&gt;') ? 'yes' : 'no')
             . '; inactive=' . (str_contains($phase7cAdminPageBody, '(nonaktif)') ? 'yes' : 'no')

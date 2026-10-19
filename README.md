@@ -1,8 +1,8 @@
-# HUMA MANTAP
+# HUMA BERKAH
 
-HUMA MANTAP adalah prototipe layanan informasi dan administrasi MAN Kota Palangka Raya.
+HUMA BERKAH adalah sistem layanan informasi dan administrasi MAN Kota Palangka Raya.
 
-**Peringatan: PROTOTIPE. Gunakan DATA FIKTIF saja; jangan masukkan data nyata.**
+**Gunakan DATA FIKTIF saja; jangan masukkan data nyata.**
 
 ## Kebutuhan
 

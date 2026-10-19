@@ -5,7 +5,7 @@ $correctedBy = trim((string) ($record['corrected_by_ids'] ?? ''));
 ?>
 <section class="page-panel">
     <div class="section-header"><h2>Detail catatan Before/After</h2></div>
-    <p class="lede">Catatan deskriptif internal prototipe; bukan bukti sebab-akibat, bukan bukti dampak terukur, dan bukan klaim kepatuhan PMPZI/LKE.</p>
+    <p class="lede">Catatan deskriptif internal; bukan bukti sebab-akibat, bukan bukti dampak terukur, dan bukan klaim kepatuhan PMPZI/LKE.</p>
     <p>Peringatan privasi: gunakan data fiktif saja. Jangan masukkan data pribadi, identitas siswa, atau informasi BK.</p>
     <dl class="data-table">
         <dt>Layanan</dt><dd><?= e((string) $record['service_code'] . ' — ' . (string) $record['service_name']) ?></dd>

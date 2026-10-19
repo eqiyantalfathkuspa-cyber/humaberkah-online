@@ -51,7 +51,7 @@ $checklistAriaLabel = 'Valid ' . $checklistCounts['VALID']
         <h2>Dashboard MADANI</h2>
         <a class="btn secondary" href="/admin/madani/ekspor<?= $queryString === '' ? '' : '?' . e($queryString) ?>">Ekspor CSV agregat</a>
     </div>
-    <p>Prototipe internal; bukan bukti kepatuhan PMPZI/LKE. Data uji bersifat fiktif.</p>
+    <p>Bukan bukti kepatuhan PMPZI/LKE. Data uji bersifat fiktif.</p>
     <p>Rata-rata, persentase, atau rasio tanpa penyebut: <strong>BELUM ADA DATA</strong>.</p>
     <form method="get" action="/admin/madani" class="form-grid">
         <label>Tanggal mulai

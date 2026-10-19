@@ -4,8 +4,8 @@
         <div class="footer-grid">
             <section class="footer-column">
                 <h2>Identitas</h2>
-                <p><strong>HUMA MANTAP</strong></p>
-                <p>Prototipe layanan MAN Kota Palangka Raya.</p>
+                <p><strong>HUMA BERKAH</strong></p>
+                <p>Platform pelayanan publik terintegrasi MAN Kota Palangka Raya. Menyatukan akses layanan, informasi, aspirasi, dan pengaduan masyarakat secara transparan serta akuntabel demi mewujudkan pelayanan madrasah yang prima.</p>
             </section>
             <section class="footer-column">
                 <h2>Layanan</h2>
@@ -31,9 +31,8 @@
                 <p>Informasi kontak resmi belum dicantumkan.</p>
             </section>
         </div>
-        <p class="privacy-notice">Peringatan privasi: gunakan data fiktif saja. Jangan masukkan data pribadi, identitas siswa, atau informasi BK.</p>
     </div>
     <div class="footer-bottom">
-        <p>&copy; <?= e(date('Y')) ?> HUMA MANTAP</p>
+        <p>&copy; <?= e(date('Y')) ?> HUMA BERKAH</p>
     </div>
 </footer>

@@ -1,8 +1,8 @@
-# BLUEPRINT TEKNIS HUMA MANTAP
+# BLUEPRINT TEKNIS HUMA BERKAH
 
 ## 1. Tujuan proyek
 
-HUMA MANTAP adalah prototipe website pelayanan publik MAN Kota Palangka Raya, dibangun sebagai satu aplikasi multi-role yang mencakup:
+HUMA BERKAH adalah prototipe website pelayanan publik MAN Kota Palangka Raya, dibangun sebagai satu aplikasi multi-role yang mencakup:
 
 - HUMA LAYAN untuk layanan masyarakat dan pemangku kepentingan eksternal
 - KAHAYAN AMANAH untuk pengaduan, aspirasi, survei, eviden, evaluasi, RTL, monitoring
@@ -181,7 +181,7 @@ Pada tahap 0, keputusan yang belum final dan harus diputuskan oleh pihak Penggun
 
 1. mode per layanan: FORMULIR, INFORMASI, atau TATAP_MUKA
 2. sub-peran admin (petugas layanan, verifikator, dsb.)
-3. tarif, SLA, dan unit penanggung jawab layanan
+3. SLA dan unit penanggung jawab layanan; biaya/tarif tidak digunakan atau disimpan
 4. dokumen wajib tiap layanan
 5. logo resmi MAN Kota Palangka Raya
 6. kebijakan rate limit dan masa sesi

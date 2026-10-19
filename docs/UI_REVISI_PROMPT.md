@@ -1,4 +1,4 @@
-# PROMPT AGENT: Revisi UI HUMA MANTAP (motto, dashboard visual, tanpa tampilan mentah)
+# PROMPT AGENT: Revisi UI HUMA BERKAH (motto, dashboard visual, tanpa tampilan mentah)
 
 ## Cara memakai (untuk pemilik proyek)
 
@@ -17,7 +17,7 @@ Pratinjau visual yang sudah disetujui: https://claude.ai/artifact/QQ3iLMrBV5Gyj4
 ## 1. Tujuan revisi
 
 1. **Motto dan identitas.** Beranda menampilkan:
-   - HUMA MANTAP, subjudul "Layanan Publik MAN Kota Palangka Raya"
+   - HUMA BERKAH, subjudul "Layanan Publik MAN Kota Palangka Raya"
    - Motto: *Melayani dengan Cinta*, *Mengabdi dengan Hati*, *Bersatu untuk Negeri*
    - Tiga fitur utama:
      1. **Huma Amanah**: Pelayanan Publik, Informasi Layanan & Pengajuan Layanan Masyarakat
@@ -213,7 +213,7 @@ Contoh markup (sesuaikan kondisi peran dengan yang ada):
 ```php
 <section class="motto-hero">
   <img class="motto-bird" src="/assets/img/tingang.svg" alt="" aria-hidden="true">
-  <h1>HUMA MANTAP</h1>
+  <h1>HUMA BERKAH</h1>
   <p class="motto-sub">Layanan Publik MAN Kota Palangka Raya</p>
   <ul class="motto-list">
     <li>

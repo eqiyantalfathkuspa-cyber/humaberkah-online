@@ -2,7 +2,9 @@
 /** @var array<string, mixed> $service */
 /** @var string $informationStepsNotice */
 /** @var string $modeLabel */
+/** @var string $displayName */
 $service = $service ?? [];
+$displayName = $displayName ?? (string) ($service['name'] ?? '');
 $standards = $service['standards'] ?? [];
 $standardValue = static function (string $key) use ($standards): string {
     $value = trim((string) ($standards[$key] ?? ''));
@@ -12,9 +14,24 @@ $standardValue = static function (string $key) use ($standards): string {
 <section class="page-panel">
     <p class="kicker"><?= e((string) ($service['category_name'] ?? '')) ?></p>
     <div class="section-header">
-        <h2><?= e((string) ($service['code'] ?? '')) ?> — <?= e((string) ($service['name'] ?? '')) ?></h2>
+        <h2><?= e((string) ($service['code'] ?? '')) ?> — <?= e($displayName) ?></h2>
     </div>
     <p><strong>Mode:</strong> <?= e($modeLabel ?? '') ?></p>
+    <?php if (($service['code'] ?? '') === 'TU-02'): ?>
+        <a class="service-external-link" href="https://lynk.id/man_koraya" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 64 64" role="img" aria-label="Ilustrasi Administrasi Mandiri" focusable="false">
+                <rect x="8" y="7" width="38" height="50" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+                <path d="M17 20h20M17 29h14M17 38h11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="45" cy="43" r="13" fill="var(--card)" stroke="currentColor" stroke-width="3"/>
+                <path d="M45 36v14M39 43h12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <span>
+                <strong>Buka Administrasi Mandiri</strong>
+                <small>Akses layanan TU-02 melalui Lynk</small>
+            </span>
+            <span class="service-external-arrow" aria-hidden="true">↗</span>
+        </a>
+    <?php endif; ?>
     <?php if (($service['code'] ?? '') === 'KES-01'): ?>
         <p class="notice">Isi konseling dan data pribadi sensitif tidak disimpan di sistem.</p>
     <?php endif; ?>
@@ -22,7 +39,6 @@ $standardValue = static function (string $key) use ($standards): string {
     <section aria-labelledby="standar-heading">
         <h3 id="standar-heading">Standar layanan</h3>
         <dl class="service-standards">
-            <dt>Tarif</dt><dd><?= e($standardValue('fee_text')) ?></dd>
             <dt>SLA</dt><dd><?= e($standardValue('sla_text')) ?></dd>
             <dt>Unit penanggung jawab</dt><dd><?= e($standardValue('responsible_unit')) ?></dd>
             <dt>Dokumen wajib</dt><dd><?= nl2br(e($standardValue('required_documents_text'))) ?></dd>

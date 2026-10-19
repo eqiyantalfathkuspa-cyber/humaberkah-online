@@ -5,6 +5,8 @@
   if (nav) {
     var button = nav.querySelector('.nav-toggle');
     var parentLinks = Array.prototype.slice.call(nav.querySelectorAll('.has-sub > a'));
+    var userMenu = nav.querySelector('.user-menu');
+    var userMenuToggle = userMenu ? userMenu.querySelector('.user-menu-toggle') : null;
 
     function isSubmenuOpen(item) {
       return !item._closedByEscape
@@ -13,6 +15,62 @@
 
     function updateExpanded(item, link) {
       link.setAttribute('aria-expanded', isSubmenuOpen(item) ? 'true' : 'false');
+    }
+
+    function isUserMenuOpen() {
+      return userMenu
+        && !userMenu._closedByEscape
+        && (userMenu.classList.contains('open') || userMenu.matches(':hover') || userMenu.matches(':focus-within'));
+    }
+
+    function updateUserMenuExpanded() {
+      if (userMenuToggle) {
+        userMenuToggle.setAttribute('aria-expanded', isUserMenuOpen() ? 'true' : 'false');
+      }
+    }
+
+    function closeUserMenu(closedByEscape) {
+      if (!userMenu) {
+        return;
+      }
+      userMenu.classList.remove('open');
+      userMenu._closedByEscape = Boolean(closedByEscape);
+      updateUserMenuExpanded();
+    }
+
+    if (userMenu && userMenuToggle) {
+      userMenu.addEventListener('mouseenter', function () {
+        userMenu._closedByEscape = false;
+        updateUserMenuExpanded();
+      });
+
+      userMenu.addEventListener('mouseleave', updateUserMenuExpanded);
+
+      userMenu.addEventListener('focusin', function () {
+        if (userMenu._escapeFocusPending) {
+          userMenu._escapeFocusPending = false;
+        } else {
+          userMenu._closedByEscape = false;
+        }
+        updateUserMenuExpanded();
+      });
+
+      userMenu.addEventListener('focusout', function () {
+        window.setTimeout(function () {
+          if (!userMenu.contains(document.activeElement)) {
+            userMenu.classList.remove('open');
+            userMenu._closedByEscape = false;
+          }
+          updateUserMenuExpanded();
+        }, 0);
+      });
+
+      userMenuToggle.addEventListener('click', function () {
+        var open = !userMenu.classList.contains('open');
+        userMenu._closedByEscape = false;
+        userMenu.classList.toggle('open', open);
+        updateUserMenuExpanded();
+      });
     }
 
     parentLinks.forEach(function (link) {
@@ -69,12 +127,14 @@
             item._closedByEscape = true;
             updateExpanded(item, link);
           });
+          closeUserMenu(false);
         }
       });
     }
 
     document.addEventListener('click', function (event) {
       if (!nav.contains(event.target)) {
+        closeUserMenu(false);
         parentLinks.forEach(function (link) {
           var item = link.parentNode;
           item.classList.remove('open');
@@ -89,15 +149,23 @@
         return;
       }
 
+      var userMenuOpen = isUserMenuOpen();
       var openItems = parentLinks
         .map(function (link) { return { item: link.parentNode, link: link }; })
         .filter(function (entry) { return isSubmenuOpen(entry.item); });
 
-      if (openItems.length === 0) {
+      if (!userMenuOpen && openItems.length === 0) {
         return;
       }
 
       event.preventDefault();
+      if (userMenuOpen && userMenuToggle) {
+        closeUserMenu(true);
+        if (document.activeElement !== userMenuToggle) {
+          userMenu._escapeFocusPending = true;
+        }
+        userMenuToggle.focus();
+      }
       openItems.forEach(function (entry) {
         entry.item.classList.remove('open');
         entry.item._closedByEscape = true;
@@ -198,12 +266,51 @@
     }
   }
 
+  var journeyTabs = Array.prototype.slice.call(document.querySelectorAll('.journey-tab'));
+  var journeyPanels = journeyTabs.map(function (tab) {
+    return document.getElementById(tab.getAttribute('aria-controls'));
+  });
+
+  function selectJourneyTab(index, moveFocus) {
+    journeyTabs.forEach(function (tab, tabIndex) {
+      var selected = tabIndex === index;
+      tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+      tab.setAttribute('tabindex', selected ? '0' : '-1');
+      journeyPanels[tabIndex].hidden = !selected;
+    });
+    if (moveFocus) {
+      journeyTabs[index].focus();
+    }
+  }
+
+  journeyTabs.forEach(function (tab, index) {
+    tab.addEventListener('click', function () {
+      selectJourneyTab(index, false);
+    });
+    tab.addEventListener('keydown', function (event) {
+      var nextIndex = index;
+      if (event.key === 'ArrowRight') {
+        nextIndex = (index + 1) % journeyTabs.length;
+      } else if (event.key === 'ArrowLeft') {
+        nextIndex = (index - 1 + journeyTabs.length) % journeyTabs.length;
+      } else if (event.key === 'Home') {
+        nextIndex = 0;
+      } else if (event.key === 'End') {
+        nextIndex = journeyTabs.length - 1;
+      } else {
+        return;
+      }
+      event.preventDefault();
+      selectJourneyTab(nextIndex, true);
+    });
+  });
+
   var floatingActions = [
     document.querySelector('.a11y-tools'),
     document.querySelector('.fab-kahayan')
   ].filter(Boolean);
-  var submitButtons = Array.prototype.slice.call(
-    document.querySelectorAll('.content button[type="submit"]')
+  var interactiveContent = Array.prototype.slice.call(
+    document.querySelectorAll('.content a, .content button, .content input, .content select, .content textarea')
   );
 
   function overlaps(first, second) {
@@ -216,16 +323,16 @@
   }
 
   function updateFloatingActions() {
-    var obscuresSubmit = window.matchMedia('(max-width: 860px)').matches
-      && submitButtons.some(function (submit) {
+    var obscuresContent = window.matchMedia('(max-width: 860px)').matches
+      && interactiveContent.some(function (item) {
         return floatingActions.some(function (action) {
-          return overlaps(action, submit);
+          return overlaps(action, item);
         });
       });
-    document.documentElement.classList.toggle('floating-actions-obscured', obscuresSubmit);
+    document.documentElement.classList.toggle('floating-actions-obscured', obscuresContent);
   }
 
-  if (floatingActions.length > 0 && submitButtons.length > 0) {
+  if (floatingActions.length > 0 && interactiveContent.length > 0) {
     window.addEventListener('resize', updateFloatingActions, { passive: true });
     window.addEventListener('scroll', updateFloatingActions, { passive: true });
     updateFloatingActions();

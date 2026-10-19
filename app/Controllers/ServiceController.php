@@ -14,11 +14,17 @@ final class ServiceController
         $categories = Db::all(
             'SELECT c.id, c.code, c.name FROM service_categories c INNER JOIN services s ON s.category_id = c.id AND s.is_active = 1 GROUP BY c.id, c.code, c.name ORDER BY c.id'
         );
+        foreach ($categories as &$category) {
+            $category['name'] = self::categoryDisplayName((string) $category['code'], (string) $category['name']);
+        }
+        unset($category);
+
         $services = Db::all(
             'SELECT s.code, s.name, s.mode, c.code AS category_code FROM services s INNER JOIN service_categories c ON c.id = s.category_id WHERE s.is_active = 1 ORDER BY c.id, s.code'
         );
         $grouped = [];
         foreach ($services as $service) {
+            $service['name'] = self::serviceDisplayName((string) $service['code'], (string) $service['name']);
             $grouped[$service['category_code']][] = $service;
         }
 
@@ -37,18 +43,22 @@ final class ServiceController
             return;
         }
 
+        $service['name'] = self::serviceDisplayName((string) $service['code'], (string) $service['name']);
+        $service['category_name'] = self::categoryDisplayName((string) $service['category_code'], (string) $service['category_name']);
         $service['steps'] = Db::all(
             'SELECT step_no, step_name FROM service_steps WHERE service_id = ? ORDER BY step_no',
             [(int) $service['id']]
         );
         $service['standards'] = Db::one(
-            'SELECT fee_text, sla_text, responsible_unit, required_documents_text FROM service_standards WHERE service_id = ?',
+            'SELECT sla_text, responsible_unit, required_documents_text FROM service_standards WHERE service_id = ?',
             [(int) $service['id']]
         ) ?? [];
+        $displayName = $service['code'] === 'TU-02' ? 'ADMINISTRASI MANDIRI' : $service['name'];
 
         View::render('pages/service_detail', [
-            'title' => $service['name'],
+            'title' => $service['code'] . ' — ' . $displayName,
             'service' => $service,
+            'displayName' => $displayName,
             'informationStepsNotice' => ServiceCatalog::INFORMATION_STEPS_NOTICE,
             'modeLabel' => ServiceCatalog::modeLabel((string) $service['mode']),
         ]);
@@ -57,9 +67,25 @@ final class ServiceController
     private static function findService(string $code): ?array
     {
         return Db::one(
-            'SELECT s.id, s.code, s.name, s.mode, s.is_active, c.name AS category_name FROM services s INNER JOIN service_categories c ON c.id = s.category_id WHERE s.code = ?',
+            'SELECT s.id, s.code, s.name, s.mode, s.is_active, c.code AS category_code, c.name AS category_name FROM services s INNER JOIN service_categories c ON c.id = s.category_id WHERE s.code = ?',
             [strtoupper(trim($code))]
         );
+    }
+
+    private static function categoryDisplayName(string $code, string $fallback): string
+    {
+        return [
+            'TU' => 'TATA USAHA',
+            'KUR' => 'KURIKULUM',
+            'KES' => 'KESISWAAN',
+            'SAR' => 'SARANA PRASARANA',
+            'HUM' => 'HUMAS',
+        ][$code] ?? strtoupper($fallback);
+    }
+
+    private static function serviceDisplayName(string $code, string $fallback): string
+    {
+        return $code === 'TU-01' ? 'Srikandi' : $fallback;
     }
 
     private static function notFound(): void
